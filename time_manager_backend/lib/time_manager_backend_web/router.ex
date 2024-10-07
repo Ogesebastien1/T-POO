@@ -9,6 +9,8 @@ defmodule TimeManagerBackendWeb.Router do
     pipe_through :api
 
     resources "/users", UserController, except: [:new, :edit]
+    resources "/workingtimes", WorkingTimeController, except: [:new, :edit]
+    resources "/clocks", ClockController, except: [:new, :edit]
   end
 
   # Enable Swoosh mailbox preview in development
