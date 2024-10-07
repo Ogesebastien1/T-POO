@@ -16,15 +16,29 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -
 # Set the working directory
 WORKDIR /app
 
+
+
+# Install ping command
+RUN apt-get update && apt-get install -y iputils-ping
+
+# Install PostgreSQL client
+RUN apt-get install -y postgresql-client
+
 # Copy the Elixir project
-COPY time_manager_backend/* .
+COPY . .
 
-COPY . /app/entrypoint.sh
+RUN mix deps.get
 
-RUN ls
+RUN mix deps.compile
+
+COPY entrypoint.sh .
 
 RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
+RUN ls
+
 EXPOSE 4000
 
-CMD ["sh", "/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "time_manager_backend/entrypoint.sh"]
+
+CMD ["mix", "phx.server"]
