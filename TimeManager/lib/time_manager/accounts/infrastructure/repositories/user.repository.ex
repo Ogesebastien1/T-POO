@@ -11,12 +11,27 @@ defmodule TimeManager.UserRepository do
     |> unique_constraint(:email)
   end
 
+
+
+  def valide_uuid(id) do
+    case Ecto.UUID.cast(id) do
+      :error -> {:error, "is not a valid UUID"}
+      {:ok, valide_id} -> {:ok, valide_id}
+
+    end
+  end
+
   def get_all() do
     Repo.all(User)
   end
 
   def get_by_id(id) do
-    Repo.get(User, id)
+    with {:ok, id} <- valide_uuid(id) do
+      Repo.get(User, id)
+    else
+      _ -> nil
+    end
+
   end
 
   def insert(user) do
@@ -24,15 +39,18 @@ defmodule TimeManager.UserRepository do
     |> Repo.insert()
   end
 
-  # def update(params) do
-  #   Repo.get(User, params.id)
-  #   |> User.update_user(params)
-  #   |> Repo.update()
-  # end
+  def get_by_email_and_username(email, username) do
+    Repo.get_by(User, email: email, username: username)
+  end
 
-  # def delete(id) do
-  #   Repo.get(User, id)
-  #   |> Repo.delete()
-  # end
+  def update(user, params) do
+    user
+    |> changeset(params)
+    |> Repo.update()
+  end
+
+  def delete(user) do
+    Repo.delete(user)
+  end
 
 end

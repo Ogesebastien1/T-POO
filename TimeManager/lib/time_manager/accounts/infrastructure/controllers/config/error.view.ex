@@ -13,7 +13,6 @@ defmodule TimeManagerWeb.ErrorView do
   end
 
   def render("422.json", %{changeset: changeset}) do
-    # You can customize this to format your changeset errors as you please
     errors = Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
       Enum.reduce(opts, msg, fn {key, value}, acc ->
         String.replace(acc, "%{#{key}}", to_string(value))
@@ -21,5 +20,9 @@ defmodule TimeManagerWeb.ErrorView do
     end)
 
     %{errors: errors}
+  end
+
+  def render("400.json", %{message: message}) do
+    %{errors: %{detail: message}}
   end
 end
