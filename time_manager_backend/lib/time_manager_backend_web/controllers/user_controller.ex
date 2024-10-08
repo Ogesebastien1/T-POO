@@ -1,5 +1,29 @@
 defmodule TimeManagerBackendWeb.UserController do
   use TimeManagerBackendWeb, :controller
+  use PhoenixSwagger
+
+  import Plug.Conn.Status, only: [code: 1]
+
+  swagger_path :index do
+    get("/users")
+    description("List of users")
+    response(code(:ok), "Success", Schema.ref(:User))
+  end
+
+  def swagger_definitions do
+    %{
+      User: swagger_schema do
+        title("User")
+        description("A user of the application")
+
+        properties do
+          id(:integer, "User ID", required: true)
+          name(:string, "User name", required: true)
+          email(:string, "User email", required: true)
+        end
+      end
+    }
+  end
 
   alias TimeManagerBackend.Accounts
   alias TimeManagerBackend.Accounts.User
