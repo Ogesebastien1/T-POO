@@ -25,4 +25,4 @@ mix ecto.create
 mix ecto.migrate
 
 # Démarrer le serveur Phoenix
-exec mix phx.server
+mix phx.server
