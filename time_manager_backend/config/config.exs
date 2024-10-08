@@ -7,6 +7,16 @@
 # General application configuration
 import Config
 
+config :time_manager_backend, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # phoenix routes will be converted to swagger paths
+      router: TimeManagerBackendWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: TimeManagerBackendWeb.Endpoint
+    ]
+  }
+
 config :time_manager_backend,
   ecto_repos: [TimeManagerBackend.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
