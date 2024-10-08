@@ -1,0 +1,55 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "description": "Success"
+          }
+        },
+        "parameters": [],
+        "operationId": "TimeManagerBackendWeb.UserController.index",
+        "description": "List of users"
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "title": "User",
+      "required": [
+        "email",
+        "name",
+        "id"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "User name"
+        },
+        "id": {
+          "type": "integer",
+          "description": "User ID"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email"
+        }
+      },
+      "description": "A user of the application"
+    }
+  },
+  "host": "localhost:4000",
+  "info": {
+    "title": "My App",
+    "version": "1.0"
+  }
+}

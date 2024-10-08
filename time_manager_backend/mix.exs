@@ -5,6 +5,7 @@ defmodule TimeManagerBackend.MixProject do
     [
       app: :time_manager_backend,
       version: "0.1.0",
+      compilers: [:phoenix, :gettext] ++ Mix.compilers() ++ [:phoenix_swagger],
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -32,6 +33,9 @@ defmodule TimeManagerBackend.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"},
+      {:poison, "~> 3.0"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.10"},
