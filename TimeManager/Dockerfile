@@ -1,8 +1,10 @@
 FROM elixir:latest
 
-RUN apt-get update && \
-    apt-get install --yes build-essential inotify-tools postgresql-client git && \
-    apt-get clean
+RUN apt-get update && apt-get install -y \
+    iputils-ping \
+    postgresql-client \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mix local.hex --force && \
     mix local.rebar --force && \
@@ -12,16 +14,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN mix deps.get
-
-RUN mix deps.compile
-
 COPY entrypoint.sh .
 
 RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
 EXPOSE 4000
 
-ENTRYPOINT ["sh", "time_manager_backend/entrypoint.sh"]
+ENTRYPOINT ["sh", "TimeManager/entrypoint.sh"]
 
 CMD ["mix", "phx.server"]
