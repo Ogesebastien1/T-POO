@@ -1,0 +1,21 @@
+# Script for populating the database. You can run it as:
+#
+#     mix run priv/repo/seeds.exs
+#
+# Inside the script, you can read and write to any of your
+# repositories directly:
+#
+#     TimeManager.Repo.insert!(%TimeManager.SomeSchema{})
+#
+# We recommend using the bang functions (`insert!`, `update!`
+# and so on) as they will fail if something goes wrong.
+alias TimeManagerBackend.Repo
+alias TimeManagerBackend.Accounts
+alias TimeManagerBackend.Accounts.User
+
+# Insert users
+Accounts.create_user(%{
+    id: 1,
+    username: "test",
+    email: "test@test.com"
+})
