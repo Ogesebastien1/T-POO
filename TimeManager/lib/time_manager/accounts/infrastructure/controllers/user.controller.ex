@@ -3,7 +3,6 @@ defmodule TimeManagerWeb.UserController do
 
   alias TimeManager.{Accounts.User, ManageUserService, Infrastructure.UserPresenter}
 
-
   action_fallback TimeManagerWeb.FallbackController
 
   def index(conn, %{"email" => email, "username" => username}) do
