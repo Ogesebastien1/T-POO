@@ -1,10 +1,6 @@
-FROM node:20-slim AS base
+FROM node:18.12-alpine
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-COPY . /app
-WORKDIR /app
+WORKDIR /Client
 
 COPY . .
 
@@ -12,6 +8,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-EXPOSE 8080
+EXPOSE 5173
 
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "run", "dev", "--host"]

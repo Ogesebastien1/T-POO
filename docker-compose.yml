@@ -1,31 +1,28 @@
 version: '3.8'
 services:
-  web_client:
+  client:
     build: 
       context: ./Client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./TimeManagerClient:/app
+      - "5173:5173"
     env_file:
       - .env
 
-
-  web_api:
+  api:
     build: 
       context: ./TimeManager
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
     volumes:
-      - .:/app
+      - ./TimeManager:/app
     env_file:
       - .env
     depends_on:
       db:
         condition: service_healthy
-
+        
   db:
     image: postgres:latest
     healthcheck:
