@@ -1,6 +1,18 @@
 version: '3.8'
 services:
-  web:
+  web_client:
+    build: 
+      context: ./Client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./TimeManagerClient:/app
+    env_file:
+      - .env
+
+
+  web_api:
     build: 
       context: ./TimeManager
       dockerfile: Dockerfile
