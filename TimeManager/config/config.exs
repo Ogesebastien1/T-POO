@@ -11,9 +11,9 @@ config :time_manager, :phoenix_swagger,
   swagger_files: %{
     "priv/static/swagger.json" => [
       # phoenix routes will be converted to swagger paths
-      router: TimeManagerBackendWeb.Router,
+      router: TimeManagerWeb.Router,
       # (optional) endpoint config used to set host, port and https schemes.
-      endpoint: TimeManagerBackendWeb.Endpoint
+      endpoint: TimeManagerWeb.Endpoint
     ]
   }
 
