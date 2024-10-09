@@ -5,7 +5,7 @@ defmodule TimeManager.MixProject do
     [
       app: :time_manager,
       version: "0.1.0",
-      compilers: [:phoenix, :gettext] ++ Mix.compilers() ++ [:phoenix_swagger],
+      compilers: Mix.compilers() ++ [:phoenix_swagger],
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
