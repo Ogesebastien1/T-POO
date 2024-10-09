@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd time_manager_backend
+cd TimeManager
 mix deps.get
 mix ecto.create
 mix ecto.migrate

@@ -2,7 +2,7 @@ defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/api", TimeManagerWeb do
@@ -25,18 +25,26 @@ defmodule TimeManagerWeb.Router do
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:time_manager, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
+    scope "/swagger" do
+      forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :time_manager_backend, swagger_file: "swagger.json"
+    end
+
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through([:fetch_session, :protect_from_forgery])
 
       live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "My App"
+      }
+    }
   end
 end

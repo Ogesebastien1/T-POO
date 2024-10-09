@@ -1,17 +1,15 @@
 defmodule TimeManager.UserRepository do
   use TimeManager, :repository
 
-  alias TimeManager.User
-
+  alias TimeManager.Accounts.User
 
   def changeset(user , attr) do
     user
     |> cast(attr, [:username, :email])
     |> validate_required([:username, :email])
+    |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
   end
-
-
 
   def valide_uuid(id) do
     case Ecto.UUID.cast(id) do
