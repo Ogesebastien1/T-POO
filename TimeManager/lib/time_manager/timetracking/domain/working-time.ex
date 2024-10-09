@@ -2,6 +2,7 @@ defmodule TimeManager.TimeTracking.WorkingTime do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.User
+  alias TimeManager.TimeTracking.WorkingTime
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,5 +12,18 @@ defmodule TimeManager.TimeTracking.WorkingTime do
     belongs_to :user, User
 
     timestamps(type: :utc_datetime)
+  end
+
+  def changeset(working_time, attrs) do
+    IO.inspect(attrs.user.id)
+
+
+
+
+    working_time
+    |> cast(attrs, [:start_time, :end_time, :user_id])
+    |> validate_required([:start_time, :end_time, :user_id])
+    |> assoc_constraint(:user)
+
   end
 end

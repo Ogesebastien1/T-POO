@@ -4,6 +4,8 @@ defmodule TimeManager do
     quote do
       @self __MODULE__
       use Ecto.Schema
+
+      import Ecto.Changeset
     end
   end
 
