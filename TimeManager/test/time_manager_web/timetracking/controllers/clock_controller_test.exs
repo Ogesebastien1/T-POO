@@ -1,7 +1,7 @@
 defmodule TimeManagerWeb.ClockControllerTest do
   use TimeManagerWeb.ConnCase
   alias DialyxirVendored.Formatter.IgnoreFile
-  alias TimeManager.ManageUserService
+  alias TimeManager.Accounts.Application.ManageUserService
   alias TimeManager.TimeTracking.Application.ManageClockService
 
   test "POST /api/clocks/{userID} with status on false", %{conn: conn} do

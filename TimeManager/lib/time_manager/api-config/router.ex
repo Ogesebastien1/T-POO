@@ -10,11 +10,11 @@ defmodule TimeManagerWeb.Router do
   scope "/api", TimeManagerWeb do
     pipe_through :api
 
-    get "/users", UserController, :index
-    get "/users/:id", UserController, :show
-    post  "/users", UserController, :create
-    put "/users/:id", UserController, :update
-    delete "/users/:id", UserController, :delete
+    get "/users", Accounts.Infrastructure.UserController, :index
+    get "/users/:id", Accounts.Infrastructure.UserController, :show
+    post  "/users", Accounts.Infrastructure.UserController, :create
+    put "/users/:id", Accounts.Infrastructure.UserController, :update
+    delete "/users/:id", Accounts.Infrastructure.UserController, :delete
 
     get "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
     get "/workingtimes/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show

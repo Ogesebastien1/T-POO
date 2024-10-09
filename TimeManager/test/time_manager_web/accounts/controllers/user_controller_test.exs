@@ -1,7 +1,7 @@
 defmodule TimeManagerWeb.UserControllerTest do
   use TimeManagerWeb.ConnCase
   alias DialyxirVendored.Formatter.IgnoreFile
-  alias TimeManager.ManageUserService
+  alias TimeManager.Accounts.Application.ManageUserService
 
   test "GET /api/users", %{conn: conn} do
     {:ok, user} =

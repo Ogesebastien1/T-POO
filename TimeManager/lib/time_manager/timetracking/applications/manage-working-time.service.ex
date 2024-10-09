@@ -1,6 +1,6 @@
 defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
   alias TimeManager.TimeTracking.{WorkingTime, Infrastructure.WorkingTimeRepository}
-  alias TimeManager.UserRepository
+  alias TimeManager.Accounts.Infrastructure.UserRepository
 
   def create_working_time(%{"userID" => userID, "working_time" => working_time_params}) do
     case UserRepository.get_by_id(userID) do

@@ -1,6 +1,6 @@
 defmodule TimeManager.TimeTracking.Application.ManageClockService do
   alias TimeManager.TimeTracking.{Clock, Infrastructure.ClockRepository}
-  alias TimeManager.UserRepository
+  alias TimeManager.Accounts.Infrastructure.UserRepository
 
   def get_clocks(%{"userID" => userID}) do
     case UserRepository.get_by_id(userID) do
