@@ -9,6 +9,7 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
 
     case UserRepository.get_by_id(userID) do
       nil ->
+        IO.puts("User not found")
         {:error, "User not found"}
 
       user ->

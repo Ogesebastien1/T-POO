@@ -1,5 +1,7 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
+  
+
 
   pipeline :api do
     plug(:accepts, ["json"])
@@ -14,11 +16,11 @@ defmodule TimeManagerWeb.Router do
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
 
-    get "/working_times/:userID", WorkingTimeController, :index
-    get "/working_times/:userID/:id", WorkingTimeController, :show
-    post "/working_times/:userID", WorkingTimeController, :create
-    put "/working_times/:id", WorkingTimeController, :update
-    delete "/working_times/:id", WorkingTimeController, :delete
+    get "/working_times/:userID", TimeTracking.Infrastructure.WorkingTimeController, :index
+    get "/working_times/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
+    post "/working_times/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
+    put "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
+    delete "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
 
 
   end
