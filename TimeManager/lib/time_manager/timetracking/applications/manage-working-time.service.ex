@@ -29,13 +29,17 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
     end
   end
 
-  def update_working_time(%{"userID" => userID, "working_time" => working_time_params}) do
-    case WorkingTimeRepository.get_by_user_id(userID) do
+  def update_working_time(%{"id" => id, "working_time" => working_time_params}) do
+    case WorkingTimeRepository.get_by_id(id) do
       nil ->
         {:error, "Working time not found"}
       working_time ->
         working_time
         |> WorkingTimeRepository.update(working_time_params)
     end
+  end
+
+  def delete_working_time(working_time) do
+    WorkingTimeRepository.delete(working_time)
   end
 end

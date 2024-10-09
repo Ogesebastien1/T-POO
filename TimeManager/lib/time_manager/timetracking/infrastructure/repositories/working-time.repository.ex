@@ -32,4 +32,8 @@ defmodule TimeManager.TimeTracking.Infrastructure.WorkingTimeRepository do
     |> WorkingTime.changeset(params , :update)
     |> Repo.update()
   end
+
+  def delete(working_time) do
+    Repo.delete(working_time)
+  end
 end
