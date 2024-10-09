@@ -7,7 +7,7 @@
 # General application configuration
 import Config
 
-config :time_manager_backend, :phoenix_swagger,
+config :time_manager, :phoenix_swagger,
   swagger_files: %{
     "priv/static/swagger.json" => [
       # phoenix routes will be converted to swagger paths

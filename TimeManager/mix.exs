@@ -43,7 +43,8 @@ defmodule TimeManager.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:phoenix_swagger, "~> 0.8.3"}
     ]
   end
 

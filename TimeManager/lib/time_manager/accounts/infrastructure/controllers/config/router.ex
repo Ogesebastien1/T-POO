@@ -26,7 +26,7 @@ defmodule TimeManagerWeb.Router do
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:time_manager, :dev_routes) do
     scope "/swagger" do
-      forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :time_manager_backend, swagger_file: "swagger.json"
+      forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :time_manager, swagger_file: "swagger.json"
     end
 
     import Phoenix.LiveDashboard.Router
