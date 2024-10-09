@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
-  
+
 
 
   pipeline :api do
@@ -22,7 +22,8 @@ defmodule TimeManagerWeb.Router do
     put "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
     delete "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
 
-
+    get "/clocks/:userID", TimeTracking.Infrastructure.ClockController, :index
+    post "/clocks/:userID", TimeTracking.Infrastructure.ClockController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
