@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
-  
+
 
 
   pipeline :api do
@@ -19,7 +19,7 @@ defmodule TimeManagerWeb.Router do
     get "/working_times/:userID", TimeTracking.Infrastructure.WorkingTimeController, :index
     get "/working_times/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
     post "/working_times/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
-    put "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
+    put "/working_times/:userID", TimeTracking.Infrastructure.WorkingTimeController, :update
     delete "/working_times/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
 
 

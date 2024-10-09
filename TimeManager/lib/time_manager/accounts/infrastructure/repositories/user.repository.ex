@@ -3,20 +3,14 @@ defmodule TimeManager.UserRepository do
 
   alias TimeManager.Accounts.User
 
+  import UUIDValidator
+
   def changeset(user , attr) do
     user
     |> cast(attr, [:username, :email])
     |> validate_required([:username, :email])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
-  end
-
-  def valide_uuid(id) do
-    case Ecto.UUID.cast(id) do
-      :error -> {:error, "is not a valid UUID"}
-      {:ok, valide_id} -> {:ok, valide_id}
-
-    end
   end
 
   def get_all() do

@@ -34,6 +34,35 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
     end
   end
 
+  def show(conn, %{"userID" => _userID, "id" => id}) do
+    with {:ok, working_time} <- ManageWorkingTimeService.get_work_time(%{"id" => id}) do
+      conn
+      |> put_status(:ok)
+      |> put_view(WorkingTimePresenter)
+      |> render(:present_working_time, working_time: working_time)
+    else {:error, message} ->
+      conn
+      |> put_status(:not_found)
+      |> put_view(TimeManagerWeb.ErrorView)
+      |> render("404.json", message: message)
+    end
+  end
+
+  def update(conn, %{"userID" => userID, "working_time" => working_time_params}) do
+    with {:ok, %WorkingTime{} = working_time} <- ManageWorkingTimeService.update_working_time(%{"userID" => userID, "working_time" => working_time_params}) do
+      conn
+      |> put_status(:ok)
+      |> put_view(WorkingTimePresenter)
+      |> render(:present_working_time, working_time: working_time)
+    else nil ->
+      conn
+      |> put_status(:not_found)
+      |> put_view(TimeManagerWeb.ErrorView)
+      |> render("404.json", message: 'aa')
+
+    end
+  end
+
 
 
 
