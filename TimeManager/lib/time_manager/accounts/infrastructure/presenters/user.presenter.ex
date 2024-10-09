@@ -1,5 +1,5 @@
 defmodule TimeManager.Infrastructure.UserPresenter do
-  alias TimeManager.User
+  alias TimeManager.Accounts.User
 
   def present_user(%{user: %User{} = user}) do
     %{

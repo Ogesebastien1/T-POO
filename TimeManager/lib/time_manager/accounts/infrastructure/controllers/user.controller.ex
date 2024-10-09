@@ -1,7 +1,7 @@
 defmodule TimeManagerWeb.UserController do
   use TimeManagerWeb, :controller
 
-  alias TimeManager.{User, ManageUserService, Infrastructure.UserPresenter}
+  alias TimeManager.{Accounts.User, ManageUserService, Infrastructure.UserPresenter}
 
 
   action_fallback TimeManagerWeb.FallbackController

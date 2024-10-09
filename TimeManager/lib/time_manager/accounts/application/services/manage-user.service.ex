@@ -1,7 +1,7 @@
 defmodule TimeManager.ManageUserService do
   use TimeManager, :application_service
 
-  alias TimeManager.{User, UserRepository}
+  alias TimeManager.{Accounts.User, UserRepository}
 
   def get_users() do
     UserRepository.get_all()
