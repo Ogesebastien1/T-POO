@@ -29,10 +29,26 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
     end
   end
 
+  def get_work_time_by_user_id_and_time_range(%{
+        "userID" => userID,
+        "start_time" => start_time,
+        "end_time" => end_time
+      }) do
+    case UserRepository.get_by_id(userID) do
+      nil ->
+        {:error, "User not found"}
+
+      user ->
+        {:ok, WorkingTimeRepository.get_by_user_id_and_time_range(user.id, start_time, end_time)}
+        |> IO.inspect()
+    end
+  end
+
   def update_working_time(%{"id" => id, "working_time" => working_time_params}) do
     case WorkingTimeRepository.get_by_id(id) do
       nil ->
         {:error, "Working time not found"}
+
       working_time ->
         working_time
         |> WorkingTimeRepository.update(working_time_params)

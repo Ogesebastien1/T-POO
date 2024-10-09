@@ -5,7 +5,7 @@ defmodule TimeManager.UserRepository do
 
   import UUIDValidator
 
-  def changeset(user , attr) do
+  def changeset(user, attr) do
     user
     |> cast(attr, [:username, :email])
     |> validate_required([:username, :email])
@@ -23,7 +23,6 @@ defmodule TimeManager.UserRepository do
     else
       _ -> nil
     end
-
   end
 
   def insert(user) do
@@ -44,5 +43,4 @@ defmodule TimeManager.UserRepository do
   def delete(user) do
     Repo.delete(user)
   end
-
 end

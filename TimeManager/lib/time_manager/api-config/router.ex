@@ -16,7 +16,7 @@ defmodule TimeManagerWeb.Router do
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
 
-    get "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :index
+    get "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
     get "/workingtimes/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
     post "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
     put "/workingtimes/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
