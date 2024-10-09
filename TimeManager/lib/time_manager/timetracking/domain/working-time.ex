@@ -14,10 +14,14 @@ defmodule TimeManager.TimeTracking.WorkingTime do
     timestamps(type: :utc_datetime)
   end
 
+  def changeset(working_time, attrs , _z) do
+    working_time
+    |> cast(attrs, [:start_time, :end_time])
+    |> validate_required([:start_time, :end_time])
+  end
+
   def changeset(working_time, attrs) do
     IO.inspect(attrs.user.id)
-
-
 
 
     working_time
@@ -26,4 +30,6 @@ defmodule TimeManager.TimeTracking.WorkingTime do
     |> assoc_constraint(:user)
 
   end
+
+
 end

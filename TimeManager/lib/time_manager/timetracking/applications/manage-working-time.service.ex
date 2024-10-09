@@ -3,13 +3,8 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
   alias TimeManager.UserRepository
 
   def create_working_time(%{"userID" => userID, "working_time" => working_time_params}) do
-    IO.inspect(userID)
-    IO.inspect(Map.get(working_time_params, "start"))
-    IO.inspect(Map.get(working_time_params, "end"))
-
     case UserRepository.get_by_id(userID) do
       nil ->
-        IO.puts("User not found")
         {:error, "User not found"}
 
       user ->
@@ -22,5 +17,29 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
         })
         |> WorkingTimeRepository.insert()
     end
+  end
+
+  def get_work_time(%{"id" => id}) do
+    case WorkingTimeRepository.get_by_id(id) do
+      nil ->
+        {:error, "Working time not found"}
+
+      working_time ->
+        {:ok, working_time}
+    end
+  end
+
+  def update_working_time(%{"id" => id, "working_time" => working_time_params}) do
+    case WorkingTimeRepository.get_by_id(id) do
+      nil ->
+        {:error, "Working time not found"}
+      working_time ->
+        working_time
+        |> WorkingTimeRepository.update(working_time_params)
+    end
+  end
+
+  def delete_working_time(working_time) do
+    WorkingTimeRepository.delete(working_time)
   end
 end
