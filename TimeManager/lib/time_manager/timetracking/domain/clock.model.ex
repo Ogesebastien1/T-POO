@@ -2,7 +2,6 @@ defmodule TimeManager.TimeTracking.Clock do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.User
-  alias TimeManager.TimeTracking.Clock
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
