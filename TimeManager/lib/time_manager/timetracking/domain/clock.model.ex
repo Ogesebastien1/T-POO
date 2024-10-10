@@ -14,8 +14,6 @@ defmodule TimeManager.TimeTracking.Clock do
   end
 
   def changeset(clock, attrs) do
-    IO.inspect(attrs.user.id)
-
     clock
     |> cast(attrs, [:time, :status, :user_id])
     |> validate_required([:time, :status, :user_id])

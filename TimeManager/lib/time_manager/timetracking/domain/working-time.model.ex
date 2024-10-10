@@ -20,8 +20,6 @@ defmodule TimeManager.TimeTracking.WorkingTime do
   end
 
   def changeset(working_time, attrs) do
-    IO.inspect(attrs.user.id)
-
     working_time
     |> cast(attrs, [:start_time, :end_time, :user_id])
     |> validate_required([:start_time, :end_time, :user_id])

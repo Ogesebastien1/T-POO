@@ -40,7 +40,6 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
 
       user ->
         {:ok, WorkingTimeRepository.get_by_user_id_and_time_range(user.id, start_time, end_time)}
-        |> IO.inspect()
     end
   end
 
