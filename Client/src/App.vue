@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Sidebar } from '@/components'
 import { RouterLink, RouterView } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
+const mode = useColorMode()
+
 </script>
 
 <template>
