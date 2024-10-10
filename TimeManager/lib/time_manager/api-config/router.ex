@@ -1,35 +1,43 @@
 defmodule TimeManagerWeb.Router do
   use TimeManagerWeb, :router
 
-
-
   pipeline :api do
     plug(:accepts, ["json"])
   end
 
-  scope "/api", TimeManagerWeb do
+  scope "/api/users", TimeManagerWeb do
     pipe_through :api
 
-    get "/users", Accounts.Infrastructure.UserController, :index
-    get "/users/:id", Accounts.Infrastructure.UserController, :show
-    post  "/users", Accounts.Infrastructure.UserController, :create
-    put "/users/:id", Accounts.Infrastructure.UserController, :update
-    delete "/users/:id", Accounts.Infrastructure.UserController, :delete
+    get "/", Accounts.Infrastructure.UserController, :index
+    get "/:id", Accounts.Infrastructure.UserController, :show
+    post "/", Accounts.Infrastructure.UserController, :create
+    put "/:id", Accounts.Infrastructure.UserController, :update
+    delete "/:id", Accounts.Infrastructure.UserController, :delete
+  end
 
-    get "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
-    get "/workingtimes/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
-    post "/workingtimes/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
-    put "/workingtimes/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
-    delete "/workingtimes/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
+  scope "/api/workingtimes", TimeManagerWeb do
+    pipe_through :api
 
-    get "/clocks/:userID", TimeTracking.Infrastructure.ClockController, :index
-    post "/clocks/:userID", TimeTracking.Infrastructure.ClockController, :create
+    get "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
+    get "/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
+    post "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
+    put "/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
+    delete "/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
+  end
+
+  scope "/api/clocks", TimeManagerWeb do
+    pipe_through :api
+
+    get "/:userID", TimeTracking.Infrastructure.ClockController, :index
+    post "/:userID", TimeTracking.Infrastructure.ClockController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:time_manager, :dev_routes) do
     scope "/swagger" do
-      forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :time_manager, swagger_file: "swagger.json"
+      forward "/", PhoenixSwagger.Plug.SwaggerUI,
+        otp_app: :time_manager,
+        swagger_file: "swagger.json"
     end
 
     import Phoenix.LiveDashboard.Router
