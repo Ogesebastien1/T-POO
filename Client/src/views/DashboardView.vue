@@ -10,22 +10,15 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { h, ref } from 'vue'
-import type {
-  ColumnFiltersState,
-  ExpandedState,
-  SortingState,
-  VisibilityState
-} from '@tanstack/vue-table'
 import {
-  FlexRender,
-  createColumnHelper,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useVueTable
-} from '@tanstack/vue-table'
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
 import { ArrowUpDown, ChevronDown } from 'lucide-vue-next'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -35,14 +28,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 
 const clockedIn = ref(false)
@@ -59,7 +44,33 @@ const handleClockedIn = () => {
 
 <template>
   <div class="grid grid-cols-2 gap-4 md:gap-8">
-    <Card>
+    <Card class="relative">
+      <div class="flex flex-col items-center absolute right-4 top-0">
+        <Button
+          v-if="!clockedIn"
+          @click="handleClockedIn"
+          :disabled="loading"
+          class="max-w-xs my-4 p-5 mx-auto"
+        >
+          <div v-if="loading" class="flex items-center">
+            <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
+          </div>
+          <div v-else class="flex items-center"><ClockArrowUp class="w-4 h-4 mr-2" /> Clock in</div>
+        </Button>
+        <Button
+          v-else
+          @click="handleClockedIn"
+          :disabled="loading"
+          class="max-w-xs my-4 p-5 mx-auto"
+        >
+          <div v-if="loading" class="flex items-center">
+            <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
+          </div>
+          <div v-else class="flex items-center">
+            <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
+          </div>
+        </Button>
+      </div>
       <CardHeader>
         <CardTitle class="text-sm font-medium"> Hello, Chris ! </CardTitle>
       </CardHeader>
@@ -97,24 +108,37 @@ const handleClockedIn = () => {
     </div>
   </div>
 
-  <div>
-    <Button
-      v-if="!clockedIn"
-      @click="handleClockedIn"
-      :disabled="loading"
-      class="max-w-xs my-4 p-5 mx-auto"
-    >
-      <div v-if="loading" class="flex items-center">
-        <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
-      </div>
-      <div v-else class="flex items-center"><ClockArrowUp class="w-4 h-4 mr-2" /> Clock in</div>
-    </Button>
-    <Button v-else @click="handleClockedIn" :disabled="loading" class="max-w-xs my-4 p-5 mx-auto">
-      <div v-if="loading" class="flex items-center">
-        <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
-      </div>
-      <div v-else class="flex items-center"><ClockArrowUp class="w-4 h-4 mr-2" /> Clock out</div>
-    </Button>
+  <div class="grid grid-cols-1 gap-4 md:gap-8">
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-sm font-medium"> Recent activities </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>Worked on project</TableCell>
+              <TableCell>2 hours ago</TableCell>
+              <TableCell>10</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Worked on project</TableCell>
+              <TableCell>2 hours ago</TableCell>
+              <TableCell>10</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Worked on project</TableCell>
+              <TableCell>2 hours ago</TableCell>
+              <TableCell>10</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Worked on project</TableCell>
+              <TableCell>2 hours ago</TableCell>
+              <TableCell>10</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   </div>
-
 </template>
