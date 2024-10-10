@@ -1,7 +1,6 @@
-defmodule TimeManagerWeb.UserController do
+defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   use TimeManagerWeb, :controller
-
-  alias TimeManager.{Accounts.User, ManageUserService, Infrastructure.UserPresenter}
+  alias TimeManager.Accounts.{User, Application.ManageUserService, Infrastructure.UserPresenter}
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -12,13 +11,13 @@ defmodule TimeManagerWeb.UserController do
     else
       _ ->
         conn
-        |> put_status(:not_found)
-        |> render(TimeManagerWeb.ErrorView, "404.json")
-      end
+        |> render_error("404.json", :not_found)
+    end
   end
 
   def index(conn, _params) do
     users = ManageUserService.get_users()
+
     conn
     |> render_result(users)
   end
@@ -31,8 +30,7 @@ defmodule TimeManagerWeb.UserController do
 
       {:error, _reason} ->
         conn
-        |> put_status(:not_found)
-        |> render(TimeManagerWeb.ErrorView, "404.json")
+        |> render_error("404.json", :not_found)
     end
   end
 
@@ -46,49 +44,39 @@ defmodule TimeManagerWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     case ManageUserService.get_user_by_id(id) do
       {:ok, user} ->
-        IO.inspect(user, label: "User before update")
         result = ManageUserService.update_user(user, user_params)
-        IO.inspect(result, label: "Update result")
 
         with {:ok, updated_user} <- result do
           conn
           |> render_result(updated_user)
         else
-          unexpected_value ->
+          _ ->
             conn
-            |> put_status(:internal_server_error)
-            |> put_view(TimeManagerWeb.ErrorView)
-            |> render("500.json", message: "Unexpected value: #{inspect(unexpected_value)}")
+            |> render_error("500.json", :internal_server_error)
         end
 
       {:error, _reason} ->
         conn
-        |> put_status(:not_found)
-        |> render(TimeManagerWeb.ErrorView, "404.json")
+        |> render_error("404.json", :not_found)
     end
   end
 
   def update(conn, _params) do
     conn
-    |> put_status(:bad_request)
-    |> put_view(json: TimeManagerWeb.ErrorView)
-    |> render("400.json", message: "Missing user params")
+    |> render_error("400.json", :bad_request)
   end
 
   def delete(conn, %{"id" => id}) do
     case ManageUserService.get_user_by_id(id) do
       {:ok, user} ->
-        IO.inspect(user, label: "User before delete")
-        result = ManageUserService.delete_user(user)
-        IO.inspect(result, label: "Delete result")
+        ManageUserService.delete_user(user)
 
         conn
         |> render_result(user, :no_content)
 
       {:error, _reason} ->
         conn
-        |> put_status(:not_found)
-        |> render(TimeManagerWeb.ErrorView, "404.json")
+        |> render_error("404.json", :not_found)
     end
   end
 

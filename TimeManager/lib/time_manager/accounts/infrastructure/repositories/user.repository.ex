@@ -1,4 +1,4 @@
-defmodule TimeManager.UserRepository do
+defmodule TimeManager.Accounts.Infrastructure.UserRepository do
   use TimeManager, :repository
 
   alias TimeManager.Accounts.User

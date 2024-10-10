@@ -21,11 +21,9 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
       conn
       |> render_result(working_time)
     else
-      {:error, message} ->
+      {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: message)
+        |> render_error("404.json", :not_found)
     end
   end
 
@@ -52,9 +50,7 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
     else
       {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: ~c"Ressource not found")
+        |> render_error("404.json", :not_found)
     end
   end
 
@@ -66,16 +62,12 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
       else
         {:error, _} ->
           conn
-          |> put_status(:not_found)
-          |> put_view(TimeManagerWeb.ErrorView)
-          |> render("404.json", message: message)
+          |> render_error("404.json", :not_found)
       end
     else
-      {:error, message} ->
+      {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: message)
+        |> render_error("404.json")
     end
   end
 

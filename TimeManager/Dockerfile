@@ -20,6 +20,6 @@ RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
 EXPOSE 4000
 
-ENTRYPOINT ["sh", "TimeManager/entrypoint.sh"]
+ENTRYPOINT ["sh", "entrypoint.sh"]
 
 CMD ["mix", "phx.server"]
