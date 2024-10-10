@@ -12,24 +12,18 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
              "working_time" => working_time_params
            }) do
       conn
-      |> put_status(:created)
-      |> put_view(WorkingTimePresenter)
-      |> render(:present_working_time, working_time: working_time)
+      |> render_working_time(working_time, :created)
     end
   end
 
   def show(conn, %{"userID" => _userID, "id" => id}) do
     with {:ok, working_time} <- ManageWorkingTimeService.get_work_time(%{"id" => id}) do
       conn
-      |> put_status(:ok)
-      |> put_view(WorkingTimePresenter)
-      |> render(:present_working_time, working_time: working_time)
+      |> render_working_time(working_time)
     else
-      {:error, message} ->
+      {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: message)
+        |> render_error("404.json", :not_found)
     end
   end
 
@@ -41,9 +35,7 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
              "end_time" => end_time
            }) do
       conn
-      |> put_status(:ok)
-      |> put_view(WorkingTimePresenter)
-      |> render(:present_working_times, working_times: working_times)
+      |> render_working_times(working_times)
     end
   end
 
@@ -54,41 +46,49 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
              "working_time" => working_time_params
            }) do
       conn
-      |> put_status(:ok)
-      |> put_view(WorkingTimePresenter)
-      |> render(:present_working_time, working_time: working_time)
+      |> render_working_time(working_time)
     else
       {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: ~c"Ressource not found")
+        |> render_error("404.json", :not_found)
     end
   end
 
   def delete(conn, %{"id" => id}) do
     with {:ok, working_time} <- ManageWorkingTimeService.get_work_time(%{"id" => id}) do
-      result = ManageWorkingTimeService.delete_working_time(working_time)
-
-      case result do
-        {:ok, _} ->
+      with {:ok, _} <- ManageWorkingTimeService.delete_working_time(working_time) do
+        conn
+        |> render_working_time(working_time, :no_content)
+      else
+        {:error, _} ->
           conn
-          |> put_status(:no_content)
-          |> put_view(WorkingTimePresenter)
-          |> render(:present_working_time, working_time: working_time)
-
-        {:error, message} ->
-          conn
-          |> put_status(:not_found)
-          |> put_view(TimeManagerWeb.ErrorView)
-          |> render("404.json", message: message)
+          |> render_error("404.json", :not_found)
       end
     else
-      {:error, message} ->
+      {:error, _} ->
         conn
-        |> put_status(:not_found)
-        |> put_view(TimeManagerWeb.ErrorView)
-        |> render("404.json", message: message)
+        |> render_error("404.json")
     end
+  end
+
+  defp render_working_time(conn, working_time, status \\ :ok) do
+    conn
+    |> put_status(status)
+    |> put_view(WorkingTimePresenter)
+    |> render(:present_working_time, working_time: working_time)
+  end
+
+  defp render_working_times(conn, working_times, status \\ :ok) do
+    conn
+    |> put_status(status)
+    |> put_view(WorkingTimePresenter)
+    |> render(:present_working_times, working_times: working_times)
+  end
+
+  defp render_error(conn, template, status \\ :not_found) do
+    conn
+    |> put_status(status)
+    |> put_view(TimeManagerWeb.ErrorView)
+    |> render(template)
   end
 end
