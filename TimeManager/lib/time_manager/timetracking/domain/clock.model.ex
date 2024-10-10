@@ -2,7 +2,6 @@ defmodule TimeManager.TimeTracking.Clock do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.User
-  alias TimeManager.TimeTracking.Clock
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -15,8 +14,6 @@ defmodule TimeManager.TimeTracking.Clock do
   end
 
   def changeset(clock, attrs) do
-    IO.inspect(attrs.user.id)
-
     clock
     |> cast(attrs, [:time, :status, :user_id])
     |> validate_required([:time, :status, :user_id])

@@ -1,6 +1,6 @@
 defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
   alias TimeManager.TimeTracking.{WorkingTime, Infrastructure.WorkingTimeRepository}
-  alias TimeManager.UserRepository
+  alias TimeManager.Accounts.Infrastructure.UserRepository
 
   def create_working_time(%{"userID" => userID, "working_time" => working_time_params}) do
     case UserRepository.get_by_id(userID) do
@@ -40,7 +40,6 @@ defmodule TimeManager.TimeTracking.Application.ManageWorkingTimeService do
 
       user ->
         {:ok, WorkingTimeRepository.get_by_user_id_and_time_range(user.id, start_time, end_time)}
-        |> IO.inspect()
     end
   end
 
