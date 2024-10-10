@@ -1,35 +1,6 @@
 <script setup lang="ts">
-import {
-  Home,
-  LineChart,
-  Package,
-  PanelLeft,
-  Settings,
-  ShoppingCart,
-  Package2,
-  Users2
-} from 'lucide-vue-next'
-
+import { Home, LineChart, PanelLeft, Settings } from 'lucide-vue-next'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import {
-  Pagination,
-  PaginationList,
-  PaginationNext,
-  PaginationPrev
-} from '@/components/ui/pagination'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Sidebar } from '@/components'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -127,12 +98,12 @@ const mode = useColorMode()
           </nav>
         </SheetContent>
       </Sheet>
-      <div class="relative ml-auto flex-1 md:grow-0 flex items-center gap-4">
+      <div class="relative flex items-center gap-4 ml-auto">
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="secondary" size="icon" class="rounded-full">
-              <Avatar>
-                <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
+            <Button variant="secondary" size="icon" class="rounded-full h-[2.5rem] w-[2.5rem]">
+              <Avatar class="h-[2.5rem] w-[2.5rem]">
+                <AvatarImage src="https://avatar.iran.liara.run/public" alt="@radix-vue" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <span class="sr-only">Toggle user menu</span>
@@ -148,22 +119,22 @@ const mode = useColorMode()
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Button variant="outline" class="rounded-full p-0 h-[2.5rem] w-[2.5rem]">
+              <Icon
+                icon="radix-icons:moon"
+                class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+              />
+              <Icon
+                icon="radix-icons:sun"
+                class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+              />
               <span class="sr-only">Toggle theme</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @click="mode = 'light'">
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'dark'">
-              Dark
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="mode = 'auto'">
-              System
-            </DropdownMenuItem>
+            <DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
+            <DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
+            <DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

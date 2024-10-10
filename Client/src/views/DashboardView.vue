@@ -1,34 +1,9 @@
 <script setup lang="ts">
-import { ClockArrowUp, Loader2, CalendarCheck2, ClockArrowDown, Clock } from 'lucide-vue-next'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { ClockArrowUp, Loader2, CalendarCheck2, Clock } from 'lucide-vue-next'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { h, ref } from 'vue'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { ArrowUpDown, ChevronDown } from 'lucide-vue-next'
-import { Checkbox } from '@/components/ui/checkbox'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { ref } from 'vue'
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
 const clockedIn = ref(false)
 const loading = ref(false)
@@ -38,14 +13,14 @@ const handleClockedIn = () => {
   setTimeout(() => {
     clockedIn.value = !clockedIn.value
     loading.value = false
-  }, 3500)
+  }, 1250)
 }
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-4 md:gap-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
     <Card class="relative">
-      <div class="flex flex-col items-center absolute right-4 top-0">
+      <div class="flex flex-col items-center sm:absolute right-4 top-0">
         <Button
           v-if="!clockedIn"
           @click="handleClockedIn"
@@ -84,7 +59,7 @@ const handleClockedIn = () => {
         </CardDescription>
       </CardContent>
     </Card>
-    <div class="grid gap-4 md:grid-cols-1 md:gap-8 lg:grid-cols-2">
+    <div class="grid gap-4 md:grid-cols-1 md:gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle class="text-sm font-medium"> Hours worked this week </CardTitle>
@@ -108,7 +83,7 @@ const handleClockedIn = () => {
     </div>
   </div>
 
-  <div class="grid grid-cols-1 gap-4 md:gap-8">
+  <div class="mt-2">
     <Card>
       <CardHeader>
         <CardTitle class="text-sm font-medium"> Recent activities </CardTitle>
@@ -118,22 +93,23 @@ const handleClockedIn = () => {
           <TableBody>
             <TableRow>
               <TableCell>Worked on project</TableCell>
-              <TableCell>2 hours ago</TableCell>
+              <TableCell>
+                <span class="text-muted-foreground">2 hours ago</span>
+              </TableCell>
               <TableCell>10</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Worked on project</TableCell>
-              <TableCell>2 hours ago</TableCell>
+              <TableCell>
+                <span class="text-muted-foreground">2 hours ago</span>
+              </TableCell>
               <TableCell>10</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Worked on project</TableCell>
-              <TableCell>2 hours ago</TableCell>
-              <TableCell>10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Worked on project</TableCell>
-              <TableCell>2 hours ago</TableCell>
+              <TableCell>
+                <span class="text-muted-foreground">2 hours ago</span>
+              </TableCell>
               <TableCell>10</TableCell>
             </TableRow>
           </TableBody>
