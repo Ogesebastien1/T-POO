@@ -15,13 +15,27 @@ import {
   Settings,
   ShoppingCart,
   Truck,
-  Users2,
+  Users2
 } from 'lucide-vue-next'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
   Breadcrumb,
@@ -29,14 +43,14 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
+  BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   Pagination,
   PaginationList,
   PaginationNext,
-  PaginationPrev,
+  PaginationPrev
 } from '@/components/ui/pagination'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
@@ -46,29 +60,21 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table'
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Checkbox } from '@/components/ui/checkbox'
-import {  Sidebar } from '@/components'
+import { Sidebar } from '@/components'
 </script>
 
 <template>
   <div class="flex min-h-screen w-full flex-col bg-muted/40">
     <Sidebar />
-        <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-      <header class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+    <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+      <header
+        class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
+      >
         <Sheet>
           <SheetTrigger as-child>
             <Button size="icon" variant="outline" class="sm:hidden">
@@ -92,10 +98,7 @@ import {  Sidebar } from '@/components'
                 <Home class="h-5 w-5" />
                 Dashboard
               </a>
-              <a
-                href="#"
-                class="flex items-center gap-4 px-2.5 text-foreground"
-              >
+              <a href="#" class="flex items-center gap-4 px-2.5 text-foreground">
                 <ShoppingCart class="h-5 w-5" />
                 Orders
               </a>
@@ -123,49 +126,24 @@ import {  Sidebar } from '@/components'
             </nav>
           </SheetContent>
         </Sheet>
-        <Breadcrumb class="hidden md:flex">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink as-child>
-                <a href="#">Dashboard</a>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink as-child>
-                <a href="#">Orders</a>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
         <div class="relative ml-auto flex-1 md:grow-0">
-          <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            class="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="secondary" size="icon" class="rounded-full">
+                <CircleUser class="h-5 w-5" />
+                <span class="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="secondary" size="icon" class="rounded-full">
-              <CircleUser class="h-5 w-5" />
-              <span class="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </header>
     </div>
   </div>
