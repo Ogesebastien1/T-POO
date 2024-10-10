@@ -39,6 +39,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useColorMode } from '@vueuse/core'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+
 </script>
 
 <template>
