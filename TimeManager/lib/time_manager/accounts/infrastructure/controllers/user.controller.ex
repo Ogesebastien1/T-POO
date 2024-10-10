@@ -8,8 +8,7 @@ defmodule TimeManagerWeb.UserController do
   def index(conn, %{"email" => email, "username" => username}) do
     with {:ok, user} <- ManageUserService.get_user_by_email_and_username(email, username) do
       conn
-      |> put_view(json: UserPresenter)
-      |> render(:present_user, user: user)
+      |> render_result(user)
     else
       _ ->
         conn
@@ -21,29 +20,15 @@ defmodule TimeManagerWeb.UserController do
   def index(conn, _params) do
     users = ManageUserService.get_users()
     conn
-    |> put_view(json: UserPresenter)
-    |> render(:present_users, users: users)
+    |> render_result(users)
   end
 
   def show(conn, %{"id" => id}) do
     case ManageUserService.get_user_by_id(id) do
       {:ok, user} ->
         conn
-        |> put_view(json: UserPresenter)
-        |> render(:present_user, user: user)
-      {:error, _reason} ->
-        conn
-        |> put_status(:not_found)
-        |> render(TimeManagerWeb.ErrorView, "404.json")
-    end
-  end
+        |> render_result(user)
 
-  def show_by_email_and_username(conn, %{"email" => email, "username" => username}) do
-    case ManageUserService.get_user_by_email_and_username(email, username) do
-      {:ok, user} ->
-        conn
-        |> put_view(json: UserPresenter)
-        |> render(:present_user, user: user)
       {:error, _reason} ->
         conn
         |> put_status(:not_found)
@@ -54,10 +39,7 @@ defmodule TimeManagerWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- ManageUserService.create_user(user_params) do
       conn
-      |> put_view(json: UserPresenter)
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/users/#{user}")
-      |> render(:present_user, user: user)
+      |> render_result(user, :created)
     end
   end
 
@@ -70,8 +52,7 @@ defmodule TimeManagerWeb.UserController do
 
         with {:ok, updated_user} <- result do
           conn
-          |> put_view(json: UserPresenter)
-          |> render(:present_user, user: updated_user)
+          |> render_result(updated_user)
         else
           unexpected_value ->
             conn
@@ -102,9 +83,7 @@ defmodule TimeManagerWeb.UserController do
         IO.inspect(result, label: "Delete result")
 
         conn
-        |> put_status(:no_content)
-        |> put_view(json: UserPresenter)
-        |> render(:present_user, user: user)
+        |> render_result(user, :no_content)
 
       {:error, _reason} ->
         conn
@@ -113,4 +92,24 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
+  defp render_result(conn, result, status \\ :ok) do
+    conn
+    |> put_status(status)
+    |> put_view(UserPresenter)
+    |> pipe_render(result)
+  end
+
+  defp pipe_render(conn, result) do
+    case is_list(result) do
+      true -> render(conn, :present_users, users: result)
+      false -> render(conn, :present_user, user: result)
+    end
+  end
+
+  defp render_error(conn, template, status) do
+    conn
+    |> put_status(status)
+    |> put_view(TimeManagerWeb.ErrorView)
+    |> render(template)
+  end
 end
