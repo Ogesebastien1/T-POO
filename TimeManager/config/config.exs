@@ -26,7 +26,7 @@ config :time_manager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [json: TimeManagerWeb.ErrorJSON],
+    formats: [json: TimeManagerWeb.ErrorView],
     layout: false
   ],
   pubsub_server: TimeManager.PubSub,
