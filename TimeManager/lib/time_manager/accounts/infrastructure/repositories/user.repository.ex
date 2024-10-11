@@ -5,14 +5,6 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
 
   import UUIDValidator
 
-  def changeset(user, attr) do
-    user
-    |> cast(attr, [:username, :email])
-    |> validate_required([:username, :email])
-    |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
-  end
-
   def get_all() do
     Repo.all(User)
   end
@@ -34,9 +26,13 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
     Repo.get_by(User, email: email, username: username)
   end
 
-  def update(user, params) do
+  def get_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
+
+  # TODO: changeset from the service..
+  def update(user, _params) do
     user
-    |> changeset(params)
     |> Repo.update()
   end
 

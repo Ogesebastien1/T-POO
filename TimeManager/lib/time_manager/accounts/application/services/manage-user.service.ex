@@ -23,7 +23,7 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
 
   def create_user(params) do
     %User{}
-    |> UserRepository.changeset(params)
+    |> User.changeset(params)
     |> UserRepository.insert()
   end
 

@@ -5,6 +5,10 @@ defmodule TimeManagerWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  pipeline :authenticated do
+    plug TimeManagerWeb.Guard.AuthGuard
+  end
+
   scope "/api/users", TimeManagerWeb do
     pipe_through :api
 
@@ -30,6 +34,24 @@ defmodule TimeManagerWeb.Router do
 
     get "/:userID", TimeTracking.Infrastructure.ClockController, :index
     post "/:userID", TimeTracking.Infrastructure.ClockController, :create
+  end
+
+  scope "/api/registration", TimeManagerWeb do
+    pipe_through :api
+
+    post "/", Accounts.Infrastructure.RegisterController, :register
+  end
+
+  scope "/api/auth", TimeManagerWeb do
+    pipe_through :api
+
+    post "/", Accounts.Infrastructure.AuthController, :login
+  end
+
+  scope "/api/auth", TimeManagerWeb do
+    pipe_through [:api, :authenticated]
+
+    get "/me", Accounts.Infrastructure.AuthController, :me
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
