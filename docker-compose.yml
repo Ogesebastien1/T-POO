@@ -11,12 +11,12 @@ services:
 
   server:
     build: 
-      context: ./Server
+      context: ./TimeManager
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
     volumes:
-      - ./Server:/app
+      - ./TimeManager:/app
     env_file:
       - .env
     depends_on:
