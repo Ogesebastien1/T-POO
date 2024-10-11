@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
+import Toaster from '@/components/ui/toast/Toaster.vue'
+import { toast } from '@/components/ui/toast/index.js'
 
 const clockedIn = ref(false)
 const loading = ref(false)
@@ -74,11 +76,17 @@ const handleClockedIn = () => {
   setTimeout(() => {
     clockedIn.value = !clockedIn.value
     loading.value = false
+    toast({
+      title: `You have successfully ${clockedIn.value ? 'clocked in' : 'clocked out'}`,
+      description: `You are now ${clockedIn.value ? 'in' : 'out'} of a work session`,
+      duration: 5000
+    })
   }, 1250)
 }
 </script>
 
 <template>
+  <Toaster />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
     <Card class="relative">
       <div class="flex flex-col items-center sm:absolute right-4 top-0" v-if="hasWorkingTime">
@@ -155,9 +163,7 @@ const handleClockedIn = () => {
         <Separator class="-mt-2 mb-4" />
         <ul class="space-y-4">
           <li class="flex flex-row items-start" v-for="activity in activities" :key="activity.type">
-            <div
-              class="-mt-1 w-8 h-8 rounded-full flex items-center justify-center"
-            >
+            <div class="-mt-1 w-8 h-8 rounded-full flex items-center justify-center">
               <ClockArrowDown class="w-4 h-4 text-primary" v-show="activity.type === 'Clock in'" />
               <ClockArrowUp class="w-4 h-4 text-primary" v-show="activity.type === 'Clock out'" />
             </div>
@@ -189,10 +195,7 @@ const handleClockedIn = () => {
                 }}
               </TableCell>
               <TableCell class="text-muted-foreground">
-                {{
-                  moment(time.end_time).diff(moment(time.start_time), 'hours') +
-                  ' hours'
-                }}
+                {{ moment(time.end_time).diff(moment(time.start_time), 'hours') + ' hours' }}
               </TableCell>
             </TableRow>
           </TableBody>
