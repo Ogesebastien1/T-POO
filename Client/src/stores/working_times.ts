@@ -3,12 +3,18 @@ import { defineStore } from 'pinia';
 
 const BACKEND_URL = 'http://localhost:4000';
 
+export type workingTimes = {
+  user_id: string;
+  start_time: string;
+  end_time: string;
+};
 export const useWorkingTimesStore = defineStore('workingTimes', {
   state: () => ({
     userId: '',
     workingTimes: [] as any[],
+    startTime: '',
+    endTime: '',
   }),
-
   actions: {
     async getWorkingTimes(userId: string, startTime: string, endTime: string) {
       try {
@@ -22,6 +28,7 @@ export const useWorkingTimesStore = defineStore('workingTimes', {
             },
           });
           this.workingTimes = data;
+          console.log(this.workingTimes);
       } catch (error) {
         console.error('Error fetching working times:', error);
       }
