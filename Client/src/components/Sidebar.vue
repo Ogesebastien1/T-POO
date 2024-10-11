@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, Home, LineChart, PanelLeft, Settings } from 'lucide-vue-next'
+import { Calendar, Home, UsersRound, LineChart, PanelLeft, Settings } from 'lucide-vue-next'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   DropdownMenu,
@@ -86,6 +86,21 @@ const mode = useColorMode()
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Analytics </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <a
+              href="/teams"
+              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+            >
+              <UsersRound class="h-5 w-5" />
+              <span class="sr-only">Teams</span>
+            </a>
+          </TooltipTrigger>
+          <TooltipContent side="right"> Teams </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </nav>

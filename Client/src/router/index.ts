@@ -33,6 +33,11 @@ const router = createRouter({
       name: 'settings',
       component: () => import('../views/Settings.vue')
     },
+    {
+      path: '/teams',
+      name: 'teams',
+      component: () => import('../views/Teams.vue')
+    },
     { path: '/workingTimes/:userID', component: WorkingTimes },
     { path: '/workingTime/:userid', component: WorkingTime },
     { path: '/workingTime/:userid/:workingtimeid', component: WorkingTime },
