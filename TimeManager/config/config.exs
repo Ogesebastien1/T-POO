@@ -26,11 +26,14 @@ config :time_manager, TimeManagerWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [json: TimeManagerWeb.ErrorJSON],
+    formats: [json: TimeManagerWeb.ErrorView],
     layout: false
   ],
   pubsub_server: TimeManager.PubSub,
-  live_view: [signing_salt: "nxSFlr1K"]
+  live_view: [signing_salt: "nxSFlr1K"],
+  secret_key_base: "secret"
+
+# config :time_manager, TimeManagerWeb.Accounts.Token, secret_key_base: "secret"
 
 # Configures the mailer
 #

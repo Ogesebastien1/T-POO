@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 import WorkingTimes from '../components/WorkingTimes.vue'
 import WorkingTime from '../components/WorkingTime.vue'
@@ -10,23 +9,39 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/auth/Login.vue')
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/auth/Register.vue')
+    },
+    {
+      path: '/',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue')
+    },
+    {
+      path: '/stats',
+      name: 'stats',
+      component: () => import('../views/StatsView.vue')
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/Settings.vue')
     },
     { path: '/workingTimes/:userID', component: WorkingTimes },
     { path: '/workingTime/:userid', component: WorkingTime },
     { path: '/workingTime/:userid/:workingtimeid', component: WorkingTime },
     { path: '/clock/:userid', component: ClockManager },
     { path: '/chartManager/:userid', component: ChartManager },
+      path: '/agenda',
+      name: 'agenda',
+      component: () => import('../views/Agenda.vue')
+    }
   ]
 })
 
