@@ -1,12 +1,73 @@
 <script setup lang="ts">
-import { ClockArrowUp, Loader2, CalendarCheck2, Clock } from 'lucide-vue-next'
+import { ClockArrowUp, Loader2, CalendarCheck2, Clock, ClockArrowDown } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ref } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
+import Separator from '@/components/ui/separator/Separator.vue'
+import moment from 'moment'
 
 const clockedIn = ref(false)
 const loading = ref(false)
+const hasWorkingTime = ref(true)
+
+const activities = [
+  {
+    type: 'Clock in',
+    time: 'Today, 08:00 AM'
+  },
+  {
+    type: 'Clock out',
+    time: 'Today, 12:00 PM'
+  },
+  {
+    type: 'Clock in',
+    time: 'Today, 13:00 PM'
+  },
+  {
+    type: 'Clock out',
+    time: 'Today, 17:00 PM'
+  },
+  {
+    type: 'Clock in',
+    time: 'Today, 18:00 PM'
+  }
+]
+
+const workingTimes = [
+  {
+    start_time: '2024-10-10 08:00:00',
+    end_time: '2024-10-10 20:00:00'
+  },
+  {
+    start_time: '2024-10-11 10:00:00',
+    end_time: '2024-10-11 15:00:00'
+  },
+  {
+    start_time: '2024-10-12 09:30:00',
+    end_time: '2024-10-12 18:00:00'
+  },
+  {
+    start_time: '2024-10-13 06:00:00',
+    end_time: '2024-10-13 22:00:00'
+  },
+  {
+    start_time: '2024-10-14 08:00:00',
+    end_time: '2024-10-14 20:00:00'
+  },
+  {
+    start_time: '2024-10-15 08:00:00',
+    end_time: '2024-10-15 20:00:00'
+  },
+  {
+    start_time: '2024-10-16 08:00:00',
+    end_time: '2024-10-16 20:00:00'
+  },
+  {
+    start_time: '2024-10-17 08:00:00',
+    end_time: '2024-10-17 20:00:00'
+  }
+]
 
 const handleClockedIn = () => {
   loading.value = true
@@ -20,7 +81,7 @@ const handleClockedIn = () => {
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
     <Card class="relative">
-      <div class="flex flex-col items-center sm:absolute right-4 top-0">
+      <div class="flex flex-col items-center sm:absolute right-4 top-0" v-if="hasWorkingTime">
         <Button
           v-if="!clockedIn"
           @click="handleClockedIn"
@@ -52,9 +113,11 @@ const handleClockedIn = () => {
       <CardContent>
         <CardDescription class="text-muted-foreground">
           {{
-            clockedIn
-              ? 'You are currently in a work session'
-              : 'What are you waiting for? Start working!'
+            hasWorkingTime
+              ? clockedIn
+                ? 'You are currently in a work session'
+                : 'What are you waiting for? Start working!'
+              : "I'm sorry but you don't have any working time today. If you think this is an error, please contact your manager."
           }}
         </CardDescription>
       </CardContent>
@@ -83,34 +146,54 @@ const handleClockedIn = () => {
     </div>
   </div>
 
-  <div class="mt-2">
+  <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
     <Card>
       <CardHeader>
         <CardTitle class="text-sm font-medium"> Recent activities </CardTitle>
       </CardHeader>
       <CardContent>
+        <Separator class="-mt-2 mb-4" />
+        <ul class="space-y-4">
+          <li class="flex flex-row items-start" v-for="activity in activities" :key="activity.type">
+            <div
+              class="-mt-1 w-8 h-8 rounded-full flex items-center justify-center"
+            >
+              <ClockArrowDown class="w-4 h-4 text-primary" v-show="activity.type === 'Clock in'" />
+              <ClockArrowUp class="w-4 h-4 text-primary" v-show="activity.type === 'Clock out'" />
+            </div>
+            <div class="flex flex-col">
+              <p class="text-sm font-medium text-primary">{{ activity.type }}</p>
+              <p class="text-xs text-muted-foreground">{{ activity.time }}</p>
+            </div>
+          </li>
+        </ul>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-sm font-medium"> Your next working times </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Separator class="-mt-2 mb-4" />
         <Table>
           <TableBody>
-            <TableRow>
-              <TableCell>Worked on project</TableCell>
+            <TableRow v-for="time in workingTimes.slice(0, 5)" :key="time.start_time">
               <TableCell>
-                <span class="text-muted-foreground">2 hours ago</span>
+                {{ moment(time.start_time).format('dddd') }}
               </TableCell>
-              <TableCell>10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Worked on project</TableCell>
-              <TableCell>
-                <span class="text-muted-foreground">2 hours ago</span>
+              <TableCell class="text-muted-foreground">
+                {{
+                  moment(time.start_time).format('HH:mm') +
+                  ' - ' +
+                  moment(time.end_time).format('HH:mm')
+                }}
               </TableCell>
-              <TableCell>10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Worked on project</TableCell>
-              <TableCell>
-                <span class="text-muted-foreground">2 hours ago</span>
+              <TableCell class="text-muted-foreground">
+                {{
+                  moment(time.end_time).diff(moment(time.start_time), 'hours') +
+                  ' hours'
+                }}
               </TableCell>
-              <TableCell>10</TableCell>
             </TableRow>
           </TableBody>
         </Table>
