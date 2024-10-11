@@ -23,7 +23,6 @@ const data = [
 
 <template>
     <div class="mx-auto grid w-full gap-2">
-      <h1 class="text-2xl font-semibold mb-3 mt-5 ml-5">Statistics</h1>
       <AreaChart
         :data="data"
         :colors="['blue', 'pink', 'orange', 'red']"
