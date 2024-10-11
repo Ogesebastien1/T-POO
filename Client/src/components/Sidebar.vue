@@ -14,7 +14,30 @@ import { useColorMode } from '@vueuse/core'
 import { Icon } from '@iconify/vue'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { ref } from 'vue'
+import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
+import { cn } from '@/lib/utils'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
+const employees = [
+  { value: 'Jean Martin', label: 'Jean Martin' },
+  { value: 'John Doe', label: 'John Doe' },
+  { value: 'Jane Doe', label: 'Jane Doe' },
+  { value: 'John Smith', label: 'John Smith' },
+  { value: 'Jane Smith', label: 'Jane Smith' }
+]
+
+const open = ref(false)
+const value = ref('')
 const mode = useColorMode()
 </script>
 
@@ -36,7 +59,7 @@ const mode = useColorMode()
         </Tooltip>
       </TooltipProvider>
 
-            <TooltipProvider>
+      <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
             <a
@@ -113,7 +136,60 @@ const mode = useColorMode()
           </nav>
         </SheetContent>
       </Sheet>
+
       <div class="relative flex items-center gap-4 ml-auto">
+        <Popover v-model:open="open">
+          <PopoverTrigger as-child>
+            <Button
+              variant="outline"
+              role="combobox"
+              :aria-expanded="open"
+              class="w-[200px] justify-between"
+            >
+              {{
+                value
+                  ? employees.find((employee) => employee.value === value)?.label
+                  : 'Choose employee...'
+              }}
+              <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent class="w-[200px] p-0">
+            <Command>
+              <CommandInput class="h-9" placeholder="Search employee..." />
+              <CommandEmpty>
+                No employees found
+              </CommandEmpty>
+              <CommandList>
+                <CommandGroup>
+                  <CommandItem
+                    v-for="framework in employees"
+                    :key="framework.value"
+                    :value="framework.value"
+                    @select="
+                      (ev) => {
+                        if (typeof ev.detail.value === 'string') {
+                          value = ev.detail.value
+                        }
+                        open = false
+                      }
+                    "
+                  >
+                    {{ framework.label }}
+                    <Check
+                      :class="
+                        cn(
+                          'ml-auto h-4 w-4',
+                          value === framework.value ? 'opacity-100' : 'opacity-0'
+                        )
+                      "
+                    />
+                  </CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full h-[2.5rem] w-[2.5rem]">
@@ -127,7 +203,9 @@ const mode = useColorMode()
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>
+              <a href="/settings">Settings</a>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Logout</DropdownMenuItem>
           </DropdownMenuContent>

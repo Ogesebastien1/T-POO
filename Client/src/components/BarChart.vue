@@ -15,6 +15,7 @@ const data = [
 <template>
     <div class="mx-auto grid w-full gap-2">
     <BarChart
+    title="Monthly Sales"
         :data="data"
         index="name"
         :categories="['total', 'predicted']"
