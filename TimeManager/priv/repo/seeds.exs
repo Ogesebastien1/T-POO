@@ -28,7 +28,7 @@ alias TimeManager.TimeTracking.Application.{ManageClockService, ManageWorkingTim
   email: "test3@test3.com"
 })
 
-# Insert clock 
+# Insert clock
 ManageClockService.create_clock(%{
   "userID" => user1.id,
   "clock" => %{
@@ -53,12 +53,28 @@ ManageClockService.create_clock(%{
   }
 })
 
-# Insert working time 
+# Insert working time
 ManageWorkingTimeService.create_working_time(%{
   "userID" => user1.id,
   "working_time" => %{
     "end" => ~N[2024-10-09 17:00:00],
-    "start" => ~N[2024-10-09 09:00:00]    
+    "start" => ~N[2024-10-09 09:00:00]
+  }
+})
+
+ManageWorkingTimeService.create_working_time(%{
+  "userID" => user1.id,
+  "working_time" => %{
+    "end" => ~N[2024-10-10 17:00:00],
+    "start" => ~N[2024-10-10 09:00:00]
+  }
+})
+
+ManageWorkingTimeService.create_working_time(%{
+  "userID" => user1.id,
+  "working_time" => %{
+    "end" => ~N[2024-10-11 17:00:00],
+    "start" => ~N[2024-10-11 09:00:00]
   }
 })
 
@@ -73,7 +89,7 @@ ManageWorkingTimeService.create_working_time(%{
 ManageWorkingTimeService.create_working_time(%{
   "userID" => user3.id,
   "working_time" => %{
-    "end" => ~N[2024-10-09 17:00:00],  
+    "end" => ~N[2024-10-09 17:00:00],
     "start" => ~N[2024-10-09 09:00:00]
   }
 })
