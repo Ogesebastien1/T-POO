@@ -38,6 +38,7 @@ const router = createRouter({
     { path: '/workingTime/:userid/:workingtimeid', component: WorkingTime },
     { path: '/clock/:userid', component: ClockManager },
     { path: '/chartManager/:userid', component: ChartManager },
+    {
       path: '/agenda',
       name: 'agenda',
       component: () => import('../views/Agenda.vue')
