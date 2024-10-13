@@ -56,7 +56,7 @@ jobs:
                 Port ${{ secrets.SSH_PORT }}
                 IdentityFile $HOME/.ssh/id_rsa
                 StrictHostKeyChecking no
-            END
+            EOF
 
       - name: add SSH host key to known_hosts
         run: |
@@ -64,7 +64,9 @@ jobs:
           ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> $HOME/.ssh/known_hosts
 
       - name: connect and pull
-        run: ssh vps "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d"
+        run: |
+            ssh vps 
+            cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d
         
       - name: cleanup
         run: rm -rf ~/.ssh
