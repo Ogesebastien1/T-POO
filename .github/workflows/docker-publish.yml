@@ -27,8 +27,8 @@ jobs:
             ls -l ./Client/Dockerfile
         
             # Construction et publication de l'image
-            docker build ./Client --tag ghcr.io/${{ github.actor }}/timemanager-client:latest
-            docker push ghcr.io/${{ github.actor }}/timemanager-client:latest
+            docker build ./Client --tag ghcr.io/ogesebastien1/timemanager-client:latest
+            docker push ghcr.io/ogesebastien1/timemanager-client:latest
 
   deploy:
     needs: publish
