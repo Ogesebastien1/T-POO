@@ -7,12 +7,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ogesebastien1/timemanager:latest 
-  GH_SECRET: ${{ secrets.GH_SECRET }}
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_PORT: ${{ secrets.SSH_PORT }}
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  WORK_DIR: ${{ secrets.WORK_DIR }}
 
 jobs:
   publish:
@@ -51,6 +45,15 @@ jobs:
                  cd ${{ secrets.WORK_DIR }}
                  echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
                  docker pull ghcr.io/ogesebastien1/timemanager-client:latest
-                 docker compose up -d
+                  if [ -f docker-compose.yml ]; then
+                    export PGHOST=${{ secrets.PGHOST }}
+                    export PGUSER=${{ secrets.PGUSER }}
+                    export PGPASSWORD=${{ secrets.PGPASSWORD }}
+                    export PGDATABASE=${{ secrets.PGDATABASE }}
+                    export PGPORT=${{ secrets.PGPORT }}
+                    docker compose up -d
+                 else
+                    echo "docker-compose.yml not found in ${{ secrets.WORK_DIR }}"
+                    exit 1
       - name: cleanup
         run: rm -rf ~/.ssh
