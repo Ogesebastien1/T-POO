@@ -38,18 +38,18 @@ jobs:
     steps:
       - name: install ssh keys
         run: | 
-            mkdir -p ~/.ssh/
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            cat >>~/.ssh/config <<END
+            mkdir -p .ssh
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > .ssh/id_rsa
+            chmod 600 .ssh/id_rsa
+            cat >>.ssh/config <<END
             Host vps
                 HostName ${{ secrets.SSH_HOST }}
                 User ${{ secrets.SSH_USER }}
                 Port ${{ secrets.SSH_PORT }}
-                IdentityFile ~/.ssh/id_rsa
+                IdentityFile .ssh/id_rsa
                  StrictHostKeyChecking no
             END
-            ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+            ssh-keyscan -H ${{ secrets.SSH_HOST }} >> .ssh/known_hosts
       - name: connect and pull
         run: ssh vps "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d"
       - name: cleanup
