@@ -38,7 +38,6 @@ jobs:
     steps:
       - name: install ssh keys
         run: |
-          sudo apt-get install openssh-client
           find / -name ".ssh" 2>/dev/null
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > /home/runner/.ssh
