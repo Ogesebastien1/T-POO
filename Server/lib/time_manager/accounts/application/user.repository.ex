@@ -5,7 +5,7 @@ defmodule TimeManager.Accounts.Application.UserRepository do
     Application.get_env(:time_manager, @self)
   end
 
-  @callback insert(user :: User.t()) :: :ok | :error
+  @callback insert(user :: UserModel.t()) :: :ok | :error
 
   def insert(user), do: adapter().insert(user)
 end

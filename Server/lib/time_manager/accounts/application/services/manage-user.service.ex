@@ -1,7 +1,7 @@
 defmodule TimeManager.Accounts.Application.ManageUserService do
   use TimeManager, :application_service
 
-  alias TimeManager.Accounts.{User, Infrastructure.UserRepository}
+  alias TimeManager.Accounts.{UserModel, Infrastructure.UserRepository}
 
   def get_users() do
     UserRepository.get_all()
@@ -22,8 +22,8 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
   end
 
   def create_user(params) do
-    %User{}
-    |> User.changeset(params)
+    %UserModel{}
+    |> UserModel.changeset(params)
     |> TimeManager.Accounts.Application.UserRepository.insert()
   end
 
