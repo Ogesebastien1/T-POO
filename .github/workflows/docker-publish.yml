@@ -20,15 +20,15 @@ jobs:
           echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build and Publish
         run: |
-            # Vérifier si le répertoire Client existe
-            ls -l ./Client
+          # Vérifier si le répertoire Client existe
+          ls -l ./Client
         
-            # Vérifier si le Dockerfile existe dans le répertoire Client
-            ls -l ./Client/Dockerfile
+          # Vérifier si le Dockerfile existe dans le répertoire Client
+          ls -l ./Client/Dockerfile
         
-            # Construction et publication de l'image
-            docker build ./Client --tag ghcr.io/ogesebastien1/timemanager-client:latest
-            docker push ghcr.io/ogesebastien1/timemanager-client:latest
+          # Construction et publication de l'image
+          docker build ./Client --tag ghcr.io/ogesebastien1/timemanager-client:latest
+          docker push ghcr.io/ogesebastien1/timemanager-client:latest
 
   deploy:
     needs: publish
@@ -38,28 +38,19 @@ jobs:
     steps:
       - name: install ssh keys
         run: | 
-             echo "Répertoire personnel : $HOME"
-             ls -l $HOME
+          mkdir -p /home/runner/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_rsa
+          chmod 600 /home/runner/.ssh/id_rsa
+          cat >>/home/runner/.ssh/config <<END
+            Host vps
+                HostName ${{ secrets.SSH_HOST }}
+                User ${{ secrets.SSH_USER }}
+                Port ${{ secrets.SSH_PORT }}
+                IdentityFile $HOME/.ssh/id_rsa
+                StrictHostKeyChecking no
+            END
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> /home/runner/.ssh/known_hosts
 
-             mkdir -p $HOME/.ssh
-             echo "Répertoire .ssh créé."
-
-             echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-             echo "Clé privée ajoutée."
-
-             # Changer les permissions de la clé privée
-             chmod 600 $HOME/.ssh/id_rsa
-
-             # Configurer SSH
-             cat >>$HOME/.ssh/config <<END
-                Host vps
-                    HostName ${{ secrets.SSH_HOST }}
-                    User ${{ secrets.SSH_USER }}
-                    Port ${{ secrets.SSH_PORT }}
-                    IdentityFile $HOME/.ssh/id_rsa
-                    StrictHostKeyChecking no
-                END
-             ssh-keyscan -H ${{ secrets.SSH_HOST }} >> $HOME/.ssh/known_hosts
       - name: connect and pull
         run: ssh vps "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d"
       - name: cleanup
