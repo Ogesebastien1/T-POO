@@ -40,33 +40,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install ssh keys
-        run: |
-          mkdir -p $HOME/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          chmod 600 $HOME/.ssh/id_rsa
-          touch $HOME/.ssh/config
-
-      - name: configure SSH client
-        run: |
-          cat <<END > $HOME/.ssh/config
-            Host vps
-                HostName ${{ secrets.SSH_HOST }}
-                User ${{ secrets.SSH_USER }}
-                Port ${{ secrets.SSH_PORT }}
-                IdentityFile $HOME/.ssh/id_rsa
-                StrictHostKeyChecking no
-            EOF
-
-      - name: add SSH host key to known_hosts
-        run: |
-          touch $HOME/.ssh/known_hosts
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> $HOME/.ssh/known_hosts
-
       - name: connect and pull
-        run: |
-            ssh vps 
-            cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            port: ${{ secrets.SSH_PORT }}
+            script: |
+              cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d
         
       - name: cleanup
         run: rm -rf ~/.ssh
