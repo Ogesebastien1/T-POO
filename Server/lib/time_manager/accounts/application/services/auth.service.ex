@@ -1,7 +1,9 @@
-defmodule TimeManager.Accounts.Applications.AuthService do
+defmodule TimeManager.Accounts.Application.AuthService do
   use TimeManager, :application_service
 
-  alias TimeManager.Accounts.{Infrastructure.UserRepository, Application.PasswordHasher}
+  alias TimeManager.Accounts.Infrastructure.UserRepository
+  alias TimeManager.Accounts.Application.{ManageUserService, PasswordHasher, Token}
+
   alias PasswordHasher
 
   def login(%{"email" => email, "password" => password}) do
@@ -11,6 +13,13 @@ defmodule TimeManager.Accounts.Applications.AuthService do
 
       user ->
         authenticate_with_password(user, password)
+    end
+  end
+
+  def auth_with_token(token) do
+    with {:ok, data} <- Token.verify(token),
+         {:ok, user} = ManageUserService.get_user_by_id(data.id) do
+      {:ok, user}
     end
   end
 

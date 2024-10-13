@@ -1,14 +1,14 @@
 defmodule TimeManager.TimeTracking.WorkingTime do
   use TimeManager, :domain_model
 
-  alias TimeManager.Accounts.User
+  alias TimeManager.Accounts.UserModel
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "working_times" do
     field(:start_time, :utc_datetime)
     field(:end_time, :utc_datetime)
-    belongs_to(:user, User)
+    belongs_to(:user, UserModel)
 
     timestamps(type: :utc_datetime)
   end

@@ -31,3 +31,8 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+# Dependency Injection for tests :
+
+config :time_manager,
+       TimeManager.Accounts.Application.UserRepository,
+       TimeManager.Accounts.Infrastructure.UserRepository

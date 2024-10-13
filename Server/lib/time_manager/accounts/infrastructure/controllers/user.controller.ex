@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   use TimeManagerWeb, :controller
-  alias TimeManager.Accounts.{User, Application.ManageUserService, Infrastructure.UserPresenter}
+  alias TimeManager.Accounts.{UserModel, Application.ManageUserService, Infrastructure.UserPresenter}
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -35,7 +35,7 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- ManageUserService.create_user(user_params) do
+    with {:ok, %UserModel{} = user} <- ManageUserService.create_user(user_params) do
       conn
       |> render_result(user, :created)
     end

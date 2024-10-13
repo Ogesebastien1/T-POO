@@ -1,9 +1,9 @@
 defmodule TimeManagerWeb.Accounts.Infrastructure.AuthController do
   use TimeManagerWeb, :controller
 
-  alias TimeManager.Accounts.{Infrastructure.UserPresenter, Applications.AuthService}
+  alias TimeManager.Accounts.{Infrastructure.UserPresenter, Application.AuthService}
 
-  action_fallback TimeManagerWeb.FallbackController
+  action_fallback(TimeManagerWeb.FallbackController)
 
   def login(conn, data) do
     with {:ok, user} <- AuthService.login(data) do
@@ -19,9 +19,7 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.AuthController do
 
   def me(conn, _params) do
     conn
-    |> put_status(:ok)
-    |> put_view(UserPresenter)
-    |> render(:present_auth_user, user: conn.assigns.current_user)
+    |> render_result(conn.assigns.current_user, :ok)
   end
 
   defp render_result(conn, result, status) do
