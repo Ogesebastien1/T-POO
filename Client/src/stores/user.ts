@@ -15,6 +15,8 @@ export type user = {
   id: number;
   username: string;
   email: string;
+  is_manager: boolean;
+  is_admin: boolean;
 };
 
 export type createdUser = {

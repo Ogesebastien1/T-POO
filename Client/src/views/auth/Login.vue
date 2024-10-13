@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 import { toast } from '@/components/ui/toast/index.js'
+import { useAuthStore } from '@/stores'
+
+const authStore = useAuthStore()
 
 const registerSchema = toTypedSchema(
   z.object({
@@ -20,11 +23,7 @@ const form = useForm({
 })
 
 const onSubmitLogin = form.handleSubmit(async (values) => {
-  toast({
-    title: `Login user ${values.email}...`,
-    description: JSON.stringify(values),
-    duration: 5000
-  })
+  authStore.fakeLogin(values.email)
 })
 </script>
 

@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { Calendar, Home, UsersRound, LineChart, PanelLeft, Settings } from 'lucide-vue-next'
+import {
+  Calendar,
+  Home,
+  UsersRound,
+  LineChart,
+  PanelLeft,
+  Settings,
+  Network
+} from 'lucide-vue-next'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   DropdownMenu,
@@ -16,7 +24,14 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { ref } from 'vue'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { cn } from '@/lib/utils'
 import {
   Command,
@@ -35,6 +50,11 @@ const employees = [
   { value: 'John Smith', label: 'John Smith' },
   { value: 'Jane Smith', label: 'Jane Smith' }
 ]
+import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores'
+
+const route = useRoute()
+const authStore = useAuthStore()
 
 const open = ref(false)
 const value = ref('')
@@ -47,12 +67,19 @@ const mode = useColorMode()
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
-            <a
-              href="/"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Home class="h-5 w-5" />
-              <span class="sr-only">Dashboard</span>
+            <a href="/">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath === '/'
+                }"
+              >
+                <Home class="h-5 w-5" />
+                <span class="sr-only">Dashboard</span>
+              </Button>
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Dashboard </TooltipContent>
@@ -62,12 +89,19 @@ const mode = useColorMode()
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
-            <a
-              href="/agenda"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Calendar class="h-5 w-5" />
-              <span class="sr-only">Agenda</span>
+            <a href="/agenda">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath.includes('/agenda')
+                }"
+              >
+                <Calendar class="h-5 w-5" />
+                <span class="sr-only">Agenda</span>
+              </Button>
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Agenda </TooltipContent>
@@ -77,30 +111,66 @@ const mode = useColorMode()
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
-            <a
-              href="/stats"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <LineChart class="h-5 w-5" />
-              <span class="sr-only">Analytics</span>
+            <a href="/analytics">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath.includes('/analytics')
+                }"
+              >
+                <LineChart class="h-5 w-5" />
+                <span class="sr-only">Analytics</span>
+              </Button>
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Analytics </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      
+
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
-            <a
-              href="/teams"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <UsersRound class="h-5 w-5" />
-              <span class="sr-only">Teams</span>
+            <a href="/teams">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath.includes('/teams')
+                }"
+              >
+                <UsersRound class="h-5 w-5" />
+                <span class="sr-only">Teams</span>
+              </Button>
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Teams </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <a href="/employees">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath.includes('/employees')
+                }"
+              >
+                <Network class="h-5 w-5" />
+                <span class="sr-only">Employees</span>
+              </Button>
+            </a>
+          </TooltipTrigger>
+          <TooltipContent side="right"> Employees </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </nav>
@@ -108,12 +178,19 @@ const mode = useColorMode()
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger as-child>
-            <a
-              href="/settings"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings class="h-5 w-5" />
-              <span class="sr-only">Settings</span>
+            <a href="/settings">
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="{
+                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                    route.fullPath.includes('/settings')
+                }"
+              >
+                <Settings class="h-5 w-5" />
+                <span class="sr-only">Settings</span>
+              </Button>
             </a>
           </TooltipTrigger>
           <TooltipContent side="right"> Settings </TooltipContent>
@@ -142,69 +219,123 @@ const mode = useColorMode()
               Dashboard
             </a>
             <a
-              href="/stats"
+              href="/analytics"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
               <LineChart class="h-5 w-5" />
               Analytics
             </a>
+            <a
+              href="/agenda"
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Calendar class="h-5 w-5" />
+              Agenda
+            </a>
+            <a
+              href="/teams"
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <UsersRound class="h-5 w-5" />
+              Teams
+            </a>
+            <a
+              href="/settings"
+              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <Settings class="h-5 w-5" />
+              Settings
+            </a>
           </nav>
         </SheetContent>
       </Sheet>
-
-      <div class="relative flex items-center gap-4 ml-auto">
-        <Popover v-model:open="open">
-          <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              role="combobox"
-              :aria-expanded="open"
-              class="w-[200px] justify-between"
+      <Breadcrumb class="hidden md:flex">
+        <BreadcrumbList>
+          <BreadcrumbItem v-if="route.fullPath === '/'">
+            <BreadcrumbPage>Dashboard</BreadcrumbPage>
+          </BreadcrumbItem>
+          <BreadcrumbItem
+            v-else
+            v-for="(segment, index) in route.fullPath.split('/').filter(Boolean)"
+            :key="index"
+          >
+            <BreadcrumbLink
+              as-child
+              v-if="index < route.fullPath.split('/').filter(Boolean).length - 1"
             >
-              {{
-                value
-                  ? employees.find((employee) => employee.value === value)?.label
-                  : 'Choose employee...'
-              }}
-              <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent class="w-[200px] p-0">
-            <Command>
-              <CommandInput class="h-9" placeholder="Search employee..." />
-              <CommandEmpty>
-                No employees found
-              </CommandEmpty>
-              <CommandList>
-                <CommandGroup>
-                  <CommandItem
-                    v-for="framework in employees"
-                    :key="framework.value"
-                    :value="framework.value"
-                    @select="
-                      (ev) => {
-                        if (typeof ev.detail.value === 'string') {
-                          value = ev.detail.value
+              <a
+                :href="`/${route.fullPath
+                  .split('/')
+                  .slice(1, index + 2)
+                  .join('/')}`"
+                >{{ segment.charAt(0).toUpperCase() + segment.slice(1) }}</a
+              >
+            </BreadcrumbLink>
+            <BreadcrumbPage v-else>{{
+              segment.charAt(0).toUpperCase() + segment.slice(1)
+            }}</BreadcrumbPage>
+            <BreadcrumbSeparator
+              v-if="index < route.fullPath.split('/').filter(Boolean).length - 1"
+            />
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div class="relative flex items-center gap-4 ml-auto">
+        <div
+          class="hidden sm:block"
+          v-show="authStore?.isLogged && (authStore?.user?.is_admin || authStore?.user?.is_manager)"
+        >
+          <Popover v-model:open="open">
+            <PopoverTrigger as-child>
+              <Button
+                variant="outline"
+                role="combobox"
+                :aria-expanded="open"
+                class="w-[200px] justify-between"
+              >
+                {{
+                  value
+                    ? employees.find((employee) => employee.value === value)?.label
+                    : 'Choose employee...'
+                }}
+                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent class="w-[200px] p-0">
+              <Command>
+                <CommandInput class="h-9" placeholder="Search employee..." />
+                <CommandEmpty> No employees found </CommandEmpty>
+                <CommandList>
+                  <CommandGroup>
+                    <CommandItem
+                      v-for="framework in employees"
+                      :key="framework.value"
+                      :value="framework.value"
+                      @select="
+                        (ev) => {
+                          if (typeof ev.detail.value === 'string') {
+                            value = ev.detail.value
+                          }
+                          open = false
                         }
-                        open = false
-                      }
-                    "
-                  >
-                    {{ framework.label }}
-                    <Check
-                      :class="
-                        cn(
-                          'ml-auto h-4 w-4',
-                          value === framework.value ? 'opacity-100' : 'opacity-0'
-                        )
                       "
-                    />
-                  </CommandItem>
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+                    >
+                      {{ framework.label }}
+                      <Check
+                        :class="
+                          cn(
+                            'ml-auto h-4 w-4',
+                            value === framework.value ? 'opacity-100' : 'opacity-0'
+                          )
+                        "
+                      />
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full h-[2.5rem] w-[2.5rem]">
@@ -222,7 +353,14 @@ const mode = useColorMode()
               <a href="/settings">Settings</a>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem
+              @click="
+                () => {
+                  authStore.fakeLogout()
+                }
+              "
+              >Logout</DropdownMenuItem
+            >
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { DataTable } from '@/components/data-table'
+import { teamsColumns } from '@/components/data-table/columns'
+import { ref } from 'vue'
+
+const teams = ref([])
 </script>
 
 <template>
-  <div class="mx-auto grid w-full gap-2">
-    <h1 class="-mt-4 text-2xl font-semibold mb-4">Teams</h1>
-  </div>
+  <DataTable :show-toolbar="true" :data="teams" :columns="teamsColumns" />
 </template>
