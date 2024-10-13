@@ -52,13 +52,13 @@ jobs:
           touch $HOME/.ssh/config
 
           cat <<END > $HOME/.ssh/config
-            Host vps
+                Host vps
                 HostName ${{ secrets.SSH_HOST }}
                 User ${{ secrets.SSH_USER }}
                 Port ${{ secrets.SSH_PORT }}
                 IdentityFile $HOME/.ssh/id_rsa
                 StrictHostKeyChecking no
-            END
+
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> $HOME/.ssh/known_hosts
 
       - name: connect and pull
