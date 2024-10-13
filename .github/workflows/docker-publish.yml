@@ -38,11 +38,12 @@ jobs:
     steps:
       - name: install ssh keys
         run: |
-          sudo apt-get update
-          sudo apt-get upgrade
           sudo apt-get install openssh-client
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          ls -l ~/
+          ls -l /home/runner
+          ls -l /home/runner/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > /home/runner/.ssh
       - name: connect and pull
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -p ${{secrets.SSH_PORT}}  "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && exit"
       - name: cleanup
