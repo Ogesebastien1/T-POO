@@ -19,9 +19,7 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.AuthController do
 
   def me(conn, _params) do
     conn
-    |> put_status(:ok)
-    |> put_view(UserPresenter)
-    |> render(:present_auth_user, user: conn.assigns.current_user)
+    |> render_result(conn.assigns.current_user, :ok)
   end
 
   defp render_result(conn, result, status) do

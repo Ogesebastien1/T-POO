@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.Guard.AuthGuard do
   import Plug.Conn
-  alias TimeManager.Accounts.Application.{Token, ManageUserService}
+  alias TimeManager.Accounts.Application.AuthService
 
   def init(opts) do
     opts
@@ -8,9 +8,7 @@ defmodule TimeManagerWeb.Guard.AuthGuard do
 
   def call(conn, _opts) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
-         {:ok, data} <- Token.verify(token) do
-      {:ok, user} = ManageUserService.get_user_by_id(data.id)
-
+         {:ok, user} <- AuthService.auth_with_token(token) do
       conn |> assign(:current_user, user)
     else
       _ ->
