@@ -19,7 +19,7 @@ jobs:
         run: |
           echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build and Publish
-      run: |
+        run: |
             # Vérifier si le répertoire Client existe
             ls -l ./Client
         
