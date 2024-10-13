@@ -7,17 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ogesebastien1/timemanager:latest 
-  PGUSER: ${{ secrets.GH_SECRET }}
-  PGPASSWORD: ${{ secrets.PGPASSWORD }}
-  PGDATABASE: ${{ secrets.PGDATABASE }}
-  PGPORT: ${{ secrets.PGPORT }}
-  PGHOST: ${{ secrets.PGHOST }}
-  GH_SECRET: ${{ secrets.GH_SECRET }}
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_PORT: ${{ secrets.SSH_PORT }}
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  WORK_DIR: ${{ secrets.WORK_DIR }}
+
 
 jobs:
   publish:
