@@ -43,10 +43,10 @@ jobs:
           chmod 600 /home/runner/.ssh/id_rsa
           cat <<END > /home/runner/.ssh/config
             Host vps
-                HostName \${{ secrets.SSH_HOST }}
-                User \${{ secrets.SSH_USER }}
-                Port \${{ secrets.SSH_PORT }}
-                IdentityFile \$HOME/.ssh/id_rsa
+                HostName ${{ secrets.SSH_HOST }}
+                User ${{ secrets.SSH_USER }}
+                Port ${{ secrets.SSH_PORT }}
+                IdentityFile /home/runner/.ssh/id_rsa
                 StrictHostKeyChecking no
             END
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> /home/runner/.ssh/known_hosts
