@@ -37,11 +37,18 @@ jobs:
 
     steps:
       - name: install ssh keys
-        run: |
-          find / -name ".ssh" 2>/dev/null
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > /home/runner/.ssh
+        run: | 
+            mkdir -p ~/.ssh/
+            echo "$SSH_KEY" > ~/.ssh/staging.key
+            chmod 600 ~/.ssh/staging.key
+            cat >>~/.ssh/config <<END
+            Host staging
+                HostName ${{ secrets.SSH_HOST }}
+                User ${{ secrets.SSH_USER }}
+                IdentityFile ~/.ssh/staging.key
+                StrictHostKeyChecking no
+            END
       - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -p ${{secrets.SSH_PORT}}  "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && exit"
+        run: ssh -p ${{ secrets.SSH_PORT }} staging "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d"
       - name: cleanup
         run: rm -rf ~/.ssh
