@@ -7,6 +7,17 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ogesebastien1/timemanager:latest 
+  GH_SECRET: ${{ secrets.GH_SECRET }}
+  PGDATABASE: ${{ secrets.PGDATABASE }}
+  PGHOST: ${{ secrets.PGHOST }}
+  PGPASSWORD: ${{ secrets.PGPASSWORD }}
+  PGPORT: ${{ secrets.PGPORT }}
+  PGUSER: ${{ secrets.PGUSER }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_PORT: ${{ secrets.SSH_PORT }}
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  WORK_DIR: ${{ secrets.WORK_DIR }}
 
 jobs:
   publish:
@@ -42,6 +53,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_rsa
           chmod 600 /home/runner/.ssh/id_rsa
           touch /home/runner/.ssh/config
+
           cat <<END > /home/runner/.ssh/config
             Host vps
                 HostName ${{ secrets.SSH_HOST }}
@@ -50,6 +62,7 @@ jobs:
                 IdentityFile /home/runner/.ssh/id_rsa
                 StrictHostKeyChecking no
             END
+          cat /home/runner/.ssh/config
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> /home/runner/.ssh/known_hosts
 
       - name: connect and pull
