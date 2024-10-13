@@ -20,12 +20,12 @@ jobs:
 
     - name: Copy files to VPS
       run: |
-        scp -o StrictHostKeyChecking=no -r ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/timeManager
+         scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -r ./ ${{ secrets.SSH_USER}}@${{ secrets.SSH_HOST }}:/timeManager
 
     - name: SSH and deploy
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd /timeManager
-          
+
           docker-compose up --build -d
         EOF
