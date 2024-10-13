@@ -39,9 +39,7 @@ jobs:
       - name: install ssh keys
         run: |
           sudo apt-get install openssh-client
-          ls -l ~/
-          ls -l /home/runner
-          ls -l /home/runner/.ssh
+          find / -name ".ssh" 2>/dev/null
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > /home/runner/.ssh
       - name: connect and pull
