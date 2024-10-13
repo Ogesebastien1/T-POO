@@ -47,6 +47,7 @@ jobs:
                 User ${{ secrets.SSH_USER }}
                 Port ${{ secrets.SSH_PORT }}
                 IdentityFile ~/.ssh/id_rsa
+                 StrictHostKeyChecking no
             END
             ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: connect and pull
