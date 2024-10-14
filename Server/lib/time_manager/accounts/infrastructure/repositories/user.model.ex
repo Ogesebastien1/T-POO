@@ -1,4 +1,4 @@
-defmodule TimeManager.Accounts.User do
+defmodule TimeManager.Accounts.UserModel do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.Application.PasswordHasher

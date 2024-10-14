@@ -50,6 +50,8 @@ defmodule TimeManager.MixProject do
       {:bandit, "~> 1.5"},
       {:bcrypt_elixir, "~> 3.0"},
       {:cors_plug, "~> 3.0"}
+      {:ecto_sqlite3, "~> 0.16"},
+      {:bodyguard, "~> 2.4"}
     ]
   end
 

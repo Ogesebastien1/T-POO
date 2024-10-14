@@ -1,17 +1,17 @@
 defmodule TimeManager.Accounts.Infrastructure.UserRepository do
   use TimeManager, :repository
 
-  alias TimeManager.Accounts.User
+  alias TimeManager.Accounts.UserModel
 
   import UUIDValidator
 
   def get_all() do
-    Repo.all(User)
+    Repo.all(UserModel)
   end
 
   def get_by_id(id) do
     with {:ok, id} <- valide_uuid(id) do
-      Repo.get(User, id)
+      Repo.get(UserModel, id)
     else
       _ -> nil
     end
@@ -23,11 +23,11 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
   end
 
   def get_by_email_and_username(email, username) do
-    Repo.get_by(User, email: email, username: username)
+    Repo.get_by(UserModel, email: email, username: username)
   end
 
   def get_by_email(email) do
-    Repo.get_by(User, email: email)
+    Repo.get_by(UserModel, email: email)
   end
 
   # TODO: changeset from the service..

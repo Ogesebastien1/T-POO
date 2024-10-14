@@ -1,7 +1,10 @@
 defmodule TimeManagerWeb.RegisterControllerTest do
-  use TimeManagerWeb.ConnCase
+  use TimeManagerWeb.ConnCase, async: true
   alias TimeManager.Accounts.Infrastructure.UserRepository
   alias TimeManagerWeb.Test.UserBuilder
+
+  @moduletag :registration
+  @moduletag :integration
 
   test "As an unregistered user, I can register with a username and an email", %{conn: conn} do
     conn = register(conn, UserBuilder.user())
