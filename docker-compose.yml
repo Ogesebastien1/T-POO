@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     image: ghcr.io/ogesebastien1/timemanager-client:latest
     ports:
-      - "4173:4173"
+      - "5173:5173"
     env_file:
       - .env
 
