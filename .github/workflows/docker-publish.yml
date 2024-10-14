@@ -43,10 +43,12 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             port: ${{ secrets.SSH_PORT }}
             script: |
+                 docker system prune 
+                 docker rm $(docker ps -a -q)
                  cd ${{ secrets.WORK_DIR }}
                  echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
                  docker pull ghcr.io/ogesebastien1/timemanager-client:latest
-                 docker system prune 
+               
                  docker compose up -d
       - name: cleanup
         run: rm -rf ~/.ssh
