@@ -1,6 +1,5 @@
 #!/bin/sh
 
-cd /app
 mix deps.get
 mix ecto.create
 mix ecto.migrate
