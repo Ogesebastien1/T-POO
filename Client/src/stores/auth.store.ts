@@ -1,13 +1,25 @@
 import { defineStore } from 'pinia'
-import type { user } from './user'
+import type { UserType } from '@/types'
 import { router } from '../router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
-    user: JSON.parse(localStorage.getItem('user') || 'null') as user | null,
+    user: JSON.parse(localStorage.getItem('user') || 'null') as UserType | null,
     isLogged: localStorage.getItem('token') ? true : false
   }),
+
+  getters: {
+    isLoggedIn: (state): boolean => state.isLogged,
+    hasRole: (state) => (role: 'admin' | 'manager') => {
+      if (!state.user) return false
+      if (role === 'admin') return state.user.is_admin
+      if (role === 'manager') return state.user.is_manager
+    },
+    hasAnyRole: (state) => state.user?.is_admin || state.user?.is_manager,
+    isAdmin: (state) => state.user?.is_admin || false,
+    isManager: (state) => state.user?.is_manager || false
+  },
 
   actions: {
     fakeLogin(email: string) {

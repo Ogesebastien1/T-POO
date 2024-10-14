@@ -6,8 +6,7 @@ import { ref } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
-import Toaster from '@/components/ui/toast/Toaster.vue'
-import { toast } from '@/components/ui/toast/index.js'
+import { toast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores'
 
 const authStore = useAuthStore()
@@ -89,54 +88,60 @@ const handleClockedIn = () => {
 </script>
 
 <template>
-  <Toaster />
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
     <Card class="relative">
       <CardHeader>
         <CardTitle class="text-sm font-medium"> Hello, {{ authStore.user?.username }} ! </CardTitle>
         <CardDescription>
-          {{
-            hasWorkingTime
-              ? clockedIn
-                ? 'You are currently in a work session'
-                : 'What are you waiting for? Start working!'
-              : null
-          }}
+          <div class="text-xs text-muted-foreground" v-show="!authStore.hasAnyRole">
+            {{
+              hasWorkingTime
+                ? clockedIn
+                  ? 'You are currently in a work session'
+                  : 'What are you waiting for? Start working!'
+                : null
+            }}
+          </div>
+          <div class="text-xs text-muted-foreground" v-show="authStore.hasAnyRole">
+            How are you big boss? 🚀
+          </div>
         </CardDescription>
       </CardHeader>
       <CardContent class="text-muted-foreground">
-        {{
-          !hasWorkingTime
-            ? "I'm sorry but you don't have any working time today. If you think this is an error, please contact your manager."
-            : null
-        }}
-        <div class="block sm:absolute -mt-4 right-4 top-4" v-if="hasWorkingTime">
-          <Button
-            v-if="!clockedIn"
-            @click="handleClockedIn"
-            :disabled="loading"
-            class="max-w-xs my-4 p-5 mx-auto"
-          >
-            <div v-if="loading" class="flex items-center">
-              <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
-            </div>
-            <div v-else class="flex items-center">
-              <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
-            </div>
-          </Button>
-          <Button
-            v-else
-            @click="handleClockedIn"
-            :disabled="loading"
-            class="max-w-xs my-4 p-5 mx-auto"
-          >
-            <div v-if="loading" class="flex items-center">
-              <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
-            </div>
-            <div v-else class="flex items-center">
-              <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
-            </div>
-          </Button>
+        <div v-show="!authStore.hasAnyRole">
+          {{
+            !hasWorkingTime
+              ? "I'm sorry but you don't have any working time today. If you think this is an error, please contact your manager."
+              : null
+          }}
+          <div class="block sm:absolute -mt-4 right-4 top-4" v-if="hasWorkingTime">
+            <Button
+              v-if="!clockedIn"
+              @click="handleClockedIn"
+              :disabled="loading"
+              class="max-w-xs my-4 p-5 mx-auto"
+            >
+              <div v-if="loading" class="flex items-center">
+                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
+              </div>
+              <div v-else class="flex items-center">
+                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
+              </div>
+            </Button>
+            <Button
+              v-else
+              @click="handleClockedIn"
+              :disabled="loading"
+              class="max-w-xs my-4 p-5 mx-auto"
+            >
+              <div v-if="loading" class="flex items-center">
+                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
+              </div>
+              <div v-else class="flex items-center">
+                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
+              </div>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

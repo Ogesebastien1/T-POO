@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
 } from '@/components/ui/form'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import Toaster from '@/components/ui/toast/Toaster.vue'
-import { toast } from '@/components/ui/toast/index.js'
+import { toast } from '@/components/ui/toast'
 
 const registerSchema = toTypedSchema(
   z.object({
@@ -79,6 +74,5 @@ const onSubmitRegister = form.handleSubmit(async (values) => {
         <a href="/login" class="underline"> Sign in </a>
       </div>
     </div>
-    <Toaster />
   </div>
 </template>

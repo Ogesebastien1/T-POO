@@ -59,143 +59,51 @@ const authStore = useAuthStore()
 const open = ref(false)
 const value = ref('')
 const mode = useColorMode()
+
+interface NavItem {
+  icon: any
+  label: string
+  path: string
+  show?: boolean
+}
+
+const navItems: NavItem[] = [
+  { icon: Home, label: 'Dashboard', path: '/' },
+  { icon: Calendar, label: 'Agenda', path: '/agenda' },
+  { icon: LineChart, label: 'Analytics', path: '/analytics' },
+  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.isManager },
+  { icon: Network, label: 'Employees', path: '/employees', show: authStore?.hasAnyRole },
+  { icon: Settings, label: 'Settings', path: '/settings' }
+]
+
 </script>
 
 <template>
   <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav class="flex flex-col items-center gap-4 px-2 sm:py-5">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath === '/'
-                }"
-              >
-                <Home class="h-5 w-5" />
-                <span class="sr-only">Dashboard</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Dashboard </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/agenda">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath.includes('/agenda')
-                }"
-              >
-                <Calendar class="h-5 w-5" />
-                <span class="sr-only">Agenda</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Agenda </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/analytics">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath.includes('/analytics')
-                }"
-              >
-                <LineChart class="h-5 w-5" />
-                <span class="sr-only">Analytics</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Analytics </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/teams">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath.includes('/teams')
-                }"
-              >
-                <UsersRound class="h-5 w-5" />
-                <span class="sr-only">Teams</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Teams </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/employees">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath.includes('/employees')
-                }"
-              >
-                <Network class="h-5 w-5" />
-                <span class="sr-only">Employees</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Employees </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </nav>
-    <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a href="/settings">
-              <Button
-                variant="ghost"
-                size="icon"
-                :class="{
-                  'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
-                  'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
-                    route.fullPath.includes('/settings')
-                }"
-              >
-                <Settings class="h-5 w-5" />
-                <span class="sr-only">Settings</span>
-              </Button>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Settings </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <div v-for="item in navItems" :key="item.label" v-show="item.show ?? true">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <a :href="item.path">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  :class="{
+                    'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                    'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                      route.fullPath === item.path
+                  }"
+                >
+                  <component :is="item.icon" class="h-5 w-5" />
+                  <span class="sr-only">{{ item.label }}</span>
+                </Button>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right"> {{ item.label }} </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </nav>
   </aside>
   <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -214,37 +122,13 @@ const mode = useColorMode()
             <a
               href="/"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              :class="{ 'text-foreground ': route.fullPath === '/' }"
+              v-for="item in navItems"
+              :key="item.label"
+              v-show="item.show ?? true"
             >
-              <Home class="h-5 w-5" />
-              Dashboard
-            </a>
-            <a
-              href="/analytics"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart class="h-5 w-5" />
-              Analytics
-            </a>
-            <a
-              href="/agenda"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <Calendar class="h-5 w-5" />
-              Agenda
-            </a>
-            <a
-              href="/teams"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <UsersRound class="h-5 w-5" />
-              Teams
-            </a>
-            <a
-              href="/settings"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <Settings class="h-5 w-5" />
-              Settings
+              <component :is="item.icon" class="h-5 w-5" />
+              {{ item.label }}
             </a>
           </nav>
         </SheetContent>
@@ -281,10 +165,7 @@ const mode = useColorMode()
         </BreadcrumbList>
       </Breadcrumb>
       <div class="relative flex items-center gap-4 ml-auto">
-        <div
-          class="hidden sm:block"
-          v-show="authStore?.isLogged && (authStore?.user?.is_admin || authStore?.user?.is_manager)"
-        >
+        <div class="hidden sm:block" v-show="authStore?.isLoggedIn && authStore?.hasAnyRole">
           <Popover v-model:open="open">
             <PopoverTrigger as-child>
               <Button
@@ -339,7 +220,7 @@ const mode = useColorMode()
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full h-[2.5rem] w-[2.5rem]">
-              <Avatar class="h-[2.5rem] w-[2.5rem]">
+              <Avatar>
                 <AvatarImage src="https://avatar.iran.liara.run/public" alt="@radix-vue" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>

@@ -5,7 +5,6 @@ import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import Toaster from '@/components/ui/toast/Toaster.vue'
 import { toast } from '@/components/ui/toast/index.js'
 import { useAuthStore } from '@/stores'
 
@@ -58,6 +57,5 @@ const onSubmitLogin = form.handleSubmit(async (values) => {
         <a href="/register" class="underline"> Sign up </a>
       </div>
     </div>
-    <Toaster />
   </div>
 </template>
