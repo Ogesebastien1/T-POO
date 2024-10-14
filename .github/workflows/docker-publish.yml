@@ -23,7 +23,7 @@ jobs:
         run: |
           docker build ./Client --tag ghcr.io/ogesebastien1/timemanager-client:latest
           docker push ghcr.io/ogesebastien1/timemanager-client:latest
-
+        
   deploy:
     needs: publish
     name: deploy image
@@ -43,7 +43,7 @@ jobs:
                  cd ${{ secrets.WORK_DIR }}
                  echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
                  docker pull ghcr.io/ogesebastien1/timemanager-client:latest
-               
                  docker compose up -d
+
       - name: cleanup
         run: rm -rf ~/.ssh
