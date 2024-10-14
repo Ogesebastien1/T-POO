@@ -9,6 +9,6 @@ RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm build
 
-EXPOSE 5173
+EXPOSE 4173
 
 CMD ["pnpm", "run", "preview", "--host"]
