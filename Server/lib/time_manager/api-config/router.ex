@@ -10,7 +10,7 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api/users", TimeManagerWeb do
-    pipe_through :api
+    pipe_through [:api, :authenticated]
 
     get "/", Accounts.Infrastructure.UserController, :index
     get "/:id", Accounts.Infrastructure.UserController, :show

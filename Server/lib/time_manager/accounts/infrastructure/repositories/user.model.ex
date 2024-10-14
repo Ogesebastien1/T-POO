@@ -9,6 +9,7 @@ defmodule TimeManager.Accounts.UserModel do
     field :username, :string
     field :email, :string
     field :password_hash, :string
+    field :role, Ecto.Enum, values: [:admin, :moderator, :user], default: :user
     field :password, :string, virtual: true
 
     timestamps(type: :utc_datetime)
@@ -16,7 +17,7 @@ defmodule TimeManager.Accounts.UserModel do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password])
+    |> cast(attrs, [:username, :email, :password, :role])
     |> validate_required([:username, :email, :password])
     |> validate_length(:username, min: 3, max: 30)
     |> validate_length(:password, min: 8, max: 100)

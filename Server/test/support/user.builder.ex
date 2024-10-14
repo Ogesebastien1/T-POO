@@ -3,7 +3,8 @@ defmodule TimeManagerWeb.Test.UserBuilder do
     %{
       "username" => "test",
       "email" => "test@gmail.com",
-      "password" => "password"
+      "password" => "password",
+      "role" => "user"
     }
   end
 
@@ -23,5 +24,9 @@ defmodule TimeManagerWeb.Test.UserBuilder do
     %{
       "username" => "test"
     }
+  end
+
+  def with_role(user, role) do
+    %{user | "role" => role}
   end
 end
