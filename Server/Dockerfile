@@ -14,12 +14,14 @@ WORKDIR /app
 
 COPY . .
 
-COPY entrypoint.sh .
-
 RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
-EXPOSE 4000
+RUN mix deps.get
+RUN mix ecto.create
+RUN mix ecto.migrate
+RUN mix phx.server
+RUN mix phx.swagger.generate
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
+EXPOSE 4000
 
 CMD ["mix", "phx.server"]
