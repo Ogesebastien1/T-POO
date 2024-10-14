@@ -2,6 +2,11 @@ import { defineStore } from 'pinia'
 import type { UserType } from '@/types'
 import { router } from '../router'
 
+interface LoginPayload {
+  email: string
+  password: string
+}
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
@@ -22,30 +27,45 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    fakeLogin(email: string) {
-      this.user = {
-        id: 1,
-        username: 'John Doe',
-        is_manager: false,
-        is_admin: false,
-        email
+    async login(payload: LoginPayload): Promise<boolean> {
+      const response = await fetch('http://localhost:4000/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log(data)
+        this.token = data.token
+        this.user = data.user
+        this.isLogged = true
+        localStorage.setItem('token', this.token || '')
+        localStorage.setItem('user', JSON.stringify(this.user))
+        return true;
+      } else {
+        return false;
       }
-      this.token = 'fakeToken'
-      this.isLogged = true
-
-      console.log('User logged in')
-
-      localStorage.setItem('user', JSON.stringify(this.user))
-      localStorage.setItem('token', this.token)
-      router.push('/')
     },
-    fakeLogout() {
-      this.user = null
-      this.token = null
-      this.isLogged = false
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
-      router.push('/login')
+    async logout() {
+      const response = await fetch('http://localhost:4000/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        }
+      })
+
+      if (response.ok) {
+        this.token = null
+        this.user = null
+        this.isLogged = false
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        router.push('/login')
+      }
     }
   }
 })

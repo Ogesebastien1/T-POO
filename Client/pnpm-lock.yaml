@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@formkit/auto-animate': ^0.8.2
   '@iconify-json/radix-icons': ^1.2.1
   '@iconify/vue': ^4.1.2
   '@internationalized/date': ^3.5.6
@@ -50,6 +51,7 @@ specifiers:
   zod: ^3.23.8
 
 dependencies:
+  '@formkit/auto-animate': 0.8.2
   '@internationalized/date': 3.5.6
   '@tanstack/vue-table': 8.20.5_vue@3.5.11
   '@types/moment': 2.13.0
@@ -775,6 +777,10 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+    dev: false
+
+  /@formkit/auto-animate/0.8.2:
+    resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
     dev: false
 
   /@humanwhocodes/config-array/0.13.0:
