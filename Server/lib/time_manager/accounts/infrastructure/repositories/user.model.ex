@@ -9,7 +9,7 @@ defmodule TimeManager.Accounts.UserModel do
     field :username, :string
     field :email, :string
     field :password_hash, :string
-    field :role, Ecto.Enum, values: [:admin, :moderator, :user], default: :user
+    field :role, Ecto.Enum, values: [:admin, :manager, :user], default: :user
     field :password, :string, virtual: true
 
     timestamps(type: :utc_datetime)

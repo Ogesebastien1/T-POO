@@ -1,5 +1,5 @@
 defmodule TimeManagerWeb.AuthControllerTest do
-  use TimeManagerWeb.ConnCase
+  use TimeManagerWeb.ConnCase, async: true
   alias TimeManagerWeb.Test.UserBuilder
   alias TimeManager.Fixture.AuthFixture
 

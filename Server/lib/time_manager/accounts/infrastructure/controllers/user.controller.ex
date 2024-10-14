@@ -1,5 +1,6 @@
 defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   use TimeManagerWeb, :controller
+  alias TimeManager.Accounts.Authorization
 
   alias TimeManager.Accounts.{
     UserModel,
@@ -21,10 +22,28 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def index(conn, _params) do
-    users = ManageUserService.get_users()
+    user_assigns = conn.assigns[:current_user]
 
-    conn
-    |> render_result(users)
+    basic_authorization = Bodyguard.permit(TimeManager.Accounts, :get_users, user_assigns)
+    permission = Authorization.permission(:get_users, user_assigns)
+
+    case {basic_authorization, permission} do
+      {:ok, :full} ->
+        users = ManageUserService.get_users()
+
+        conn
+        |> render_result(users)
+
+      {:ok, :partial} ->
+        users = ManageUserService.get_users()
+
+        conn
+        |> render_result(users)
+
+      _ ->
+        conn
+        |> render_error("403.json", :forbidden)
+    end
   end
 
   def show(conn, %{"id" => id}) do
@@ -49,10 +68,7 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user_assigns = conn.assigns[:current_user]
 
-    with :ok <-
-           Bodyguard.permit(TimeManager.Accounts, :update_user, user_assigns, %{
-             id: id
-           }) do
+    with :ok <- Bodyguard.permit(TimeManager.Accounts, :update_user, user_assigns, %{id: id}) do
       case ManageUserService.get_user_by_id(id) do
         {:ok, user} ->
           result = ManageUserService.update_user(user, user_params)
