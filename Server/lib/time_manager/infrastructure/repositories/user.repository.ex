@@ -3,6 +3,10 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
 
   alias TimeManager.Accounts.UserModel
 
+  alias TimeManager.Accounts.Application.UserRepository
+
+  @behaviour UserRepository
+
   import UUIDValidator
 
   def get_all() do
