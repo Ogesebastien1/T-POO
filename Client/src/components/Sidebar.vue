@@ -42,6 +42,7 @@ import {
   CommandList
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { RouterLink } from 'vue-router'
 
 const employees = [
   { value: 'Jean Martin', label: 'Jean Martin' },
@@ -75,7 +76,6 @@ const navItems: NavItem[] = [
   { icon: Network, label: 'Employees', path: '/employees', show: authStore?.hasAnyRole },
   { icon: Settings, label: 'Settings', path: '/settings' }
 ]
-
 </script>
 
 <template>
@@ -85,7 +85,7 @@ const navItems: NavItem[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
-              <a :href="item.path">
+              <RouterLink :to="item.path">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -98,7 +98,7 @@ const navItems: NavItem[] = [
                   <component :is="item.icon" class="h-5 w-5" />
                   <span class="sr-only">{{ item.label }}</span>
                 </Button>
-              </a>
+              </RouterLink>
             </TooltipTrigger>
             <TooltipContent side="right"> {{ item.label }} </TooltipContent>
           </Tooltip>
@@ -119,8 +119,8 @@ const navItems: NavItem[] = [
         </SheetTrigger>
         <SheetContent side="left" class="sm:max-w-xs">
           <nav class="grid gap-6 text-lg font-medium">
-            <a
-              href="/"
+            <RouterLink
+              to="/"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               :class="{ 'text-foreground ': route.fullPath === '/' }"
               v-for="item in navItems"
@@ -129,7 +129,7 @@ const navItems: NavItem[] = [
             >
               <component :is="item.icon" class="h-5 w-5" />
               {{ item.label }}
-            </a>
+            </RouterLink>
           </nav>
         </SheetContent>
       </Sheet>
@@ -147,13 +147,14 @@ const navItems: NavItem[] = [
               as-child
               v-if="index < route.fullPath.split('/').filter(Boolean).length - 1"
             >
-              <a
-                :href="`/${route.fullPath
+              <RouterLink
+                :to="`/${route.fullPath
                   .split('/')
                   .slice(1, index + 2)
                   .join('/')}`"
-                >{{ segment.charAt(0).toUpperCase() + segment.slice(1) }}</a
               >
+                {{ segment.charAt(0).toUpperCase() + segment.slice(1) }}
+              </RouterLink>
             </BreadcrumbLink>
             <BreadcrumbPage v-else>{{
               segment.charAt(0).toUpperCase() + segment.slice(1)
@@ -231,7 +232,7 @@ const navItems: NavItem[] = [
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <a href="/settings">Settings</a>
+              <RouterLink to="/settings">Settings</RouterLink>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

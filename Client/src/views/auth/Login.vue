@@ -5,8 +5,8 @@ import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/toast/index.js'
 import { useAuthStore } from '@/stores'
+import { RouterLink } from 'vue-router'
 
 const authStore = useAuthStore()
 
@@ -54,7 +54,7 @@ const onSubmitLogin = form.handleSubmit(async (values) => {
       </form>
       <div class="mt-4 text-center text-sm">
         Don't have an account?
-        <a href="/register" class="underline"> Sign up </a>
+        <RouterLink to="/register" class="underline"> Sign up </RouterLink>
       </div>
     </div>
   </div>

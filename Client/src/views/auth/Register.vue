@@ -11,6 +11,7 @@ import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/toast'
+import { RouterLink } from 'vue-router'
 
 const registerSchema = toTypedSchema(
   z.object({
@@ -71,7 +72,7 @@ const onSubmitRegister = form.handleSubmit(async (values) => {
       </form>
       <div class="mt-4 text-center text-sm">
         Already have an account?
-        <a href="/login" class="underline"> Sign in </a>
+        <RouterLink to="/login" class="underline"> Sign in </RouterLink>
       </div>
     </div>
   </div>
