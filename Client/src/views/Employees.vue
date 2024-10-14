@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import DateRangePicker from '@/components/ui/date-range-picker/DateRangePicker.vue'
 import { DataTable } from '@/components/data-table'
 import { employeesColumns } from '@/components/data-table/columns'
+import { ref } from 'vue'
+
+const employees = ref([])
 </script>
 
 <template>
-  <DateRangePicker />
-  <DataTable :data="[]" :columns="employeesColumns" />
+  <DataTable :data="employees" :columns="employeesColumns" />
 </template>

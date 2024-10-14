@@ -1,11 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import WorkingTimes from '../components/WorkingTimes.vue'
-import WorkingTime from '../components/WorkingTime.vue'
-import ClockManager from '../components/ClockManager.vue'
-import ChartManager from '../components/ChartManager.vue'
-
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -21,23 +16,33 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      component: () => import('../views/Dashboard.vue')
     },
     {
-      path: '/stats',
-      name: 'stats',
-      component: () => import('../views/StatsView.vue')
+      path: '/analytics',
+      name: 'analytics',
+      component: () => import('../views/Analytics.vue')
     },
     {
       path: '/settings',
       name: 'settings',
       component: () => import('../views/Settings.vue')
     },
-    { path: '/workingTimes/:userID', component: WorkingTimes },
-    { path: '/workingTime/:userid', component: WorkingTime },
-    { path: '/workingTime/:userid/:workingtimeid', component: WorkingTime },
-    { path: '/clock/:userid', component: ClockManager },
-    { path: '/chartManager/:userid', component: ChartManager },
+    {
+      path: '/employees',
+      name: 'employees',
+      component: () => import('../views/Employees.vue')
+    },
+    {
+      path: '/teams',
+      name: 'teams',
+      component: () => import('../views/Teams.vue')
+    },
+    {
+      path: '/teams/:id/members',
+      name: 'team-members',
+      component: () => import('../views/TeamMembers.vue')
+    },
     {
       path: '/agenda',
       name: 'agenda',
@@ -46,4 +51,18 @@ const router = createRouter({
   ]
 })
 
-export default router
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login', '/register']
+  const authRequired = !publicPages.includes(to.path)
+  const loggedIn = localStorage.getItem('token')
+
+  if (authRequired && !loggedIn) {
+    return next('/login')
+  }
+
+  if (publicPages.includes(to.path) && loggedIn) {
+    return next('/')
+  }
+
+  next()
+})

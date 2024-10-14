@@ -48,4 +48,5 @@ defmodule TimeManagerWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug TimeManagerWeb.Router
+  plug CORSPlug, origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 end

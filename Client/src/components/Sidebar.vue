@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { Calendar, Home, LineChart, PanelLeft, Settings } from 'lucide-vue-next'
+import {
+  Calendar,
+  Home,
+  UsersRound,
+  LineChart,
+  PanelLeft,
+  Settings,
+  Network
+} from 'lucide-vue-next'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   DropdownMenu,
@@ -16,7 +24,14 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { ref } from 'vue'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { cn } from '@/lib/utils'
 import {
   Command,
@@ -27,6 +42,7 @@ import {
   CommandList
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { RouterLink } from 'vue-router'
 
 const employees = [
   { value: 'Jean Martin', label: 'Jean Martin' },
@@ -35,75 +51,59 @@ const employees = [
   { value: 'John Smith', label: 'John Smith' },
   { value: 'Jane Smith', label: 'Jane Smith' }
 ]
+import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores'
+
+const route = useRoute()
+const authStore = useAuthStore()
 
 const open = ref(false)
 const value = ref('')
 const mode = useColorMode()
+
+interface NavItem {
+  icon: any
+  label: string
+  path: string
+  show?: boolean
+}
+
+const navItems: NavItem[] = [
+  { icon: Home, label: 'Dashboard', path: '/' },
+  { icon: Calendar, label: 'Agenda', path: '/agenda' },
+  { icon: LineChart, label: 'Analytics', path: '/analytics' },
+  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.isManager },
+  { icon: Network, label: 'Employees', path: '/employees', show: authStore?.hasAnyRole },
+  { icon: Settings, label: 'Settings', path: '/settings' }
+]
 </script>
 
 <template>
   <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav class="flex flex-col items-center gap-4 px-2 sm:py-5">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a
-              href="/"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Home class="h-5 w-5" />
-              <span class="sr-only">Dashboard</span>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Dashboard </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a
-              href="/agenda"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Calendar class="h-5 w-5" />
-              <span class="sr-only">Agenda</span>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Agenda </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a
-              href="/stats"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <LineChart class="h-5 w-5" />
-              <span class="sr-only">Analytics</span>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Analytics </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </nav>
-    <nav class="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <a
-              href="/settings"
-              class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings class="h-5 w-5" />
-              <span class="sr-only">Settings</span>
-            </a>
-          </TooltipTrigger>
-          <TooltipContent side="right"> Settings </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <div v-for="item in navItems" :key="item.label" v-show="item.show ?? true">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <RouterLink :to="item.path">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  :class="{
+                    'rounded-lg text-muted-foreground transition-colors hover:text-foreground': true,
+                    'bg-gray-100 text-foreground dark:bg-gray-800 dark:text-foreground':
+                      route.fullPath === item.path
+                  }"
+                >
+                  <component :is="item.icon" class="h-5 w-5" />
+                  <span class="sr-only">{{ item.label }}</span>
+                </Button>
+              </RouterLink>
+            </TooltipTrigger>
+            <TooltipContent side="right"> {{ item.label }} </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </nav>
   </aside>
   <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -119,81 +119,109 @@ const mode = useColorMode()
         </SheetTrigger>
         <SheetContent side="left" class="sm:max-w-xs">
           <nav class="grid gap-6 text-lg font-medium">
-            <a
-              href="/"
+            <RouterLink
+              to="/"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              :class="{ 'text-foreground ': route.fullPath === '/' }"
+              v-for="item in navItems"
+              :key="item.label"
+              v-show="item.show ?? true"
             >
-              <Home class="h-5 w-5" />
-              Dashboard
-            </a>
-            <a
-              href="/stats"
-              class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart class="h-5 w-5" />
-              Analytics
-            </a>
+              <component :is="item.icon" class="h-5 w-5" />
+              {{ item.label }}
+            </RouterLink>
           </nav>
         </SheetContent>
       </Sheet>
-
-      <div class="relative flex items-center gap-4 ml-auto">
-        <Popover v-model:open="open">
-          <PopoverTrigger as-child>
-            <Button
-              variant="outline"
-              role="combobox"
-              :aria-expanded="open"
-              class="w-[200px] justify-between"
+      <Breadcrumb class="hidden md:flex">
+        <BreadcrumbList>
+          <BreadcrumbItem v-if="route.fullPath === '/'">
+            <BreadcrumbPage>Dashboard</BreadcrumbPage>
+          </BreadcrumbItem>
+          <BreadcrumbItem
+            v-else
+            v-for="(segment, index) in route.fullPath.split('/').filter(Boolean)"
+            :key="index"
+          >
+            <BreadcrumbLink
+              as-child
+              v-if="index < route.fullPath.split('/').filter(Boolean).length - 1"
             >
-              {{
-                value
-                  ? employees.find((employee) => employee.value === value)?.label
-                  : 'Choose employee...'
-              }}
-              <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent class="w-[200px] p-0">
-            <Command>
-              <CommandInput class="h-9" placeholder="Search employee..." />
-              <CommandEmpty>
-                No employees found
-              </CommandEmpty>
-              <CommandList>
-                <CommandGroup>
-                  <CommandItem
-                    v-for="framework in employees"
-                    :key="framework.value"
-                    :value="framework.value"
-                    @select="
-                      (ev) => {
-                        if (typeof ev.detail.value === 'string') {
-                          value = ev.detail.value
+              <RouterLink
+                :to="`/${route.fullPath
+                  .split('/')
+                  .slice(1, index + 2)
+                  .join('/')}`"
+              >
+                {{ segment.charAt(0).toUpperCase() + segment.slice(1) }}
+              </RouterLink>
+            </BreadcrumbLink>
+            <BreadcrumbPage v-else>{{
+              segment.charAt(0).toUpperCase() + segment.slice(1)
+            }}</BreadcrumbPage>
+            <BreadcrumbSeparator
+              v-if="index < route.fullPath.split('/').filter(Boolean).length - 1"
+            />
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div class="relative flex items-center gap-4 ml-auto">
+        <div class="hidden sm:block" v-show="authStore?.isLoggedIn && authStore?.hasAnyRole">
+          <Popover v-model:open="open">
+            <PopoverTrigger as-child>
+              <Button
+                variant="outline"
+                role="combobox"
+                :aria-expanded="open"
+                class="w-[200px] justify-between"
+              >
+                {{
+                  value
+                    ? employees.find((employee) => employee.value === value)?.label
+                    : 'Choose employee...'
+                }}
+                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent class="w-[200px] p-0">
+              <Command>
+                <CommandInput class="h-9" placeholder="Search employee..." />
+                <CommandEmpty> No employees found </CommandEmpty>
+                <CommandList>
+                  <CommandGroup>
+                    <CommandItem
+                      v-for="framework in employees"
+                      :key="framework.value"
+                      :value="framework.value"
+                      @select="
+                        (ev) => {
+                          if (typeof ev.detail.value === 'string') {
+                            value = ev.detail.value
+                          }
+                          open = false
                         }
-                        open = false
-                      }
-                    "
-                  >
-                    {{ framework.label }}
-                    <Check
-                      :class="
-                        cn(
-                          'ml-auto h-4 w-4',
-                          value === framework.value ? 'opacity-100' : 'opacity-0'
-                        )
                       "
-                    />
-                  </CommandItem>
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+                    >
+                      {{ framework.label }}
+                      <Check
+                        :class="
+                          cn(
+                            'ml-auto h-4 w-4',
+                            value === framework.value ? 'opacity-100' : 'opacity-0'
+                          )
+                        "
+                      />
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full h-[2.5rem] w-[2.5rem]">
-              <Avatar class="h-[2.5rem] w-[2.5rem]">
+              <Avatar>
                 <AvatarImage src="https://avatar.iran.liara.run/public" alt="@radix-vue" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
@@ -204,10 +232,17 @@ const mode = useColorMode()
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <a href="/settings">Settings</a>
+              <RouterLink to="/settings">Settings</RouterLink>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem
+              @click="
+                () => {
+                  authStore.fakeLogout()
+                }
+              "
+              >Logout</DropdownMenuItem
+            >
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>

@@ -5,8 +5,10 @@ import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import Toaster from '@/components/ui/toast/Toaster.vue'
-import { toast } from '@/components/ui/toast/index.js'
+import { useAuthStore } from '@/stores'
+import { RouterLink } from 'vue-router'
+
+const authStore = useAuthStore()
 
 const registerSchema = toTypedSchema(
   z.object({
@@ -20,11 +22,7 @@ const form = useForm({
 })
 
 const onSubmitLogin = form.handleSubmit(async (values) => {
-  toast({
-    title: `Login user ${values.email}...`,
-    description: JSON.stringify(values),
-    duration: 5000
-  })
+  authStore.fakeLogin(values.email)
 })
 </script>
 
@@ -56,9 +54,8 @@ const onSubmitLogin = form.handleSubmit(async (values) => {
       </form>
       <div class="mt-4 text-center text-sm">
         Don't have an account?
-        <a href="/register" class="underline"> Sign up </a>
+        <RouterLink to="/register" class="underline"> Sign up </RouterLink>
       </div>
     </div>
-    <Toaster />
   </div>
 </template>
