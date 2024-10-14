@@ -2,7 +2,6 @@
 import { Sidebar } from '@/components'
 import { RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores'
-import ToastProvider from './components/ui/toast/ToastProvider.vue'
 import Toaster from './components/ui/toast/Toaster.vue'
 
 const authStore = useAuthStore()
