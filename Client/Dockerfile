@@ -7,8 +7,8 @@ COPY . .
 RUN npm install -g pnpm
 
 RUN pnpm install
-RUN pnpm build
+RUN pnpm run build
 
 EXPOSE 5173
 
-CMD ["pnpm", "run", "dev", "--host"]
+CMD ["pnpm", "run", "preview", "--host"]
