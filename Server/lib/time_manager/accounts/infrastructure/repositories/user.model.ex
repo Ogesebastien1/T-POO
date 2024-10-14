@@ -2,6 +2,8 @@ defmodule TimeManager.Accounts.UserModel do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.Application.PasswordHasher
+  alias TimeManager.Accounts.UserModel
+  alias __MODULE__
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,6 +12,9 @@ defmodule TimeManager.Accounts.UserModel do
     field :email, :string
     field :password_hash, :string
     field :role, Ecto.Enum, values: [:admin, :manager, :user], default: :user
+    # field :manager_id, :binary_id
+
+    belongs_to(:manager, UserModel)
     field :password, :string, virtual: true
 
     timestamps(type: :utc_datetime)
