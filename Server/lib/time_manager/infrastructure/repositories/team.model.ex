@@ -1,4 +1,4 @@
-defmodule TimeManager.Accounts.TeamModel do
+defmodule TimeManager.TimeTracking.TeamModel do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.UserModel
@@ -12,5 +12,12 @@ defmodule TimeManager.Accounts.TeamModel do
     belongs_to(:user, UserModel)
 
     timestamps(type: :utc_datetime)
+  end
+
+  def changeset(team, params) do
+    team
+    |> cast(params, [:name])
+    |> validate_required([:name])
+    |> assoc_constraint(:manager)
   end
 end
