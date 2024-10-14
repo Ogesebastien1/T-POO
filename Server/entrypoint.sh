@@ -1,7 +1,8 @@
 #!/bin/sh
 
-RUN mix deps.get
-RUN mix ecto.create
-RUN mix ecto.migrate
-RUN mix phx.server
-RUN mix phx.swagger.generate
+cd /app
+mix deps.get
+mix ecto.create
+mix ecto.migrate
+mix phx.server
+mix phx.swagger.generate
