@@ -16,12 +16,8 @@ COPY . .
 
 RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
-RUN mix deps.get
-RUN mix ecto.create
-RUN mix ecto.migrate
-RUN mix phx.server
-RUN mix phx.swagger.generate
-
 EXPOSE 4000
+
+ENTRYPOINT [ "entrypoint.sh" ]
 
 CMD ["mix", "phx.server"]
