@@ -18,4 +18,4 @@ RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
 EXPOSE 4000
 
-CMD ["sh" "entrypoint.sh"]
+CMD ["sh", "entrypoint.sh"]
