@@ -8,6 +8,16 @@ defmodule TimeManager.Accounts.Authorization do
 
   def authorize(:update_user, %{role: :manager}, %{role: :user}), do: :ok
 
+  def permission(:update_user, %{role: :user} = _user, update_params)
+      when map_size(update_params) > 0 do
+    restricted_fields = ["role", "manager_id"]
+
+    case Enum.any?(restricted_fields, &Map.has_key?(update_params, &1)) do
+      true -> :none
+      false -> :ok
+    end
+  end
+
   def authorize(:get_users, %{role: :admin}, _), do: :ok
   def authorize(:get_users, %{role: :manager}, _), do: :ok
 

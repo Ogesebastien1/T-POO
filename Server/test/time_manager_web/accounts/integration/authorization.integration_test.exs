@@ -85,14 +85,57 @@ defmodule TimeManagerWeb.AuthorizationTest do
     end
 
     test "I can update my profile", %{conn: conn} do
-      Registration.given_existing_users([@user])
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
       user_response = Auth.login_pass(@user["email"], @user["password"])
       token = Auth.extract_auth_token(user_response)
 
+      IO.inspect(manager)
+
+      updated_user = @user |> with_username("User 2")
+
+      IO.inspect(updated_user)
+
       conn
       |> Auth.put_auth_token(token)
-      |> AccountsFixture.update_user(@user |> with_username("User 2"), user_response.user.id)
+      |> AccountsFixture.update_user(updated_user, user_response.user.id)
       |> AccountsFixture.then_user_is_updated(@user |> with_username("User 2"))
+    end
+
+    @tag :this
+    test "I can't update my role", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
+      user_response = Auth.login_pass(@user["email"], @user["password"])
+      token = Auth.extract_auth_token(user_response)
+
+      updated_user = @user |> with_role("manager")
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_user, user_response.user.id)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    @tag :this
+    test "I can't update my manager", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
+      user_response = Auth.login_pass(@user["email"], @user["password"])
+      token = Auth.extract_auth_token(user_response)
+
+      updated_user = @user |> with_manager_id(manager.id)
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_user, user_response.user.id)
+      |> AccountsFixture.request_is_forbidden()
     end
 
     test "I can't update another user's profile", %{conn: conn} do

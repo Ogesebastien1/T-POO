@@ -36,8 +36,9 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
 
   # TODO: changeset from the service..
   def update(user, _params) do
-    user
-    |> Repo.update()
+    with {:ok, user} <- Repo.update(user) do
+      {:ok, Repo.preload(user, [:manager])}
+    end
   end
 
   def delete(user) do
