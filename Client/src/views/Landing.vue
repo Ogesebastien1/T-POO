@@ -18,15 +18,11 @@ import Footer from '@/components/landing/Footer.vue'
 <template>
   <Navbar />
   <Hero />
-  <Sponsors />
   <Benefits />
   <Features />
-  <Services />
-  <HowItWorks />
   <Testimonials />
   <Team />
   <Community />
-  <Pricing />
   <Contact />
   <FAQ />
   <Footer />

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 
-import { useColorMode } from "@vueuse/core";
-const mode = useColorMode();
-mode.value = "dark";
+import { useColorMode } from '@vueuse/core'
+const mode = useColorMode()
+mode.value = 'dark'
 
 import {
   NavigationMenu,
@@ -11,71 +11,69 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+  NavigationMenuTrigger
+} from '@/components/ui/navigation-menu'
 import {
   Sheet,
   SheetContent,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  SheetTrigger
+} from '@/components/ui/sheet'
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 
-import { ChevronsDown, Menu } from "lucide-vue-next";
-import GithubIcon from "@/assets/icons/GithubIcon.vue";
-import ToggleTheme from "./ToggleTheme.vue";
+import { ChevronsDown, Menu } from 'lucide-vue-next'
+import GithubIcon from '@/assets/icons/GithubIcon.vue'
+import ToggleTheme from './ToggleTheme.vue'
 
 interface RouteProps {
-  href: string;
-  label: string;
+  href: string
+  label: string
 }
 
 interface FeatureProps {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }
 
 const routeList: RouteProps[] = [
   {
-    href: "#testimonials",
-    label: "Testimonials",
+    href: '#testimonials',
+    label: 'Testimonials'
   },
   {
-    href: "#team",
-    label: "Team",
+    href: '#team',
+    label: 'Team'
   },
   {
-    href: "#contact",
-    label: "Contact",
+    href: '#contact',
+    label: 'Contact'
   },
   {
-    href: "#faq",
-    label: "FAQ",
-  },
-];
+    href: '#faq',
+    label: 'FAQ'
+  }
+]
 
 const featureList: FeatureProps[] = [
   {
-    title: "Showcase Your Value ",
-    description: "Highlight how your product solves user problems.",
+    title: 'Showcase Your Value ',
+    description: 'Highlight how your product solves user problems.'
   },
   {
-    title: "Build Trust",
-    description:
-      "Leverages social proof elements to establish trust and credibility.",
+    title: 'Build Trust',
+    description: 'Leverages social proof elements to establish trust and credibility.'
   },
   {
-    title: "Capture Leads",
-    description:
-      "Make your lead capture form visually appealing and strategically.",
-  },
-];
+    title: 'Capture Leads',
+    description: 'Make your lead capture form visually appealing and strategically.'
+  }
+]
 
-const isOpen = ref<boolean>(false);
+const isOpen = ref<boolean>(false)
 </script>
 
 <template>
@@ -83,26 +81,20 @@ const isOpen = ref<boolean>(false);
     :class="{
       'shadow-light': mode === 'light',
       'shadow-dark': mode === 'dark',
-      'w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border z-40 rounded-2xl flex justify-between items-center p-2 bg-card shadow-md': true,
+      'w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border z-40 rounded-2xl flex justify-between items-center p-2 bg-card shadow-md': true
     }"
   >
-    <a
-      href="/"
-      class="font-bold text-lg flex items-center"
-    >
+    <a href="/" class="font-bold text-lg flex items-center">
       <ChevronsDown
         class="bg-gradient-to-tr from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white"
       />
-      ShadcnVue</a
+      TimeManager</a
     >
     <!-- Mobile -->
     <div class="block items-center lg:hidden">
       <Sheet v-model:open="isOpen">
         <SheetTrigger as-child>
-          <Menu
-            @click="isOpen = true"
-            class="cursor-pointer"
-          />
+          <Menu @click="isOpen = true" class="cursor-pointer" />
         </SheetTrigger>
 
         <SheetContent
@@ -112,10 +104,7 @@ const isOpen = ref<boolean>(false);
           <div>
             <SheetHeader class="mb-4 ml-4">
               <SheetTitle class="flex items-center">
-                <a
-                  href="/"
-                  class="flex items-center"
-                >
+                <a href="/" class="flex items-center">
                   <ChevronsDown
                     class="bg-gradient-to-tr from-primary/70 via-primary to-primary/70 rounded-lg size-9 mr-2 border text-white"
                   />
@@ -132,10 +121,7 @@ const isOpen = ref<boolean>(false);
                 variant="ghost"
                 class="justify-start text-base"
               >
-                <a
-                  @click="isOpen = false"
-                  :href="href"
-                >
+                <a @click="isOpen = false" :href="href">
                   {{ label }}
                 </a>
               </Button>
@@ -155,9 +141,7 @@ const isOpen = ref<boolean>(false);
     <NavigationMenu class="hidden lg:block">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger class="bg-card text-base">
-            Features
-          </NavigationMenuTrigger>
+          <NavigationMenuTrigger class="bg-card text-base"> Features </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div class="grid w-[600px] grid-cols-2 gap-5 p-4">
               <img
@@ -204,12 +188,7 @@ const isOpen = ref<boolean>(false);
     <div class="hidden lg:flex">
       <ToggleTheme />
 
-      <Button
-        as-child
-        size="sm"
-        variant="ghost"
-        aria-label="View on GitHub"
-      >
+      <Button as-child size="sm" variant="ghost" aria-label="View on GitHub">
         <a
           aria-label="View on GitHub"
           href="https://github.com/leoMirandaa/shadcn-vue-landing-page.git"
