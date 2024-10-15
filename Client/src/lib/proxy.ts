@@ -7,17 +7,16 @@ export enum HttpMethod {
 
 const { VITE_API_URL = 'https://api.timemanager.alexishenry.eu/api' } = import.meta.env
 
-export const fetch = async ({
-  endpoint,
-  method,
-  payload,
-  withToken
-}: {
+interface FetchParamsInterface {
   endpoint: string
-  method: HttpMethod
+  method?: HttpMethod
   payload?: any
-  withToken: boolean
-}): Promise<Response> => {
+  withToken?: boolean
+}
+
+export const fetch = async (params: FetchParamsInterface): Promise<Response> => {
+  const { endpoint, method = HttpMethod.GET, payload, withToken = true } = params
+
   const headers = new Headers()
 
   if (withToken) {
