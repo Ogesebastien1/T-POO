@@ -14,6 +14,9 @@ importers:
       '@internationalized/date':
         specifier: ^3.5.6
         version: 3.5.6
+      '@selemondev/vue3-marquee':
+        specifier: ^0.0.8
+        version: 0.0.8(tailwindcss@3.4.13)(typescript@5.4.5)
       '@tanstack/vue-table':
         specifier: ^8.20.5
         version: 8.20.5(vue@3.5.11(typescript@5.4.5))
@@ -41,6 +44,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      embla-carousel-vue:
+        specifier: ^8.3.0
+        version: 8.3.0(vue@3.5.11(typescript@5.4.5))
       lucide-vue-next:
         specifier: ^0.451.0
         version: 0.451.0(vue@3.5.11(typescript@5.4.5))
@@ -724,6 +730,9 @@ packages:
 
   '@rushstack/eslint-patch@1.10.4':
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
+
+  '@selemondev/vue3-marquee@0.0.8':
+    resolution: {integrity: sha512-PoZd52L3OywhQzCmrEe+C990z4NBZukGS/jxGjt2Xjv8y/nmJu+3trHM9UP0/8XpYAmcGO2NHy2sVARznV1wBQ==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -1625,6 +1634,19 @@ packages:
 
   elkjs@0.8.2:
     resolution: {integrity: sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==}
+
+  embla-carousel-reactive-utils@8.3.0:
+    resolution: {integrity: sha512-EYdhhJ302SC4Lmkx8GRsp0sjUhEN4WyFXPOk0kGu9OXZSRMmcBlRgTvHcq8eKJE1bXWBsOi1T83B+BSSVZSmwQ==}
+    peerDependencies:
+      embla-carousel: 8.3.0
+
+  embla-carousel-vue@8.3.0:
+    resolution: {integrity: sha512-K8ghzWZ9Th2Czvy9dVaz6ItgvFdkI3wHQe6HgeHmvmOlkvhu/fNz83uHrLWVAsjztu/b+yiFk9zvXb0+IQ2mPw==}
+    peerDependencies:
+      vue: ^3.2.37
+
+  embla-carousel@8.3.0:
+    resolution: {integrity: sha512-Ve8dhI4w28qBqR8J+aMtv7rLK89r1ZA5HocwFz6uMB/i5EiC7bGI7y+AM80yAVUJw3qqaZYK7clmZMUR8kM3UA==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -3612,6 +3634,14 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.4': {}
 
+  '@selemondev/vue3-marquee@0.0.8(tailwindcss@3.4.13)(typescript@5.4.5)':
+    dependencies:
+      tailwindcss-animate: 1.0.7(tailwindcss@3.4.13)
+      vue: 3.5.11(typescript@5.4.5)
+    transitivePeerDependencies:
+      - tailwindcss
+      - typescript
+
   '@sinclair/typebox@0.27.8': {}
 
   '@swc/helpers@0.5.13':
@@ -4711,6 +4741,18 @@ snapshots:
   electron-to-chromium@1.5.36: {}
 
   elkjs@0.8.2: {}
+
+  embla-carousel-reactive-utils@8.3.0(embla-carousel@8.3.0):
+    dependencies:
+      embla-carousel: 8.3.0
+
+  embla-carousel-vue@8.3.0(vue@3.5.11(typescript@5.4.5)):
+    dependencies:
+      embla-carousel: 8.3.0
+      embla-carousel-reactive-utils: 8.3.0(embla-carousel@8.3.0)
+      vue: 3.5.11(typescript@5.4.5)
+
+  embla-carousel@8.3.0: {}
 
   emoji-regex@8.0.0: {}
 
