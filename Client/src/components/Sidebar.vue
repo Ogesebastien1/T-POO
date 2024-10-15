@@ -238,7 +238,7 @@ const navItems: NavItem[] = [
             <DropdownMenuItem
               @click="
                 () => {
-                  authStore.fakeLogout()
+                  authStore.logout()
                 }
               "
               >Logout</DropdownMenuItem

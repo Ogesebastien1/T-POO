@@ -1,6 +1,31 @@
 import { defineStore } from 'pinia'
 import type { UserType } from '@/types'
 import { router } from '../router'
+import { fetch, HttpMethod } from '@/lib/proxy'
+
+interface LoginPayload {
+  email: string
+  password: string
+}
+
+interface RegisterPayload {
+  username: string
+  email: string
+  password: string
+}
+
+interface ResponseError {
+  [key: string]: string[]
+}
+
+const extractResponseErrors = async (response: Response): Promise<ResponseError | null> => {
+  if (response.status === 422) {
+    const data = await response.json()
+    return data.errors
+  }
+
+  return null
+}
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -22,30 +47,64 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    fakeLogin(email: string) {
-      this.user = {
-        id: 1,
-        username: 'John Doe',
-        is_manager: false,
-        is_admin: false,
-        email
+    async login(payload: LoginPayload): Promise<boolean> {
+      const response = await fetch({
+        endpoint: '/auth',
+        method: HttpMethod.POST,
+        payload,
+        withToken: false
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        this.token = data.token
+        this.user = data.user
+        this.isLogged = true
+        localStorage.setItem('token', this.token || '')
+        localStorage.setItem('user', JSON.stringify(this.user))
+        return true
+      } else {
+        return false
       }
-      this.token = 'fakeToken'
-      this.isLogged = true
-
-      console.log('User logged in')
-
-      localStorage.setItem('user', JSON.stringify(this.user))
-      localStorage.setItem('token', this.token)
-      router.push('/')
     },
-    fakeLogout() {
-      this.user = null
+    async logout() {
       this.token = null
+      this.user = null
       this.isLogged = false
-      localStorage.removeItem('user')
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
       router.push('/login')
+    },
+    async register(payload: RegisterPayload): Promise<any> {
+      const response = await fetch({
+        endpoint: '/registration',
+        method: HttpMethod.POST,
+        payload,
+        withToken: false
+      })
+
+      const errors = await extractResponseErrors(response)
+
+      return {
+        ok: response.ok,
+        errors
+      }
+    },
+    async me() {
+      const response = await fetch({
+        endpoint: '/auth/me',
+        method: HttpMethod.GET,
+        payload: null,
+        withToken: true
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        this.user = data.user
+        localStorage.setItem('user', JSON.stringify(this.user))
+      } else {
+        this.logout()
+      }
     }
   }
 })
