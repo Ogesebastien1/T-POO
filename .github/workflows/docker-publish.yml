@@ -42,16 +42,14 @@ jobs:
             username: ${{ secrets.SSH_USER }}
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             port: ${{ secrets.SSH_PORT }}
-            script: |
-                  
-                 chmod +x /app/entrypoint.sh
-                 cd ${{ secrets.WORK_DIR }}
-                 echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-                 docker-compose down
-                 docker system prune -a -f
-                 docker pull ghcr.io/ogesebastien1/timemanager-client:latest
-                 docker pull ghcr.io/ogesebastien1/timemanager-server:latest
-                 docker compose up -d
+            script: |    
+              cd ${{ secrets.WORK_DIR }}
+              echo ${{ secrets.GH_SECRET }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+              docker-compose down
+              docker system prune -a -f
+              docker pull ghcr.io/ogesebastien1/timemanager-client:latest
+              docker pull ghcr.io/ogesebastien1/timemanager-server:latest
+              docker compose up -d
 
       - name: cleanup
         run: rm -rf ~/.ssh
