@@ -1,28 +1,44 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormMessage, FormLabel } from '@/components/ui/form'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import Toaster from '@/components/ui/toast/Toaster.vue'
-import { toast } from '@/components/ui/toast/index.js'
+import { useAuthStore } from '@/stores'
+import { vAutoAnimate } from '@formkit/auto-animate/vue'
+import { RouterLink } from 'vue-router'
+import { router } from '@/router'
+import { toast } from '@/components/ui/toast'
 
-const registerSchema = toTypedSchema(
+const authStore = useAuthStore()
+
+const loginSchema = toTypedSchema(
   z.object({
     email: z.string().email().min(1),
-    password: z.string().min(1)
+    password: z.string()
   })
 )
 
 const form = useForm({
-  validationSchema: registerSchema
+  validationSchema: loginSchema
 })
 
-const onSubmitLogin = form.handleSubmit(async (values) => {
+interface LoginPayload {
+  email: string
+  password: string
+}
+
+const onSubmit = form.handleSubmit(async (values: LoginPayload) => {
+  if (await authStore.login(values)) {
+    router.push('/')
+    return;
+  }
+
+  form.resetForm()
   toast({
-    title: `Login user ${values.email}...`,
-    description: JSON.stringify(values),
+    variant: 'destructive',
+    description: 'Invalid credentials',
     duration: 5000
   })
 })
@@ -35,30 +51,31 @@ const onSubmitLogin = form.handleSubmit(async (values) => {
         <h1 class="text-3xl font-bold">Login</h1>
         <p class="text-balance text-muted-foreground">Enter your details below to login</p>
       </div>
-      <form class="w-full space-y-6" @submit="onSubmitLogin">
+      <form class="w-full space-y-6" @submit="onSubmit">
         <FormField name="email" v-slot="{ componentField }">
-          <FormItem class="flex flex-col gap-1 w-full">
+          <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
             <FormLabel>Email</FormLabel>
             <FormControl class="w-full">
               <Input placeholder="hello@world.fr" v-bind="componentField" />
             </FormControl>
+            <FormMessage />
           </FormItem>
         </FormField>
         <FormField name="password" v-slot="{ componentField }">
-          <FormItem class="flex flex-col gap-1 w-full">
+          <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
             <FormLabel>Password</FormLabel>
             <FormControl class="w-full">
               <Input type="password" v-bind="componentField" />
             </FormControl>
+            <FormMessage />
           </FormItem>
         </FormField>
         <Button type="submit" class="w-full"> Login </Button>
       </form>
       <div class="mt-4 text-center text-sm">
         Don't have an account?
-        <a href="/register" class="underline"> Sign up </a>
+        <RouterLink to="/register" class="underline"> Sign up </RouterLink>
       </div>
     </div>
-    <Toaster />
   </div>
 </template>

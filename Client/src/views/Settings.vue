@@ -9,35 +9,35 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useAuthStore } from '@/stores'
+
+const authStore = useAuthStore()
 </script>
 
 <template>
-  <div class="mx-auto grid w-full gap-2">
-    <h1 class="-mt-4 text-2xl font-semibold mb-4">Settings</h1>
-  </div>
   <div class="mx-auto grid w-full items-start gap-6">
     <div class="grid gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription> Change your profile settings. </CardDescription>
+          <CardTitle>Profile Information</CardTitle>
+          <CardDescription class="max-w-lg"> Update your account's profile information. </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent class="max-w-lg">
           <form class="flex flex-col gap-4">
-            <Input type="username" placeholder="Username" />
+            <Input type="username" placeholder="Username" :default-value="authStore.user?.username" />
           </form>
         </CardContent>
         <CardFooter class="border-t px-6 py-4">
-          <Button>Save</Button>
+          <Button class="min-w-[100px]">Save</Button>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Change password</CardTitle>
-          <CardDescription> Update your password. </CardDescription>
+          <CardTitle>Update Password</CardTitle>
+          <CardDescription class="max-w-lg"> Ensure your account is using a long, random password to stay secure. </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent class="max-w-lg">
           <form class="flex flex-col gap-4">
             <Input type="password" placeholder="Current Password" />
             <Input type="password" placeholder="New Password" />
@@ -45,8 +45,19 @@ import { Input } from '@/components/ui/input'
           </form>
         </CardContent>
         <CardFooter class="border-t px-6 py-4">
-          <Button>Save</Button>
+          <Button class="min-w-[100px]">Save</Button>
         </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Delete your account</CardTitle>
+          <CardDescription class="max-w-lg">
+            Once you delete your account, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+          </CardDescription>
+        </CardHeader>
+        <CardContent class="max-w-lg">
+          <Button variant="destructive" class="min-w-[100px]">Delete Account</Button>
+        </CardContent>
       </Card>
     </div>
   </div>

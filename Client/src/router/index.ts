@@ -1,6 +1,7 @@
+import { useAuthStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -16,24 +17,60 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      component: () => import('../views/Dashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
-      path: '/stats',
-      name: 'stats',
-      component: () => import('../views/StatsView.vue')
+      path: '/analytics',
+      name: 'analytics',
+      component: () => import('../views/Analytics.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/settings',
       name: 'settings',
-      component: () => import('../views/Settings.vue')
+      component: () => import('../views/Settings.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/employees',
+      name: 'employees',
+      component: () => import('../views/Employees.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/teams',
+      name: 'teams',
+      component: () => import('../views/Teams.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/teams/:id/members',
+      name: 'team-members',
+      component: () => import('../views/TeamMembers.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/agenda',
       name: 'agenda',
-      component: () => import('../views/Agenda.vue')
+      component: () => import('../views/Agenda.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })
 
-export default router
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  if (authStore.token) {
+    await authStore.me()
+  }
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    next('/login')
+  } else if (!to.meta.requiresAuth && authStore.isLoggedIn) {
+    next('/')
+  } else {
+    next()
+  }
+})
