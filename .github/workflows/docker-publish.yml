@@ -26,7 +26,7 @@ jobs:
 
       - name: Build and Publish Server
         run: |
-          docker build ./Server --tag ghcr.io/ogesebastien1/timemanager-server:latest
+          docker build ./Server -f ./Server/Dockerfile.prod --tag ghcr.io/ogesebastien1/timemanager-server:latest
           docker push ghcr.io/ogesebastien1/timemanager-server:latest
 
   deploy:

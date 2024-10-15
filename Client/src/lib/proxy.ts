@@ -5,7 +5,7 @@ export enum HttpMethod {
   DELETE = 'DELETE'
 }
 
-const { VITE_API_URL } = import.meta.env
+const { VITE_API_URL = 'https://api.timemanager.alexishenry.eu/api' } = import.meta.env
 
 export const fetch = async ({
   endpoint,
