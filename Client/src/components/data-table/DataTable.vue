@@ -31,8 +31,13 @@ import {
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, any>[]
-  data: TData[],
+  data: TData[]
   showToolbar?: boolean
+  search?: {
+    label?: string
+    field?: string
+  },
+  onCreate?: () => void | undefined
 }
 const props = defineProps<DataTableProps<any>>()
 
@@ -78,7 +83,12 @@ const table = useVueTable({
 
 <template>
   <div class="space-y-4">
-    <DataTableToolbar :table="table" v-show="props.showToolbar" />
+    <DataTableToolbar
+      :table="table"
+      v-show="props.showToolbar"
+      :search="props.search"
+      :on-create="props.onCreate"
+    />
     <div class="rounded-md border">
       <Table>
         <TableHeader>
@@ -106,7 +116,9 @@ const table = useVueTable({
           </template>
 
           <TableRow v-else>
-            <TableCell :colspan="props.columns.length" class="h-24 text-center"> No results. </TableCell>
+            <TableCell :colspan="props.columns.length" class="h-24 text-center">
+              No results.
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

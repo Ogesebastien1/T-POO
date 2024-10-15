@@ -9,11 +9,18 @@ import { Input } from '@/components/ui/input'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  search?: {
+    label?: string
+    field?: string
+  },
+  onCreate?: () => void
 }
 
 const props = defineProps<DataTableToolbarProps<any>>()
 
 const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
+
+const searchField = computed(() => props.search?.field ?? 'name')
 </script>
 
 <template>
@@ -21,10 +28,10 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
     <div class="flex flex-1 items-center justify-between space-x-2">
       <div class="flex items-center space-x-2">
         <Input
-          placeholder="Filter teams..."
-          :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
+          :placeholder="props.search?.label ?? 'Search...'"
+          :model-value="(table.getColumn(searchField)?.getFilterValue() as string) ?? ''"
           class="h-8 p-2 w-[150px] lg:w-[250px]"
-          @input="table.getColumn('name')?.setFilterValue($event.target.value)"
+          @input="table.getColumn(searchField)?.setFilterValue($event.target.value)"
         />
 
         <Button
@@ -38,7 +45,7 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
         </Button>
       </div>
       <div class="flex items-center space-x-2">
-        <Button variant="outline" size="sm" class="ml-auto flex h-8">
+        <Button variant="outline" size="sm" class="ml-auto flex h-8" @click="props.onCreate">
           <Plus class="mr-2 h-4 w-4" />
           Create
         </Button>
