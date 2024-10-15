@@ -6,8 +6,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
@@ -24,4 +22,3 @@ EXPOSE 4000
 RUN chmod +x /app/entrypoint.sh
 
 CMD ["/app/entrypoint.sh"]
-#CMD ["sh", "-c", "bin/time_manager eval TimeManager.Release.migrate && bin/time_manager start"]
