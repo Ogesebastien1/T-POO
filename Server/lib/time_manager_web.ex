@@ -40,13 +40,20 @@ defmodule TimeManagerWeb do
       use Phoenix.Controller,
         formats: [:json]
 
-
       import Plug.Conn
 
       unquote(verified_routes())
     end
   end
 
+  def view do
+    quote do
+      use Phoenix.Controller,
+        formats: [:json]
+
+      import Plug.Conn
+    end
+  end
 
   def verified_routes do
     quote do

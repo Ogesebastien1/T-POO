@@ -15,6 +15,10 @@ defmodule TimeManagerWeb.ErrorView do
     %{errors: %{detail: "Unauthorized"}}
   end
 
+  def render("403.json", _assigns) do
+    %{errors: %{detail: "Forbidden"}}
+  end
+
   def render("422.json", %{changeset: changeset}) do
     errors =
       Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->

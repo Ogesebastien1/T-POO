@@ -10,30 +10,13 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api/users", TimeManagerWeb do
-    pipe_through :api
+    pipe_through [:api, :authenticated]
 
     get "/", Accounts.Infrastructure.UserController, :index
     get "/:id", Accounts.Infrastructure.UserController, :show
     post "/", Accounts.Infrastructure.UserController, :create
     put "/:id", Accounts.Infrastructure.UserController, :update
     delete "/:id", Accounts.Infrastructure.UserController, :delete
-  end
-
-  scope "/api/workingtimes", TimeManagerWeb do
-    pipe_through :api
-
-    get "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
-    get "/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
-    post "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
-    put "/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
-    delete "/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
-  end
-
-  scope "/api/clocks", TimeManagerWeb do
-    pipe_through :api
-
-    get "/:userID", TimeTracking.Infrastructure.ClockController, :index
-    post "/:userID", TimeTracking.Infrastructure.ClockController, :create
   end
 
   scope "/api/registration", TimeManagerWeb do
@@ -50,8 +33,14 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api/auth", TimeManagerWeb do
     pipe_through [:api, :authenticated]
-
     get "/me", Accounts.Infrastructure.AuthController, :me
+  end
+
+  scope "/api/teams", TimeManagerWeb do
+    pipe_through [:api, :authenticated]
+
+    post "/", TimeTracking.Infrastructure.TeamsController, :create_team
+    post "/:team_id/users", TimeTracking.Infrastructure.TeamsController, :add_user_to_team
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

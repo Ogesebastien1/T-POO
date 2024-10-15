@@ -6,7 +6,8 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
     %{
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      manager: present_manager(user.manager)
     }
   end
 
@@ -15,16 +16,25 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
   end
 
   def present_auth_user(%{user: %UserModel{} = user}) do
-    user =
-      %{
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
+    user = present_user(%{user: user})
 
     %{
       user: user,
       token: Token.sign(user)
     }
+  end
+
+  defp present_manager(manager) do
+    case manager do
+      %UserModel{} ->
+        %{
+          id: manager.id,
+          username: manager.username,
+          email: manager.email
+        }
+
+      _ ->
+        nil
+    end
   end
 end

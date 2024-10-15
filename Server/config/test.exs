@@ -36,3 +36,7 @@ config :phoenix, :plug_init_mode, :runtime
 config :time_manager,
        TimeManager.Accounts.Application.UserRepository,
        TimeManager.Accounts.Infrastructure.UserRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.TeamRepository,
+       TimeManager.TimeTracking.Infrastructure.TeamRepository
