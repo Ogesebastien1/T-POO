@@ -49,6 +49,7 @@ defmodule TimeManager.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:bcrypt_elixir, "~> 3.0"},
+      {:cors_plug, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.16"},
       {:bodyguard, "~> 2.4"}
     ]

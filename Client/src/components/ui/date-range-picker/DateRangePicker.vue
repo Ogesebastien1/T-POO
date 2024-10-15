@@ -1,23 +1,8 @@
 <script setup lang="ts">
-import Card from '@/components/ui/card/Card.vue'
-import CardContent from '@/components/ui/card/CardContent.vue'
-import CardHeader from '@/components/ui/card/CardHeader.vue'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AreaChart } from '@/components'
-import { BarChart } from '@/components'
 import { ref } from 'vue'
-import { Check, ChevronsUpDown } from 'lucide-vue-next'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 import { type Ref, watch } from 'vue'
@@ -270,25 +255,4 @@ watch(secondMonthPlaceholder, (_secondMonthPlaceholder) => {
       </PopoverContent>
     </Popover>
   </div>
-
-  <!-- First tab -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <card class="w-full justify-center">
-      <CardContent class="w-full mt-20">
-        <BarChart />
-      </CardContent>
-    </card>
-    <card class="w-full justify-center">
-      <CardContent class="w-full mt-20">
-        <BarChart />
-      </CardContent>
-    </card>
-  </div>
-
-  <!-- Second tab -->
-  <card class="w-full flex items-center justify-center">
-    <CardContent class="w-full">
-      <AreaChart />
-    </CardContent>
-  </card>
 </template>

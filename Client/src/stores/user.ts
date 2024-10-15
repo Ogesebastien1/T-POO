@@ -1,38 +1,18 @@
+import type { CreatedUserType, UpdatedUserType, UserType } from '@/types';
 import axios from 'axios';
 import { defineStore } from 'pinia';
 
-const BACKEND_URL = 'http://localhost:4000';
-
-export type updatedUser = {
-  id: string;
-  user: {
-    username: string;
-    email: string;
-  }
-};
-
-export type user = {
-  id: number;
-  username: string;
-  email: string;
-};
-
-export type createdUser = {
-  user:{
-    username: string;
-    email: string;
-  }
-};
+const BACKEND_URL = 'http://localhost:4000/api';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null as user | null,
+    user: null as UserType | null,
   }),
 
   actions: {
-    async createUser(userData: createdUser) {
+    async createUser(userData: CreatedUserType) {
       try {
-        const { data } = await axios.post(`${BACKEND_URL}/api/users`, userData, {
+        const { data } = await axios.post(`${BACKEND_URL}/users`, userData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -43,9 +23,9 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async updateUser(user: updatedUser) {
+    async updateUser(user: UpdatedUserType) {
       try {
-        const { data } = await axios.put(`${BACKEND_URL}/api/users/${user.id}`, user, {
+        const { data } = await axios.put(`${BACKEND_URL}/users/${user.id}`, user, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -58,7 +38,7 @@ export const useUserStore = defineStore('user', {
 
     async deleteUser(userId: string) {
       try {
-        await axios.delete(`${BACKEND_URL}/api/users/${userId}`, {
+        await axios.delete(`${BACKEND_URL}/users/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -71,7 +51,7 @@ export const useUserStore = defineStore('user', {
 
     async getUser(userId: string) {
       try {
-        const { data } = await axios.get(`${BACKEND_URL}/api/users/${userId}`, {
+        const { data } = await axios.get(`${BACKEND_URL}/users/${userId}`, {
           headers: {
             'Content-Type': 'application/json',
           },
