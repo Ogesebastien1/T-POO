@@ -49,7 +49,7 @@ jobs:
               docker system prune -a -f
               docker pull ghcr.io/ogesebastien1/timemanager-client:latest
               docker pull ghcr.io/ogesebastien1/timemanager-server:latest
-              docker compose up -d
+              docker compose up -d --build
 
       - name: cleanup
         run: rm -rf ~/.ssh
