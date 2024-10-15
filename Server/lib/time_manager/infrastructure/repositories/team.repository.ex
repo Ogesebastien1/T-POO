@@ -7,8 +7,6 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
 
   @behaviour TeamRepository
 
-  import UUIDValidator
-
   def get_all() do
     TeamModel
     |> Repo.all()
@@ -20,8 +18,9 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
   end
 
   def insert(team) do
-    team
-    |> Repo.insert()
+    with {:ok, team} <- Repo.insert(team) do
+      {:ok, Repo.preload(team, :manager)}
+    end
   end
 
   def get_by_manager(manager_id) do

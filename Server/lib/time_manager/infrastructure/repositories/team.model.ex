@@ -2,11 +2,10 @@ defmodule TimeManager.TimeTracking.TeamModel do
   use TimeManager, :domain_model
 
   alias TimeManager.Accounts.UserModel
-  alias __MODULE__
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "users" do
+  schema "teams" do
     field :name, :string
     belongs_to(:manager, UserModel)
     belongs_to(:user, UserModel)
@@ -16,8 +15,8 @@ defmodule TimeManager.TimeTracking.TeamModel do
 
   def changeset(team, params) do
     team
-    |> cast(params, [:name])
-    |> validate_required([:name])
+    |> cast(params, [:name, :manager_id, :user_id])
+    |> validate_required([:name, :manager_id])
     |> assoc_constraint(:manager)
   end
 end
