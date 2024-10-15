@@ -6,8 +6,10 @@ import { useForm } from 'vee-validate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuthStore } from '@/stores'
-import { RouterLink } from 'vue-router'
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
+import { RouterLink } from 'vue-router'
+import { router } from '@/router'
+import { toast } from '@/components/ui/toast'
 
 const authStore = useAuthStore()
 
@@ -30,9 +32,15 @@ interface LoginPayload {
 const onSubmit = form.handleSubmit(async (values: LoginPayload) => {
   if (await authStore.login(values)) {
     router.push('/')
+    return;
   }
-  
+
   form.resetForm()
+  toast({
+    variant: 'destructive',
+    description: 'Invalid credentials',
+    duration: 5000
+  })
 })
 </script>
 

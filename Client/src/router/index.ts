@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
 export const router = createRouter({
@@ -16,53 +17,60 @@ export const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: () => import('../views/Dashboard.vue')
+      component: () => import('../views/Dashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/analytics',
       name: 'analytics',
-      component: () => import('../views/Analytics.vue')
+      component: () => import('../views/Analytics.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/settings',
       name: 'settings',
-      component: () => import('../views/Settings.vue')
+      component: () => import('../views/Settings.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/employees',
       name: 'employees',
-      component: () => import('../views/Employees.vue')
+      component: () => import('../views/Employees.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/teams',
       name: 'teams',
-      component: () => import('../views/Teams.vue')
+      component: () => import('../views/Teams.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/teams/:id/members',
       name: 'team-members',
-      component: () => import('../views/TeamMembers.vue')
+      component: () => import('../views/TeamMembers.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/agenda',
       name: 'agenda',
-      component: () => import('../views/Agenda.vue')
+      component: () => import('../views/Agenda.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register']
-  const authRequired = !publicPages.includes(to.path)
-  const loggedIn = localStorage.getItem('token')
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
 
-  if (authRequired && !loggedIn) {
-    return next('/login')
+  if (authStore.token) {
+    await authStore.me()
   }
 
-  if (publicPages.includes(to.path) && loggedIn) {
-    return next('/')
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    next('/login')
+  } else if (!to.meta.requiresAuth && authStore.isLoggedIn) {
+    next('/')
+  } else {
+    next()
   }
-
-  next()
 })
