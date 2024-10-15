@@ -1,10 +1,8 @@
 defmodule TimeManagerWeb.AuthorizationTest do
   use TimeManagerWeb.ConnCase, async: true
-  alias TimeManager.Fixture.AuthFixture
   import TimeManagerWeb.Test.UserBuilder
   alias TimeManager.Test.SetupFixture.{Registration, Auth, Authorization}
   alias TimeManager.Test.AccountsFixture
-  alias TimeManager.Accounts.Application.ManageUserService
 
   @moduletag :integration
   @moduletag :authorization

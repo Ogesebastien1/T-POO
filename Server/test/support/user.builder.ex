@@ -29,4 +29,35 @@ defmodule TimeManagerWeb.Test.UserBuilder do
   def with_role(user, role) do
     %{user | "role" => role}
   end
+
+  def user(number, role \\ :user) do
+    case role do
+      :user ->
+        the_user = "User#{number}"
+
+        user()
+        |> with_username(the_user)
+        |> with_email("#{the_user}@gmail.com")
+        |> with_role("user")
+
+      :admin ->
+        the_user = "Admin#{number}"
+
+        user()
+        |> with_username(the_user)
+        |> with_email("#{the_user}@gmail.com")
+        |> with_role("admin")
+
+      :manager ->
+        the_user = "Manager#{number}"
+
+        user()
+        |> with_username(the_user)
+        |> with_email("#{the_user}@gmail.com")
+        |> with_role("manager")
+
+      _ ->
+        nil
+    end
+  end
 end
