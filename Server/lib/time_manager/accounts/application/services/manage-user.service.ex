@@ -36,7 +36,7 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
 
   def update_user(user, update_user) do
     user
-    |> UserModel.changeset(update_user)
+    |> UserModel.changeset_update(update_user)
     |> UserRepository.update(update_user)
   end
 
