@@ -17,6 +17,7 @@ COPY . .
 RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 
 EXPOSE 4000
+RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["sh", "-c", "bin/time_manager eval TimeManager.Release.migrate && bin/time_manager start"]
