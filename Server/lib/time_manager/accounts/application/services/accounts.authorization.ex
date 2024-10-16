@@ -5,8 +5,17 @@ defmodule TimeManager.Accounts.Authorization do
     do: :ok
 
   def authorize(:update_user, %{role: :admin}, _), do: :ok
-  def authorize(:get_users, %{role: :admin}, _), do: :ok
-  def authorize(:get_users, %{role: :manager}, _), do: :ok
+  def authorize(:get_users, %{role: role}, _) when role in [:admin, :manager], do: :ok
+  def authorize(:get_user, %{role: :admin}, _), do: :ok
+  # il faut sa permission a partial
+  # def authorize(:get_user, %{role: :manager}, _), do: :ok
+  # def authorize(:get_user, %{id: user_id}, %{id: user_id}), do: :ok
+  #
+  # def authorize(:create_user, %{role: :admin}, _), do: :ok
+  #
+  # def authorize(:delete_user, %{role: :admin}, _), do: :ok
+  # def authorize(:delete_user, %{id: user_id}, %{id: user_id}), do: :ok
+
   def authorize(_, _, _), do: false
 
   def permission(:update_user, %{role: :admin}, _), do: :ok

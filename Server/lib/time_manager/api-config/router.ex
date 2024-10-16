@@ -62,7 +62,10 @@ defmodule TimeManagerWeb.Router do
     scope "/dev" do
       pipe_through([:fetch_session, :protect_from_forgery])
 
-      live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: TimeManagerWeb.Telemetry,
+        ecto_repo: [TimeManager.Repo]
+
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
