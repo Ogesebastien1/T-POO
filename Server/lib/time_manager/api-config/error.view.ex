@@ -33,4 +33,8 @@ defmodule TimeManagerWeb.ErrorView do
   def render("400.json", %{message: message}) do
     %{errors: %{detail: message}}
   end
+
+  def render("400.json", _assigns) do
+    %{errors: %{detail: "Bad request"}}
+  end
 end

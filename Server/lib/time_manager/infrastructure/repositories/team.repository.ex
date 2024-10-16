@@ -55,9 +55,11 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
 
   @impl true
   def add_user(team, user_id) do
+    IO.inspect("Le repository :")
+
     team =
       TeamModel
-      |> Repo.get!(team)
+      |> Repo.get(team.id)
       |> Repo.preload(:users)
       |> Repo.preload(:manager)
 
