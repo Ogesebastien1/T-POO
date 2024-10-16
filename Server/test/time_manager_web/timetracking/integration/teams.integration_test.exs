@@ -30,6 +30,7 @@ defmodule TimeManagerWeb.TeamsTest do
   end
 
   describe "As a Manager, " do
+    @describetag :this
     test "I can create a blank team", %{
       conn: conn,
       manager_id: manager_id,
@@ -44,6 +45,25 @@ defmodule TimeManagerWeb.TeamsTest do
       |> Auth.put_auth_token(manager_token)
       |> TeamsFixture.when_manager_creates_team(team_params)
       |> TeamsFixture.then_team_was_created(team_params)
+    end
+
+    test "UNIT, I can add a user to my team", %{
+      manager_id: manager_id,
+      users: users
+    } do
+      team = %{
+        "name" => "Team 1",
+        "manager_id" => manager_id
+      }
+
+      user1 = List.first(users)
+
+      {:ok, team} =
+        team
+        |> TeamsFixture.given_team_exists()
+
+      team.id
+      |> TeamsFixture.unit_when_manager_adds_user_to_team(user1.id)
     end
 
     # test "I can add a user to my team", %{

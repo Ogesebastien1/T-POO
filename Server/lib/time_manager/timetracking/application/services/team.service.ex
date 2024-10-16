@@ -34,6 +34,11 @@ defmodule TimeManager.TimeTracking.Application.TeamService do
     |> TeamRepository.insert()
   end
 
+  def add_user_to_team(team, user) do
+    team
+    |> TeamRepository.add_user(user)
+  end
+
   def update_team(team, update_team) do
     team
     |> TeamModel.changeset(update_team)

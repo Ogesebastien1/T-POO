@@ -19,7 +19,7 @@ defmodule TimeManager.TimeTracking.TeamModel do
   def changeset(team, params) do
     team
     |> cast(params, [:name, :manager_id])
-    |> validate_required([:name, :manager_id])
+    |> validate_required([:name])
     |> assoc_constraint(:manager)
   end
 end

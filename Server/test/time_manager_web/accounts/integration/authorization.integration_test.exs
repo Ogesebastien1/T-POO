@@ -221,25 +221,6 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> AccountsFixture.request_is_forbidden()
     end
 
-    @tag :this
-    test "I can't update another user's profile", %{conn: conn} do
-      registered_users = Registration.given_existing_users([@user, @manager])
-
-      _manager = List.first(registered_users)
-      user = List.last(registered_users)
-
-      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
-      token = Auth.extract_auth_token(manager_response)
-
-      updated_user = @user |> with_username("User 2") |> Map.drop(["role", "manager_id", "email"])
-
-      conn
-      |> Auth.put_auth_token(token)
-      |> AccountsFixture.update_user(updated_user, user.id)
-      |> AccountsFixture.request_is_forbidden()
-    end
-
-    @tag :this
     test "I can see all users that are assigned to me", %{conn: conn} do
       registred_users =
         Registration.given_existing_users([

@@ -13,6 +13,8 @@ defmodule TimeManager.TimeTracking.Application.TeamRepository do
   @callback update(team :: TeamModel.t(), params :: map()) ::
               {:ok, TeamModel.t()} | {:error, any()}
   @callback delete(team :: TeamModel.t()) :: {:ok, TeamModel.t()} | {:error, any()}
+  @callback add_user(team :: String.t(), user :: String.t()) ::
+              {:ok, TeamModel.t()} | {:error, any()}
 
   def insert(team), do: adapter().insert(team)
   def get_all(), do: adapter().get_all()
@@ -21,4 +23,6 @@ defmodule TimeManager.TimeTracking.Application.TeamRepository do
   def get_by_user(user), do: adapter().get_by_user(user)
   def update(team, params), do: adapter().update(team, params)
   def delete(team), do: adapter().delete(team)
+
+  def add_user(team, user), do: adapter().add_user(team, user)
 end
