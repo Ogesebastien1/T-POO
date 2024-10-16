@@ -31,7 +31,6 @@ interface LoginPayload {
 
 const onSubmit = form.handleSubmit(async (values: LoginPayload) => {
   if (await authStore.login(values)) {
-    router.push('/')
     return;
   }
 

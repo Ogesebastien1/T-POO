@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { UserType } from '@/types'
-import { router } from '../router'
+import { router } from '@/router'
 import { fetch, HttpMethod } from '@/lib/proxy'
 
 interface LoginPayload {
@@ -31,7 +31,8 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
     user: JSON.parse(localStorage.getItem('user') || 'null') as UserType | null,
-    isLogged: localStorage.getItem('token') ? true : false
+    isLogged: localStorage.getItem('token') ? true : false,
+    isLoading: false
   }),
 
   getters: {
@@ -48,6 +49,7 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(payload: LoginPayload): Promise<boolean> {
+      this.isLoading = true
       const response = await fetch({
         endpoint: '/auth',
         method: HttpMethod.POST,
@@ -62,8 +64,12 @@ export const useAuthStore = defineStore('auth', {
         this.isLogged = true
         localStorage.setItem('token', this.token || '')
         localStorage.setItem('user', JSON.stringify(this.user))
+        // console.log(data, "Set isLoading to false")
+        this.isLoading = false
+        router.push('/')
         return true
       } else {
+        this.isLoading = false
         return false
       }
     },
@@ -91,6 +97,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async me() {
+      this.isLoading = true
       const response = await fetch({
         endpoint: '/auth/me',
         method: HttpMethod.GET,
@@ -101,7 +108,10 @@ export const useAuthStore = defineStore('auth', {
       if (response.ok) {
         const data = await response.json()
         this.user = data.user
+        this.token = data.token
+        localStorage.setItem('token', this.token || '')
         localStorage.setItem('user', JSON.stringify(this.user))
+        this.isLoading = false
       } else {
         this.logout()
       }
