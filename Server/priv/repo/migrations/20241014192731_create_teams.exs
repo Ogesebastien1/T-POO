@@ -18,12 +18,12 @@ defmodule TimeManager.Repo.Migrations.CreateTeams do
       timestamps(type: :utc_datetime_usec)
     end
 
-    create index(:teams, [:manager_id])
-    create index(:teams, [:user_id])
-
-    create index(:teams_users, [:team_id])
-    create index(:teams_users, [:user_id])
-
-    create unique_index(:teams_users, [:team_id, :user_id])
+    # create index(:teams, [:manager_id])
+    # create index(:teams, [:user_id])
+    #
+    # create index(:teams_users, [:team_id])
+    # create index(:teams_users, [:user_id])
+    #
+    # create unique_index(:teams_users, [:team_id, :user_id])
   end
 end

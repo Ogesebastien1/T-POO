@@ -8,21 +8,19 @@ defmodule TimeManager.TimeTracking.TeamModel do
   schema "teams" do
     field :name, :string
     belongs_to(:manager, UserModel)
-    many_to_many :users, UserModel, join_through: "teams_users"
+
+    many_to_many :users, UserModel,
+      join_through: "teams_users",
+      join_keys: [team_id: :id, user_id: :id]
 
     timestamps(type: :utc_datetime)
   end
 
   def changeset(team, params) do
     team
-    |> cast(params, [:name, :manager_id, :user_id])
+    |> cast(params, [:name, :manager_id])
     |> validate_required([:name, :manager_id])
     |> assoc_constraint(:manager)
-  end
-
-  def changeset_update(team, params) do
-    team
-    |> cast_assoc(:users, with: &UserModel.changeset/2)
   end
 end
 
