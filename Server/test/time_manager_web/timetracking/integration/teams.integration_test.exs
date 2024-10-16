@@ -1,13 +1,13 @@
 defmodule TimeManagerWeb.TeamsTest do
   use TimeManagerWeb.ConnCase, async: true
-  alias TimeManager.Test.SetupFixture.{Registration, Auth, Authorization}
+  alias TimeManager.Test.SetupFixture.{Registration, Auth}
   import TimeManagerWeb.Test.UserBuilder
   alias TimeManager.Test.TeamsFixture
 
   @moduletag :integration
   @moduletag :teams
 
-  setup context do
+  setup do
     manager1 = user(1, :manager)
 
     user1 = user(1)

@@ -1,6 +1,6 @@
 defmodule TimeManager.Accounts.Application.Token do
   @day_in_seconds 86_400
-  @token_age 7 * @day_in_seconds
+  @token_age @day_in_seconds
   @namespace "user auth"
   alias Phoenix.Token
 

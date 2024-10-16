@@ -47,8 +47,6 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
       with {:ok, team} <- TeamService.get_team_by_id(team_id) do
         case TeamService.update_team(team, %{"user_id" => user_id}) do
           {:ok, team} ->
-            IO.inspect(team)
-
             conn
             |> TeamPresenter.render_result(team, :created)
 

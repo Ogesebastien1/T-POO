@@ -45,4 +45,10 @@ defmodule TimeManager.Test.SetupFixture do
       end
     end
   end
+
+  defmodule Accounts do
+    def update_user(user, updated_user) do
+      ManageUserService.update_user(user, updated_user)
+    end
+  end
 end

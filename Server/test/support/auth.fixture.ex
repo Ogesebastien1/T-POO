@@ -22,13 +22,13 @@ defmodule TimeManager.Fixture.AuthFixture do
     given_existing_users([user])
 
     conn = login_pass(conn, %{email: user["email"], password: user["password"]})
-    response_token = json_response(conn, 200)["token"]
+    _response_token = json_response(conn, 200)["token"]
   end
 
   def assert_is_the_same_user(conn, user) do
     assert conn.status == 200
     response_user = json_response(conn, 200)["user"]
-    response_token = json_response(conn, 200)["token"]
+    _response_token = json_response(conn, 200)["token"]
 
     assert response_user["email"] == user["email"]
     assert response_user["username"] == user["username"]

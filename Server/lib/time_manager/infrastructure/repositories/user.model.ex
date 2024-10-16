@@ -22,7 +22,7 @@ defmodule TimeManager.Accounts.UserModel do
 
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email, :password, :role])
+    |> cast(attrs, [:username, :email, :password, :role, :manager_id])
     |> validate_required([:username, :email, :password])
     |> validate_length(:username, min: 3, max: 30)
     |> validate_length(:password, min: 8, max: 100)

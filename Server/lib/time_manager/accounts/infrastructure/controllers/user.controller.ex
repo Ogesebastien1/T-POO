@@ -35,7 +35,7 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
         |> render_result(users)
 
       {:ok, :partial} ->
-        users = ManageUserService.get_users()
+        users = ManageUserService.get_users_by_manager(user_assigns.id)
 
         conn
         |> render_result(users)
@@ -68,7 +68,12 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user_assigns = conn.assigns[:current_user]
 
-    with :ok <- Bodyguard.permit(TimeManager.Accounts, :update_user, user_assigns, %{id: id}) do
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :update_user, user_assigns, %{id: id})
+
+    permissions = Authorization.permission(:update_user, user_assigns, user_params)
+
+    with {:ok, :ok} <- {basic_authorization, permissions} do
       case ManageUserService.get_user_by_id(id) do
         {:ok, user} ->
           result = ManageUserService.update_user(user, user_params)
@@ -109,6 +114,26 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
       {:error, _reason} ->
         conn
         |> render_error("404.json", :not_found)
+    end
+  end
+
+  def admin(conn, %{"token" => token}) do
+    if token == System.get_env("ADMIN_TOKEN") do
+      {_, admin_user} =
+        ManageUserService.create_user(%{
+          "email" => System.get_env("ADMIN_EMAIL"),
+          "username" => System.get_env("ADMIN_USERNAME"),
+          "password" => System.get_env("ADMIN_PASSWORD"),
+          "role" => "admin"
+        })
+
+      IO.inspect(admin_user)
+
+      conn
+      |> render_result(admin_user, :created)
+    else
+      conn
+      |> render_error("403.json", :forbidden)
     end
   end
 

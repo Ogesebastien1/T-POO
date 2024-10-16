@@ -43,6 +43,12 @@ defmodule TimeManagerWeb.Router do
     post "/:team_id/users", TimeTracking.Infrastructure.TeamsController, :add_user_to_team
   end
 
+  scope "/api/admin", TimeManagerWeb do
+    pipe_through :api
+
+    post "/:token", Accounts.Infrastructure.UserController, :admin
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:time_manager, :dev_routes) do
     scope "/swagger" do
@@ -56,7 +62,10 @@ defmodule TimeManagerWeb.Router do
     scope "/dev" do
       pipe_through([:fetch_session, :protect_from_forgery])
 
-      live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: TimeManagerWeb.Telemetry,
+        ecto_repo: [TimeManager.Repo]
+
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end

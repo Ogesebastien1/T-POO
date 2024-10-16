@@ -3,7 +3,6 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamPresenter do
 
   alias TimeManager.TimeTracking.TeamModel
   alias TimeManager.Accounts.Infrastructure.UserPresenter
-  alias TimeManager.Accounts.UserModel
 
   def present_team(%{team: %TeamModel{} = team}) do
     %{
