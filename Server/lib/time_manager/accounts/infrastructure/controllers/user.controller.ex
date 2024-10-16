@@ -27,8 +27,6 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
     basic_authorization = Bodyguard.permit(TimeManager.Accounts, :get_users, user_assigns)
     permission = Authorization.permission(:get_users, user_assigns)
 
-    IO.inspect({basic_authorization, permission})
-
     case {basic_authorization, permission} do
       {:ok, :full} ->
         users = ManageUserService.get_users()
@@ -75,14 +73,10 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
 
     permissions = Authorization.permission(:update_user, user_assigns, user_params)
 
-    IO.inspect({basic_authorization, permissions})
-
     with {:ok, :ok} <- {basic_authorization, permissions} do
       case ManageUserService.get_user_by_id(id) do
         {:ok, user} ->
           result = ManageUserService.update_user(user, user_params)
-
-          IO.inspect(result)
 
           with {:ok, updated_user} <- result do
             conn

@@ -24,8 +24,6 @@ defmodule TimeManagerWeb.AuthorizationTest do
            |> with_password("MAIS LOL")
            |> with_role("manager")
 
-  @seed 0
-
   describe "As a an Admin, " do
     test "I have an admin role" do
       Registration.given_existing_users([@admin])
@@ -89,7 +87,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     test "I can update my profile", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
-      manager = List.first(registered_users)
+      _manager = List.first(registered_users)
 
       user_response = Auth.login_pass(@user["email"], @user["password"])
       token = Auth.extract_auth_token(user_response)
@@ -105,7 +103,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     test "I can't update my role", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
-      manager = List.first(registered_users)
+      _manager = List.first(registered_users)
 
       user_response = Auth.login_pass(@user["email"], @user["password"])
       token = Auth.extract_auth_token(user_response)
@@ -149,7 +147,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     end
 
     test "I can't see all users", %{conn: conn} do
-      registred_users =
+      _registred_users =
         Registration.given_existing_users([
           @user,
           @user |> with_email("user2@gmail.com") |> with_username("User 2"),
@@ -178,7 +176,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     test "I can update my profile", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
-      manager = List.first(registered_users)
+      _manager = List.first(registered_users)
 
       manager_response = Auth.login_pass(@manager["email"], @manager["password"])
       token = Auth.extract_auth_token(manager_response)
@@ -194,7 +192,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     test "I can't update my role", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
-      manager = List.first(registered_users)
+      _manager = List.first(registered_users)
 
       manager_response = Auth.login_pass(@manager["email"], @manager["password"])
       token = Auth.extract_auth_token(manager_response)
@@ -227,7 +225,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
     test "I can't update another user's profile", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
-      manager = List.first(registered_users)
+      _manager = List.first(registered_users)
       user = List.last(registered_users)
 
       manager_response = Auth.login_pass(@manager["email"], @manager["password"])

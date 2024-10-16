@@ -1,8 +1,5 @@
 defmodule TimeManager.Test.AccountsFixture do
   use TimeManagerWeb.ConnCase
-  alias TimeManager.Accounts.Application.ManageUserService
-  alias TimeManager.Accounts.Application.AuthService
-  alias TimeManager.Accounts.Infrastructure.UserPresenter
 
   def get_users(conn) do
     get(conn, "/api/users")
