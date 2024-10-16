@@ -1,6 +1,8 @@
 import type { CreatedUserType, UpdatedUserType, UserType } from '@/types';
 import axios from 'axios';
 import { defineStore } from 'pinia';
+import { useAuthStore } from '@/stores';
+import { fetch, HttpMethod } from '@/lib/proxy';
 
 const BACKEND_URL = 'http://localhost:4000/api';
 
@@ -11,12 +13,14 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     async createUser(userData: CreatedUserType) {
+      const authStore = useAuthStore();
       try {
-        const { data } = await axios.post(`${BACKEND_URL}/users`, userData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch({
+          endpoint: `/users`,
+          method: HttpMethod.POST,
+          payload: userData,
+        })
+        const { data } = await response.json()
         this.user = data;
       } catch (error) {
         console.error('Error creating user:', error);
@@ -24,38 +28,40 @@ export const useUserStore = defineStore('user', {
     },
 
     async updateUser(user: UpdatedUserType) {
+      const authStore = useAuthStore();
       try {
-        const { data } = await axios.put(`${BACKEND_URL}/users/${user.id}`, user, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+          method: HttpMethod.PUT,
+          payload: user,
+        })
+        const { data } = await response.json()
         this.user = data;
       } catch (error) {
         console.error('Error updating user:', error);
       }
     },
 
-    async deleteUser(userId: string) {
+    async deleteUser() {
+      const authStore = useAuthStore();
       try {
-        await axios.delete(`${BACKEND_URL}/users/${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+          method: HttpMethod.DELETE,
+        })
         this.user = null;
       } catch (error) {
         console.error('Error deleting user:', error);
       }
     },
 
-    async getUser(userId: string) {
+    async getUser() {
+      const authStore = useAuthStore();
       try {
-        const { data } = await axios.get(`${BACKEND_URL}/users/${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+        })
+        const { data } = await response.json()
         this.user = data;
       } catch (error) {
         console.error('Error fetching user:', error);

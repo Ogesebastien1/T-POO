@@ -9,9 +9,64 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { ref } from 'vue'
 import { useAuthStore } from '@/stores'
+import { toast } from '@/components/ui/toast'
 
 const authStore = useAuthStore()
+const newPassword = ref('')
+const newUsername = ref(authStore.user?.username || '')
+
+const updateUsername = async () => {
+  try {
+    await authStore.updateUsername(newUsername.value)
+    toast({
+      variant: 'default',
+      description: 'Username updated successfully',
+      duration: 5000
+    })
+  } catch (error) {
+    toast({
+      variant: 'destructive',
+      description: 'Failed to update username',
+      duration: 5000
+    })
+  }
+}
+
+const updatePassword = async () => {
+  try {
+    await authStore.updatePassword(newPassword.value)
+    toast({
+      variant: 'default',
+      description: 'Password updated successfully',
+      duration: 5000
+    })
+  } catch (error) {
+    toast({
+      variant: 'destructive',
+      description: 'Failed to update password',
+      duration: 5000
+    })
+  }
+}
+
+const deleteAccount = async () => {
+  try {
+    await authStore.delete()
+    toast({
+      variant: 'default',
+      description: 'Account deleted successfully',
+      duration: 5000
+    })
+  } catch (error) {
+    toast({
+      variant: 'destructive',
+      description: 'Failed to delete account',
+      duration: 5000
+    })
+  }
+}
 </script>
 
 <template>
@@ -24,11 +79,11 @@ const authStore = useAuthStore()
         </CardHeader>
         <CardContent class="max-w-lg">
           <form class="flex flex-col gap-4">
-            <Input type="username" placeholder="Username" :default-value="authStore.user?.username" />
+            <Input v-model="newUsername" type="username" placeholder="Username" :default-value="authStore.user?.username" />
           </form>
         </CardContent>
         <CardFooter class="border-t px-6 py-4">
-          <Button class="min-w-[100px]">Save</Button>
+          <Button @click="updateUsername" class="min-w-[100px]">Save</Button>
         </CardFooter>
       </Card>
 
@@ -39,13 +94,12 @@ const authStore = useAuthStore()
         </CardHeader>
         <CardContent class="max-w-lg">
           <form class="flex flex-col gap-4">
-            <Input type="password" placeholder="Current Password" />
-            <Input type="password" placeholder="New Password" />
+            <Input v-model="newPassword" type="password" placeholder="New Password" />
             <Input type="password" placeholder="Confirm New Password" />
           </form>
         </CardContent>
         <CardFooter class="border-t px-6 py-4">
-          <Button class="min-w-[100px]">Save</Button>
+          <Button @click="updatePassword" class="min-w-[100px]">Save</Button>
         </CardFooter>
       </Card>
       <Card>
@@ -56,7 +110,7 @@ const authStore = useAuthStore()
           </CardDescription>
         </CardHeader>
         <CardContent class="max-w-lg">
-          <Button variant="destructive" class="min-w-[100px]">Delete Account</Button>
+          <Button @click="deleteAccount" variant="destructive" class="min-w-[100px]">Delete Account</Button>
         </CardContent>
       </Card>
     </div>
