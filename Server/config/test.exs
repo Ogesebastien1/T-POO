@@ -40,3 +40,5 @@ config :time_manager,
 config :time_manager,
        TimeManager.TimeTracking.Application.TeamRepository,
        TimeManager.TimeTracking.Infrastructure.TeamRepository
+
+config :bcrypt_elixir, log_rounds: 4

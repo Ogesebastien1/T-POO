@@ -26,13 +26,21 @@ defmodule TimeManager.Test.TeamsFixture do
     TeamService.add_user_to_team(team_id, user_id)
   end
 
-  def then_user_was_added_to_team(conn, team) do
+  def then_user_was_added_to_team(conn, team, added_users) do
     response_body = json_response(conn, 201)
 
-    IO.inspect(response_body)
-    #
-    # assert response_body["name"] == team["name"]
-    #
-    # assert response_body["manager"]["id"] == team["manager_id"]
+    assert response_body["name"] == team.name
+
+    assert response_body["manager"]["id"] == team.manager.id
+
+    assert Enum.all?(added_users, fn user ->
+             Enum.any?(response_body["users"]["data"], fn response_user ->
+               response_user["id"] == user.id
+             end)
+           end)
+  end
+
+  def then_conflict_response(conn) do
+    assert conn.status == 409
   end
 end

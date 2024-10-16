@@ -25,7 +25,20 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamPresenter do
     }
   end
 
-  def render_result(conn, result, status \\ :ok) do
+  def present_teams_with_manager(%{teams: teams}) do
+    %{data: for(team <- teams, do: present_team_with_manager(%{team: team}))}
+  end
+
+  def render_result(conn, result, status \\ :ok)
+
+  def render_result(conn, result, status) when is_list(result) do
+    conn
+    |> put_status(status)
+    |> put_view(TimeManager.TimeTracking.Infrastructure.TeamPresenter)
+    |> render(:present_teams_with_manager, teams: result)
+  end
+
+  def render_result(conn, result, status) do
     conn
     |> put_status(status)
     |> put_view(TimeManager.TimeTracking.Infrastructure.TeamPresenter)

@@ -66,7 +66,7 @@ defmodule TimeManagerWeb.TeamsTest do
         conn
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
-        |> TeamsFixture.then_user_was_added_to_team(team)
+        |> TeamsFixture.then_user_was_added_to_team(team, [user1])
     end
 
     test "I can add multiple users to my team", %{
@@ -90,7 +90,79 @@ defmodule TimeManagerWeb.TeamsTest do
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user2.id)
-        |> TeamsFixture.then_user_was_added_to_team(team)
+        |> TeamsFixture.then_user_was_added_to_team(team, [user1, user2])
     end
+
+    test "I can't add a user to a team multiple times", %{
+      conn: conn,
+      manager_id: manager_id,
+      manager_token: manager_token,
+      users: users
+    } do
+      {:ok, team} =
+        %{
+          "name" => "Team 1",
+          "manager_id" => manager_id
+        }
+        |> TeamsFixture.given_team_exists()
+
+      user1 = hd(tl(users))
+
+      team =
+        conn
+        |> Auth.put_auth_token(manager_token)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.then_conflict_response()
+    end
+  end
+
+  test "I can get a team by id", %{
+    conn: conn,
+    manager_id: manager_id,
+    manager_token: manager_token,
+    users: users
+  } do
+    {:ok, team} =
+      %{
+        "name" => "Team 1",
+        "manager_id" => manager_id
+      }
+      |> TeamsFixture.given_team_exists()
+
+    team =
+      conn
+      |> Auth.put_auth_token(manager_token)
+      |> get("/api/teams/#{team.id}")
+
+    assert false == true
+  end
+
+  @tag :this_unit
+  test "I can get all teams -- REMOVE THIS TEST", %{
+    conn: conn,
+    manager_id: manager_id,
+    manager_token: manager_token,
+    users: users
+  } do
+    {:ok, team} =
+      %{
+        "name" => "Team 1",
+        "manager_id" => manager_id
+      }
+      |> TeamsFixture.given_team_exists()
+
+    {:ok, team} =
+      %{
+        "name" => "Team 2",
+        "manager_id" => manager_id
+      }
+      |> TeamsFixture.given_team_exists()
+
+    conn
+    |> Auth.put_auth_token(manager_token)
+    |> get("/api/teams")
+
+    assert false == true
   end
 end
