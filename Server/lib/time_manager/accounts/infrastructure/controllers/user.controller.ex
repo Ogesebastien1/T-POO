@@ -117,6 +117,26 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
     end
   end
 
+  def admin(conn, %{"token" => token}) do
+    if token == System.get_env("ADMIN_TOKEN") do
+      {_, admin_user} =
+        ManageUserService.create_user(%{
+          "email" => System.get_env("ADMIN_EMAIL"),
+          "username" => System.get_env("ADMIN_USERNAME"),
+          "password" => System.get_env("ADMIN_PASSWORD"),
+          "role" => "admin"
+        })
+
+      IO.inspect(admin_user)
+
+      conn
+      |> render_result(admin_user, :created)
+    else
+      conn
+      |> render_error("403.json", :forbidden)
+    end
+  end
+
   defp render_result(conn, result, status \\ :ok) do
     conn
     |> put_status(status)

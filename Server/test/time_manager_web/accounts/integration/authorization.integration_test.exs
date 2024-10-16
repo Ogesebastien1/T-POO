@@ -259,6 +259,9 @@ defmodule TimeManagerWeb.AuthorizationTest do
         user
       end)
 
+      # User 6 pas assignee (pour tester ..)
+      Registration.given_existing_users([user(6)])
+
       manager_response = Auth.login_pass(@manager["email"], @manager["password"])
       manager_token = Auth.extract_auth_token(manager_response)
 
