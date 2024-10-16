@@ -47,45 +47,50 @@ defmodule TimeManagerWeb.TeamsTest do
       |> TeamsFixture.then_team_was_created(team_params)
     end
 
-    test "UNIT, I can add a user to my team", %{
+    test "I can add a user to my team", %{
+      conn: conn,
       manager_id: manager_id,
+      manager_token: manager_token,
       users: users
     } do
-      team = %{
-        "name" => "Team 1",
-        "manager_id" => manager_id
-      }
+      {:ok, team} =
+        %{
+          "name" => "Team 1",
+          "manager_id" => manager_id
+        }
+        |> TeamsFixture.given_team_exists()
 
       user1 = List.first(users)
 
-      {:ok, team} =
-        team
-        |> TeamsFixture.given_team_exists()
-
-      team.id
-      |> TeamsFixture.unit_when_manager_adds_user_to_team(user1.id)
+      team =
+        conn
+        |> Auth.put_auth_token(manager_token)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.then_user_was_added_to_team(team)
     end
 
-    # test "I can add a user to my team", %{
-    #   conn: conn,
-    #   manager_id: manager_id,
-    #   manager_token: manager_token,
-    #   users: users
-    # } do
-    #   {:ok, team} =
-    #     %{
-    #       "name" => "Team 1",
-    #       "manager_id" => manager_id
-    #     }
-    #     |> TeamsFixture.given_team_exists()
-    #
-    #   user1 = List.first(users)
-    #
-    #   team =
-    #     conn
-    #     |> Auth.put_auth_token(manager_token)
-    #     |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
-    #     |> TeamsFixture.then_user_was_added_to_team(user1)
-    # end
+    test "I can add multiple users to my team", %{
+      conn: conn,
+      manager_id: manager_id,
+      manager_token: manager_token,
+      users: users
+    } do
+      {:ok, team} =
+        %{
+          "name" => "Team 1",
+          "manager_id" => manager_id
+        }
+        |> TeamsFixture.given_team_exists()
+
+      user1 = hd(tl(users))
+      user2 = hd(users)
+
+      team =
+        conn
+        |> Auth.put_auth_token(manager_token)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user2.id)
+        |> TeamsFixture.then_user_was_added_to_team(team)
+    end
   end
 end

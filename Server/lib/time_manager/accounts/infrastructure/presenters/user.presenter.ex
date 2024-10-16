@@ -25,7 +25,7 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
     }
   end
 
-  defp present_manager(manager) do
+  def present_manager(manager) do
     case manager do
       %UserModel{} ->
         %{
@@ -36,6 +36,25 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
 
       _ ->
         nil
+    end
+  end
+
+  def present_user_without_manager(%{user: %UserModel{} = user}) do
+    %{
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    }
+  end
+
+  def present_users_without_manager(%{users: users}) do
+    case users do
+      %Ecto.Association.NotLoaded{} ->
+        []
+
+      _ ->
+        %{data: for(user <- users, do: present_user_without_manager(%{user: user}))}
     end
   end
 end

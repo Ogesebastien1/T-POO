@@ -40,12 +40,14 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
     team_id = conn.params["team_id"]
     user_id = user_params["user_id"]
 
+    IO.inspect("Le controller :")
+
     basic_authorization =
       Bodyguard.permit(TimeManager.Teams, :add_user_to_team, user_assigns, user_params["user"])
 
     with :ok <- basic_authorization do
       with {:ok, team} <- TeamService.get_team_by_id(team_id) do
-        case TeamService.update_team(team, %{"user_id" => user_id}) do
+        case TeamService.add_user_to_team(team, user_id) do
           {:ok, team} ->
             conn
             |> TeamPresenter.render_result(team, :created)

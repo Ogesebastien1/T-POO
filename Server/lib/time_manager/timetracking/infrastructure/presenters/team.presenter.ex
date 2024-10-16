@@ -20,7 +20,8 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamPresenter do
     %{
       id: team.id,
       name: team.name,
-      manager: UserPresenter.present_user(%{user: team.manager})
+      manager: UserPresenter.present_manager(team.manager),
+      users: UserPresenter.present_users_without_manager(%{users: team.users})
     }
   end
 

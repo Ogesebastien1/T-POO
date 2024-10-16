@@ -24,12 +24,15 @@ defmodule TimeManager.Test.TeamsFixture do
 
   def unit_when_manager_adds_user_to_team(team_id, user_id) do
     TeamService.add_user_to_team(team_id, user_id)
-    |> IO.inspect()
   end
 
-  def then_user_was_added_to_team(_conn, _user) do
-    # response_body = json_response(conn, 201)
+  def then_user_was_added_to_team(conn, team) do
+    response_body = json_response(conn, 201)
 
-    # IO.inspect(response_body)
+    IO.inspect(response_body)
+    #
+    # assert response_body["name"] == team["name"]
+    #
+    # assert response_body["manager"]["id"] == team["manager_id"]
   end
 end
