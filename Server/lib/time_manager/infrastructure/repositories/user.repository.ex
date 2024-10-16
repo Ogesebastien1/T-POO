@@ -34,6 +34,10 @@ defmodule TimeManager.Accounts.Infrastructure.UserRepository do
     Repo.get_by(UserModel, email: email)
   end
 
+  def get_all_by_manager(manager_id) do
+    from(u in UserModel, where: u.manager_id == ^manager_id) |> Repo.all()
+  end
+
   # TODO: changeset from the service..
   def update(user, _params) do
     with {:ok, user} <- Repo.update(user) do

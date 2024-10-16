@@ -28,6 +28,10 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
     end
   end
 
+  def get_users_by_manager(manager_id) do
+    UserRepository.get_all_by_manager(manager_id)
+  end
+
   def create_user(params) do
     %UserModel{}
     |> UserModel.changeset(params)
@@ -38,7 +42,6 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
     user
     |> UserModel.changeset(update_user)
     |> UserRepository.update(update_user)
-    |> IO.inspect()
   end
 
   def delete_user(user) do

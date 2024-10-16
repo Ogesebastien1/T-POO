@@ -1,7 +1,7 @@
 defmodule TimeManagerWeb.AuthorizationTest do
   use TimeManagerWeb.ConnCase, async: true
   import TimeManagerWeb.Test.UserBuilder
-  alias TimeManager.Test.SetupFixture.{Registration, Auth, Authorization}
+  alias TimeManager.Test.SetupFixture.{Registration, Auth, Authorization, Accounts}
   alias TimeManager.Test.AccountsFixture
 
   @moduletag :integration
@@ -19,6 +19,8 @@ defmodule TimeManagerWeb.AuthorizationTest do
         |> with_password("MAIS LOL")
 
   @manager user()
+           |> with_email("manager1@gmail.com")
+           |> with_username("Manager 1")
            |> with_password("MAIS LOL")
            |> with_role("manager")
 
@@ -92,11 +94,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
       user_response = Auth.login_pass(@user["email"], @user["password"])
       token = Auth.extract_auth_token(user_response)
 
-      IO.inspect(manager)
-
-      updated_user = @user |> with_username("User 2")
-
-      IO.inspect(updated_user)
+      updated_user = @user |> with_username("User 2") |> Map.drop(["role", "manager_id"])
 
       conn
       |> Auth.put_auth_token(token)
@@ -104,7 +102,6 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> AccountsFixture.then_user_is_updated(@user |> with_username("User 2"))
     end
 
-    @tag :this
     test "I can't update my role", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
@@ -121,7 +118,6 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> AccountsFixture.request_is_forbidden()
     end
 
-    @tag :this
     test "I can't update my manager", %{conn: conn} do
       registered_users = Registration.given_existing_users([@user, @manager])
 
@@ -177,6 +173,101 @@ defmodule TimeManagerWeb.AuthorizationTest do
       Registration.given_existing_users([@manager])
 
       Authorization.assert_user_role(@manager["email"], :manager)
+    end
+
+    test "I can update my profile", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      token = Auth.extract_auth_token(manager_response)
+
+      updated_manager = @manager |> with_username("Manager 2") |> Map.drop(["role", "manager_id"])
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_manager, manager_response.user.id)
+      |> AccountsFixture.then_user_is_updated(@manager |> with_username("Manager 2"))
+    end
+
+    test "I can't update my role", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      token = Auth.extract_auth_token(manager_response)
+
+      updated_manager = @manager |> with_role("admin")
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_manager, manager_response.user.id)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    test "I can't update my manager", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      token = Auth.extract_auth_token(manager_response)
+
+      updated_manager = @manager |> with_manager_id(manager.id)
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_manager, manager_response.user.id)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    @tag :this
+    test "I can't update another user's profile", %{conn: conn} do
+      registered_users = Registration.given_existing_users([@user, @manager])
+
+      manager = List.first(registered_users)
+      user = List.last(registered_users)
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      token = Auth.extract_auth_token(manager_response)
+
+      updated_user = @user |> with_username("User 2") |> Map.drop(["role", "manager_id", "email"])
+
+      conn
+      |> Auth.put_auth_token(token)
+      |> AccountsFixture.update_user(updated_user, user.id)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    @tag :this
+    test "I can see all users that are assigned to me", %{conn: conn} do
+      registred_users =
+        Registration.given_existing_users([
+          @user,
+          @user |> with_email("user2@gmail.com") |> with_username("User 2"),
+          @user |> with_email("user3@gmail.com") |> with_username("User 3"),
+          @user |> with_email("user4@gmail.com") |> with_username("User 4"),
+          @manager
+        ])
+
+      manager = hd(registred_users)
+
+      tl(registred_users)
+      |> Enum.map(fn user ->
+        updated_user = %{manager_id: manager.id, password: "Pour faire passer le test"}
+        Accounts.update_user(user, updated_user)
+        user
+      end)
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      manager_token = Auth.extract_auth_token(manager_response)
+
+      conn
+      |> Auth.put_auth_token(manager_token)
+      |> AccountsFixture.get_users()
+      |> AccountsFixture.then_users_got_are(tl(registred_users))
     end
   end
 end

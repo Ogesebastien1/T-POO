@@ -25,6 +25,6 @@ defmodule TimeManager.Test.TeamsFixture do
   def then_user_was_added_to_team(conn, user) do
     response_body = json_response(conn, 201)
 
-    IO.inspect(response_body)
+    # IO.inspect(response_body)
   end
 end

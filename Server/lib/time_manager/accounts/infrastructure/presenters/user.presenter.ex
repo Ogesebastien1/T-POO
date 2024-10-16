@@ -7,6 +7,7 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
       id: user.id,
       username: user.username,
       email: user.email,
+      role: user.role,
       manager: present_manager(user.manager)
     }
   end
