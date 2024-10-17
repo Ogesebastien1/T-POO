@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { UserType } from '@/types'
-import { router } from '../router'
+import { router } from '@/router'
 import { fetch, HttpMethod } from '@/lib/proxy'
 
 interface LoginPayload {
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
     user: JSON.parse(localStorage.getItem('user') || 'null') as UserType | null,
-    isLogged: localStorage.getItem('token') ? true : false
+    isLogged: localStorage.getItem('token') ? true : false,
   }),
 
   getters: {
