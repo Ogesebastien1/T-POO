@@ -71,11 +71,15 @@ router.beforeEach(async (to, from, next) => {
     await authStore.me()
   }
 
-  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    next('/login')
-  } else if (!to.meta.requiresAuth && authStore.isLoggedIn) {
-    next('/')
+  if (to.meta.name === 'landing') {
+    next();
   } else {
-    next()
+    if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+      next('/login')
+    } else if (!to.meta.requiresAuth && authStore.isLoggedIn) {
+      next('/')
+    } else {
+      next()
+    }
   }
 })
