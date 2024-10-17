@@ -35,6 +35,14 @@ config :time_manager,
        TimeManager.TimeTracking.Application.TeamRepository,
        TimeManager.TimeTracking.Infrastructure.TeamRepository
 
+config :time_manager,
+       TimeManager.TimeTracking.Application.ClockRepository,
+       TimeManager.TimeTracking.Infrastructure.ClockRepository
+
+config :time_manager,
+       :date_provider,
+       TimeManager.TimeTracking.Infrastructure.DateProvider
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

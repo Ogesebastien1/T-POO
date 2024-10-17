@@ -30,7 +30,6 @@ defmodule TimeManagerWeb.TeamsTest do
   end
 
   describe "As a Manager, " do
-    @describetag :this
     test "I can create a blank team", %{
       conn: conn,
       manager_id: manager_id,
