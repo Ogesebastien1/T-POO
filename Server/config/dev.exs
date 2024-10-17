@@ -10,6 +10,7 @@ config :time_manager, TimeManager.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :bcrypt_elixir, log_rounds: 12
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -25,6 +26,14 @@ config :time_manager, TimeManagerWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Gr/kHCXYkk6JQFfpzKCoyE7y5HyK9/urd4TMwGqDpqzRueapgvU6IC9KZfN7W5yd",
   watchers: []
+
+config :time_manager,
+       TimeManager.Accounts.Application.UserRepository,
+       TimeManager.Accounts.Infrastructure.UserRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.TeamRepository,
+       TimeManager.TimeTracking.Infrastructure.TeamRepository
 
 # ## SSL Support
 #

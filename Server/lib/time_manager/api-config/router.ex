@@ -41,7 +41,26 @@ defmodule TimeManagerWeb.Router do
 
     post "/", TimeTracking.Infrastructure.TeamsController, :create_team
     post "/:team_id/users", TimeTracking.Infrastructure.TeamsController, :add_user_to_team
+    get "/", TimeTracking.Infrastructure.TeamsController, :get_teams
+    get "/:team_id", TimeTracking.Infrastructure.TeamsController, :get_team
+
+    delete "/:team_id/users/:user_id",
+           TimeTracking.Infrastructure.TeamsController,
+           :delete_user_from_team
+
+    delete "/:team_id", TimeTracking.Infrastructure.TeamsController, :delete_team
+    # put "/:team_id", TimeTracking.Infrastructure.TeamsController, :update_team
+
+    # a faire supprime user from team
   end
+
+  # Working time 
+  # On peut ajouter des heures de travails pour chaque jours pour chaque Utilisateur
+  # On peut aussi faire une batch query 
+  # On peut recuperer les working time d'un utilisateur
+  # On peut recuperer les working time d'un utilisateur avec un start et un end
+  # On peut modifier un working time
+  # On peut supprimer un working time
 
   scope "/api/admin", TimeManagerWeb do
     pipe_through :api

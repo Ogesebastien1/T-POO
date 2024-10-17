@@ -6,10 +6,37 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
   alias TimeManager.TimeTracking.Infrastructure.TeamPresenter
   alias TimeManager.TimeTracking.Application.TeamService
 
-  def get_teams() do
+  def get_teams(conn, _params) do
+    _user_assigns = conn.assigns[:current_user]
+
+    case TeamService.get_teams() do
+      {:ok, teams} ->
+        conn
+        |> TeamPresenter.render_result(teams, :ok)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("500.json", :internal_server_error)
+    end
   end
 
-  def get_team() do
+  def get_team(conn, %{"team_id" => team_id}) do
+    _user_assigns = conn.assigns[:current_user]
+
+    case TeamService.get_team_by_id(team_id) do
+      {:ok, team} ->
+        conn
+        |> TeamPresenter.render_result(team, :ok)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("404.json", :not_found)
+    end
+  end
+
+  def get_team(conn, _params) do
+    conn
+    |> TeamPresenter.render_error("400.json", :bad_request)
   end
 
   def create_team(conn, team_params) do
@@ -40,8 +67,6 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
     team_id = conn.params["team_id"]
     user_id = user_params["user_id"]
 
-    IO.inspect("Le controller :")
-
     basic_authorization =
       Bodyguard.permit(TimeManager.Teams, :add_user_to_team, user_assigns, user_params["user"])
 
@@ -51,6 +76,10 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
           {:ok, team} ->
             conn
             |> TeamPresenter.render_result(team, :created)
+
+          {:error, :already_in_team} ->
+            conn
+            |> TeamPresenter.render_error("409.json", :conflict)
 
           {:error, _reason} ->
             conn
@@ -64,13 +93,32 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
     end
   end
 
-  def remove_user_from_team() do
+  def delete_team(conn, %{"team_id" => team_id}) do
+    _user_assigns = conn.assigns[:current_user]
+
+    case TeamService.delete_team(team_id) do
+      {:ok, _team} ->
+        conn
+        |> TeamPresenter.render_result(nil, :no_content)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("500.json", :internal_server_error)
+    end
   end
 
-  def update_team() do
-  end
+  def delete_user_from_team(conn, %{"team_id" => team_id, "user_id" => user_id}) do
+    _user_assigns = conn.assigns[:current_user]
 
-  def delete_team() do
+    case TeamService.delete_user_from_team(team_id, user_id) do
+      {:ok, team} ->
+        conn
+        |> TeamPresenter.render_result(team)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("500.json", :internal_server_error)
+    end
   end
 
   def get_team_users() do

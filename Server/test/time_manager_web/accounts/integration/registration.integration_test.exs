@@ -1,6 +1,6 @@
 defmodule TimeManagerWeb.RegisterControllerTest do
   use TimeManagerWeb.ConnCase, async: true
-  alias TimeManager.Accounts.Infrastructure.UserRepository
+  alias TimeManager.Accounts.Application.UserRepository
   alias TimeManagerWeb.Test.UserBuilder
 
   @moduletag :registration

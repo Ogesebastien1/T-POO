@@ -4,7 +4,7 @@ defmodule TimeManager.Accounts.Application.PasswordHasher do
   @spec hash(String.t()) :: String.t()
   def hash(password) do
     password
-    |> Base.hash_password(Base.gen_salt())
+    |> Base.hash_password(Base.gen_salt(Application.get_env(:bcrypt_elixir, :log_rounds)))
   end
 
   @spec verify_password(String.t(), String.t()) :: boolean()

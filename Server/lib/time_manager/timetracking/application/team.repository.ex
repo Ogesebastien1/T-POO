@@ -16,6 +16,9 @@ defmodule TimeManager.TimeTracking.Application.TeamRepository do
   @callback add_user(team :: String.t(), user :: String.t()) ::
               {:ok, TeamModel.t()} | {:error, any()}
 
+  @callback delete_user(team :: String.t(), user_id :: String.t()) ::
+              {:ok, TeamModel.t()} | {:error, any()}
+
   def insert(team), do: adapter().insert(team)
   def get_all(), do: adapter().get_all()
   def get_by_id(id), do: adapter().get_by_id(id)
@@ -25,4 +28,5 @@ defmodule TimeManager.TimeTracking.Application.TeamRepository do
   def delete(team), do: adapter().delete(team)
 
   def add_user(team, user), do: adapter().add_user(team, user)
+  def delete_user(team, user_id), do: adapter().delete_user(team, user_id)
 end

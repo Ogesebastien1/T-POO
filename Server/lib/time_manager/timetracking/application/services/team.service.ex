@@ -4,7 +4,10 @@ defmodule TimeManager.TimeTracking.Application.TeamService do
   alias TimeManager.TimeTracking.{TeamModel, Application.TeamRepository}
 
   def get_teams() do
-    TeamRepository.get_all()
+    case TeamRepository.get_all() do
+      [] -> {:error, "Teams not found"}
+      teams -> {:ok, teams}
+    end
   end
 
   def get_team_by_id(id) do
@@ -48,5 +51,12 @@ defmodule TimeManager.TimeTracking.Application.TeamService do
   def delete_team(team) do
     team
     |> TeamRepository.delete()
+  end
+
+  def delete_user_from_team(team_id, user_id) do
+    team = TeamRepository.get_by_id(team_id)
+
+    team
+    |> TeamRepository.delete_user(user_id)
   end
 end
