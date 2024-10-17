@@ -58,8 +58,7 @@ const handleSubmit = () => {
           <h2 class="text-3xl md:text-4xl font-bold">Connect With Us</h2>
         </div>
         <p class="mb-8 text-muted-foreground lg:w-5/6">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-          ipsam sint enim exercitationem ex autem corrupti quas tenetur
+          We are here to help and answer any question you might have. We look forward to hearing from you.
         </p>
 
         <div class="flex flex-col gap-4">
@@ -69,7 +68,7 @@ const handleSubmit = () => {
               <div class="font-bold">Find Us</div>
             </div>
 
-            <div>742 Evergreen Terrace, Springfield, IL 62704</div>
+            <div>4 Rue du Dôme, 67000 Strasbourg</div>
           </div>
 
           <div>
@@ -78,7 +77,9 @@ const handleSubmit = () => {
               <div class="font-bold">Call Us</div>
             </div>
 
-            <div>+1 (619) 123-4567</div>
+            <div>
+              +33 6 12 34 56 78
+            </div>
           </div>
 
           <div>
@@ -87,7 +88,9 @@ const handleSubmit = () => {
               <div class="font-bold">Mail Us</div>
             </div>
 
-            <div>leomirandadev@gmail.com</div>
+            <div>
+              contact@timemanager_stg8.com
+            </div>
           </div>
 
           <div>
@@ -153,16 +156,11 @@ const handleSubmit = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="Web Development">
-                      Web Development
+                    <SelectItem value="I'm interested in your services">
+                      I'm interested in your services
                     </SelectItem>
-                    <SelectItem value="Mobile Development">
-                      Mobile Development
-                    </SelectItem>
-                    <SelectItem value="Figma Design"> Figma Design </SelectItem>
-                    <SelectItem value="REST API "> REST API </SelectItem>
-                    <SelectItem value="FullStack Project">
-                      FullStack Project
+                    <SelectItem value="I have some questions">
+                      I have some questions
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>

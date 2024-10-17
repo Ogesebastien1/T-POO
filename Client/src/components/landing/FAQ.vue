@@ -3,71 +3,65 @@ import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  AccordionTrigger
+} from '@/components/ui/accordion'
 
 interface FAQProps {
-  question: string;
-  answer: string;
-  value: string;
+  question: string
+  answer: string
+  value: string
 }
 
 const FAQList: FAQProps[] = [
   {
-    question: "Is this template free?",
-    answer: "Yes. It is a free Shadcn/Vue template.",
-    value: "item-1",
-  },
-  {
-    question: "Duis aute irure dolor in reprehenderit in voluptate velit?",
+    question: 'Is the Timer Manager easy to use?',
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam consectetur sapiente, iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
-    value: "item-2",
+      'Yes, the Timer Manager is designed with a simple and intuitive interface, making it easy for all employees to log their working hours.',
+    value: 'item-1'
   },
   {
-    question:
-      "Lorem ipsum dolor sit amet Consectetur natus dolor minus quibusdam?",
+    question: 'Can I track overtime with this tool?',
     answer:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis.",
-    value: "item-3",
+      'Yes, the Timer Manager allows you to track both regular working hours and overtime, ensuring full transparency in time management.',
+    value: 'item-2'
   },
   {
-    question: "Excepteur sint occaecat cupidata non proident sunt?",
-    answer: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
-    value: "item-4",
+    question: 'Will my personal data be secure?',
+    answer:
+      'Absolutely. The Timer Manager uses robust security measures to protect your personal data and ensure privacy.',
+    value: 'item-3'
   },
   {
-    question:
-      "Enim ad minim veniam, quis nostrud exercitation ullamco laboris?",
-    answer: "consectetur adipisicing elit. Sint labore.",
-    value: "item-5",
+    question: 'What should I do if I forget to log my hours?',
+    answer:
+      'You can easily submit a request to modify or add missed hours through the app, subject to approval by your manager.',
+    value: 'item-4'
   },
-];
+  {
+    question: 'How will this app affect my flexibility at work?',
+    answer:
+      'The Timer Manager is built to respect your work-life balance, offering flexibility in logging hours while ensuring accuracy in tracking time.',
+    value: 'item-5'
+  },
+  {
+    question: 'Can I submit complaints or requests through the app?',
+    answer:
+      'Yes, you can submit any concerns, claims, or requests directly through the Timer Manager, ensuring your feedback reaches the administration quickly.',
+    value: 'item-6'
+  }
+]
 </script>
 
 <template>
-  <section
-    id="faq"
-    class="container md:w-[700px] py-24 sm:py-32"
-  >
+  <section id="faq" class="container md:w-[700px] py-24 sm:py-32">
     <div class="text-center mb-8">
       <h2 class="text-lg text-primary text-center mb-2 tracking-wider">FAQS</h2>
 
-      <h2 class="text-3xl md:text-4xl text-center font-bold">
-        Common Questions
-      </h2>
+      <h2 class="text-3xl md:text-4xl text-center font-bold">Common Questions</h2>
     </div>
 
-    <Accordion
-      type="single"
-      collapsible
-      class="AccordionRoot"
-    >
-      <AccordionItem
-        v-for="{ question, answer, value } in FAQList"
-        :key="value"
-        :value="value"
-      >
+    <Accordion type="single" collapsible class="AccordionRoot">
+      <AccordionItem v-for="{ question, answer, value } in FAQList" :key="value" :value="value">
         <AccordionTrigger class="text-left"> {{ question }} </AccordionTrigger>
 
         <AccordionContent>{{ answer }}</AccordionContent>
@@ -76,15 +70,8 @@ const FAQList: FAQProps[] = [
 
     <h3 class="font-medium mt-4">
       Still have questions?
-      <a
-        href="#"
-        class="text-muted-foreground"
-      >
-        <a
-          href="#"
-          class="underline"
-          >Contact us</a
-        >
+      <a href="#" class="text-muted-foreground">
+        <a href="#contact" class="underline">Contact us</a>
       </a>
     </h3>
   </section>

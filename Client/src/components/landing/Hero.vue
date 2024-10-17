@@ -1,62 +1,50 @@
 <script setup lang="ts">
-import { useColorMode } from "@vueuse/core";
-const mode = useColorMode();
+import { useColorMode } from '@vueuse/core'
+const mode = useColorMode()
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-vue-next";
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-vue-next'
 </script>
 
 <template>
   <section class="container">
-    <div
-      class="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto py-20 md:py-32"
-    >
+    <div class="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto py-20 md:py-32">
       <div class="text-center space-y-8">
-        <Badge
-          variant="outline"
-          class="text-sm py-2"
-        >
+        <Badge variant="outline" class="text-sm py-2">
           <span class="mr-2 text-primary">
             <Badge>New</Badge>
           </span>
-          <span> Design is out now! </span>
+          <span>
+            <span class="mr-2 text-primary">Beta</span>
+          </span>
         </Badge>
 
-        <div
-          class="max-w-screen-md mx-auto text-center text-5xl md:text-6xl font-bold"
-        >
+        <div class="max-w-screen-md mx-auto text-center text-5xl md:text-6xl font-bold">
           <h1>
-            Experience the
-            <span
-              class="text-transparent bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text"
-              >Shadcn/Vue
+            <span class="text-transparent bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text"
+              >Time Manager
             </span>
-            landing page
           </h1>
         </div>
 
         <p class="max-w-screen-sm mx-auto text-xl text-muted-foreground">
-          We're more than just a tool, we're a community of passionate creators.
-          Get access to exclusive resources, tutorials, and support.
+          Time Manager is a time tracking app that helps employees to clock in and out, and managers
+          to track their employees' work hours. We guarantee that it is an ethical use.
         </p>
 
         <div class="space-y-4 md:space-y-0 md:space-x-4">
-          <Button class="w-5/6 md:w-1/4 font-bold group/arrow">
-            Get Started
-            <ArrowRight
-              class="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform"
-            />
-          </Button>
+          <RouterLink to="/login">
+            <Button class="w-5/6 md:w-1/4 font-bold group/arrow">
+              Get Started
+              <ArrowRight
+                class="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform"
+              />
+            </Button>
+          </RouterLink>
 
-          <Button
-            as-child
-            variant="secondary"
-            class="w-5/6 md:w-1/4 font-bold"
-          >
-            <a
-              href="https://github.com/leoMirandaa/shadcn-vue-landing-page.git"
-              target="_blank"
+          <Button as-child variant="secondary" class="w-5/6 md:w-1/4 font-bold">
+            <a href="http://github.com/EpitechMscProPromo2026/T-POO-700-STG_8/" target="_blank"
               >Github respository</a
             >
           </Button>
@@ -71,10 +59,8 @@ import { ArrowRight } from "lucide-vue-next";
 
         <img
           class="w-full md:w-[1200px] mx-auto rounded-lg relative rouded-lg leading-none flex items-center border border-t-2 border-t-primary/30 img-border-animation"
-          :src="
-            mode == 'light' ? 'hero-image-light.jpg' : 'hero-image-dark.jpg'
-          "
-          alt="dashboard using shadcn-vue"
+          :src="mode == 'light' ? 'light.png' : 'dark.png'"
+          alt="dashboard image"
         />
 
         <!-- gradient effect img -->

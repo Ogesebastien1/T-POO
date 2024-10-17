@@ -25,7 +25,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
-import { ChevronsDown, Menu } from 'lucide-vue-next'
+import { ChevronsDown, Menu, Clock } from 'lucide-vue-next'
 import GithubIcon from '@/assets/icons/GithubIcon.vue'
 import ToggleTheme from './ToggleTheme.vue'
 
@@ -40,10 +40,6 @@ interface FeatureProps {
 }
 
 const routeList: RouteProps[] = [
-  {
-    href: '#testimonials',
-    label: 'Testimonials'
-  },
   {
     href: '#team',
     label: 'Team'
@@ -60,16 +56,17 @@ const routeList: RouteProps[] = [
 
 const featureList: FeatureProps[] = [
   {
-    title: 'Showcase Your Value ',
-    description: 'Highlight how your product solves user problems.'
+    title: 'Garanteed Quality',
+    description:
+      'We provide the best quality for your website, we make sure that your website is the best it can be.'
   },
   {
-    title: 'Build Trust',
-    description: 'Leverages social proof elements to establish trust and credibility.'
+    title: 'Ethical use',
+    description: 'We make sure that your website is ethical and safe for all users.'
   },
   {
-    title: 'Capture Leads',
-    description: 'Make your lead capture form visually appealing and strategically.'
+    title: 'User Focused',
+    description: 'We make sure that your website is user focused and user friendly.'
   }
 ]
 
@@ -85,8 +82,8 @@ const isOpen = ref<boolean>(false)
     }"
   >
     <a href="/" class="font-bold text-lg flex items-center">
-      <ChevronsDown
-        class="bg-gradient-to-tr from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white"
+      <Clock
+        class="bg-gradient-to-tr from-primary via-primary/70 to-primary rounded-lg w-8 h-8 mr-2 border text-white"
       />
       TimeManager</a
     >
@@ -191,7 +188,7 @@ const isOpen = ref<boolean>(false)
       <Button as-child size="sm" variant="ghost" aria-label="View on GitHub">
         <a
           aria-label="View on GitHub"
-          href="https://github.com/leoMirandaa/shadcn-vue-landing-page.git"
+          href="http://github.com/EpitechMscProPromo2026/T-POO-700-STG_8/"
           target="_blank"
         >
           <GithubIcon class="size-5" />
