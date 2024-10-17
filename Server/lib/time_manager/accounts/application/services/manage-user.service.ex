@@ -21,14 +21,26 @@ defmodule TimeManager.Accounts.Application.ManageUserService do
     end
   end
 
+  def get_user_by_email(email) do
+    case UserRepository.get_by_email(email) do
+      nil -> {:error, "User not found"}
+      user -> {:ok, user}
+    end
+  end
+
+  def get_users_by_manager(manager_id) do
+    UserRepository.get_all_by_manager(manager_id)
+  end
+
   def create_user(params) do
     %UserModel{}
     |> UserModel.changeset(params)
-    |> TimeManager.Accounts.Infrastructure.UserRepository.insert()
+    |> UserRepository.insert()
   end
 
   def update_user(user, update_user) do
     user
+    |> UserModel.changeset_update(update_user)
     |> UserRepository.update(update_user)
   end
 

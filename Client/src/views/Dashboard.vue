@@ -2,20 +2,37 @@
 import { ClockArrowUp, Loader2, CalendarCheck2, Clock, ClockArrowDown } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
 import { toast } from '@/components/ui/toast'
-import { useAuthStore } from '@/stores'
+import { useAuthStore, useClockManagerStore } from '@/stores'
 
 const authStore = useAuthStore()
+//const clockManagerStore = useClockManagerStore()
+
+onMounted(() => {
+  // await clockManagerStore.getAllClocks();
+  // await clockManagerStore.clock({
+  //   status: true,
+  //   time: '2024-10-14 11:16:32'
+  // })
+})
+
+// watch(() => clockManagerStore.clocks, (clocksTable) => {
+//   console.log('clocksTable', clocksTable);
+// });
 
 const clockedIn = ref(false)
 const loading = ref(false)
 const hasWorkingTime = ref(true)
 
-const activities = [
+type Activity = {
+  type: string
+  time: string
+}
+const activities = ref([
   {
     type: 'Clock in',
     time: 'Today, 08:00 AM'
@@ -36,45 +53,39 @@ const activities = [
     type: 'Clock in',
     time: 'Today, 18:00 PM'
   }
-]
+])
 
 const workingTimes = [
   {
-    start_time: '2024-10-10 08:00:00',
-    end_time: '2024-10-10 20:00:00'
+    start_time: '2024-10-18 08:00:00',
+    end_time: '2024-10-18 20:00:00'
   },
   {
-    start_time: '2024-10-11 10:00:00',
-    end_time: '2024-10-11 15:00:00'
+    start_time: '2024-10-21 10:00:00',
+    end_time: '2024-10-21 15:00:00'
   },
   {
-    start_time: '2024-10-12 09:30:00',
-    end_time: '2024-10-12 18:00:00'
+    start_time: '2024-10-22 09:30:00',
+    end_time: '2024-10-22 18:00:00'
   },
   {
-    start_time: '2024-10-13 06:00:00',
-    end_time: '2024-10-13 22:00:00'
+    start_time: '2024-10-23 06:00:00',
+    end_time: '2024-10-23 22:00:00'
   },
   {
-    start_time: '2024-10-14 08:00:00',
-    end_time: '2024-10-14 20:00:00'
-  },
-  {
-    start_time: '2024-10-15 08:00:00',
-    end_time: '2024-10-15 20:00:00'
-  },
-  {
-    start_time: '2024-10-16 08:00:00',
-    end_time: '2024-10-16 20:00:00'
-  },
-  {
-    start_time: '2024-10-17 08:00:00',
-    end_time: '2024-10-17 20:00:00'
+    start_time: '2024-10-24 08:00:00',
+    end_time: '2024-10-24 20:00:00'
   }
 ]
 
 const handleClockedIn = () => {
   loading.value = true
+  if (clockedIn.value) {
+    activities.value.unshift({ type: 'Clock out', time: 'Today, ' + moment().format('HH:mm A') })
+  } else {
+    activities.value.unshift({ type: 'Clock in', time: 'Today, ' + moment().format('HH:mm A') })
+  }
+  console.log('activities', activities)
   setTimeout(() => {
     clockedIn.value = !clockedIn.value
     loading.value = false

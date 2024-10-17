@@ -73,7 +73,7 @@ export const useAuthStore = defineStore('auth', {
       this.isLogged = false
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      router.push('/login')
+      router.replace('/login')
     },
     async register(payload: RegisterPayload): Promise<any> {
       const response = await fetch({
@@ -104,6 +104,55 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('user', JSON.stringify(this.user))
       } else {
         this.logout()
+      }
+    },
+    async delete() {
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+          method: HttpMethod.DELETE,
+        })
+        this.logout();
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    },
+    async updatePassword(password: string) {
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+          method: HttpMethod.PUT,
+          payload: {
+            user: {
+              password
+            }
+          }
+        })
+        const { data } = await response.json()
+        this.user = data;
+        console.log('Password updated');
+      } catch (error) {
+        console.error('Error updating password:', error);
+      }
+    },
+    async updateUsername(username: string) {
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch({
+          endpoint: `/users/${authStore.user?.id}`,
+          method: HttpMethod.PUT,
+          payload: {
+            user: {
+              username
+            }
+          }
+        })
+        this.me();
+        console.log('Username updated');
+      } catch (error) {
+        console.error('Error updating username:', error);
       }
     }
   }

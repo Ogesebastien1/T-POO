@@ -3,28 +3,41 @@ import axios from 'axios';
 import type { CreatedClockType, CreatedClock } from '@/types';
 import moment from 'moment';
 import { set } from 'zod';
-
-const BACKEND_URL = 'http://localhost:4000/api';
+import { useAuthStore } from '@/stores';
+import { fetch, HttpMethod } from '@/lib/proxy';
 
 export const useClockManagerStore = defineStore('clockManager', {
   state: () => ({
     clocks: [] as any[],
   }),
-  getters: {
-    getClocks: (state) => state.clocks,
-  },
   actions: {
-    async getAllClocks(userId: string) {
+    async getAllClocks() {
+    const authStore = useAuthStore();
       try { 
-        const response = await axios.get(`${BACKEND_URL}/clocks/${userId}`);
-        this.clocks = response.data.data;
+        const response = await fetch({
+          endpoint: `/clocks/${authStore.user?.id}`,
+        })
+        const { data } = await response.json()
+        this.clocks = data;
       } catch (error) {
         console.error('Error fetching all clocks :', error);
       }
     },
-    async clock(userId: string, createdClock: CreatedClockType) {
+    async clock(createdClock: CreatedClockType) {
+      const authStore = useAuthStore();
       try {
-        await axios.post(`${BACKEND_URL}/clocks/${userId}`, createdClock);
+        const response = await fetch({
+          endpoint: `/clocks/${authStore.user?.id}`,
+          method: HttpMethod.POST,
+          payload: {
+            clock: {
+              ...createdClock,
+              user_id: authStore.user?.id,
+            }
+          }
+        })
+        const { data } = await response.json()
+        this.clocks.push(data);
       } catch (error) {
         console.error('Error creating a clock state:', error);
       }

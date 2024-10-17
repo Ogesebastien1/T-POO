@@ -14,8 +14,8 @@ defmodule TimeManagerWeb.Guard.AuthGuard do
       _ ->
         conn
         |> put_status(:unauthorized)
-        |> Phoenix.Controller.put_view(MyAppWeb.ErrorView)
-        |> Phoenix.Controller.render(:"401")
+        |> Phoenix.Controller.put_view(TimeManagerWeb.ErrorView)
+        |> Phoenix.Controller.render("401.json")
         |> halt()
     end
   end

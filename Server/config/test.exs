@@ -9,7 +9,7 @@ config :time_manager, TimeManager.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "time_manager_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "db_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
@@ -36,3 +36,9 @@ config :phoenix, :plug_init_mode, :runtime
 config :time_manager,
        TimeManager.Accounts.Application.UserRepository,
        TimeManager.Accounts.Infrastructure.UserRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.TeamRepository,
+       TimeManager.TimeTracking.Infrastructure.TeamRepository
+
+config :bcrypt_elixir, log_rounds: 4

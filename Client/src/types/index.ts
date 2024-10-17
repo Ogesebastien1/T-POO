@@ -11,7 +11,7 @@ type BaseWorkingTimeType = {
 type BaseClockType = {
     status: boolean;
     time: string;
-    user_id: string;   
+    user_id?: string;   
 };
 
 export type UpdatedUserType = {
@@ -20,7 +20,7 @@ export type UpdatedUserType = {
 }
 
 export type UserType = {
-    id: number;
+    id: string;
     is_manager: boolean;
     is_admin: boolean;
 } & BaseUserType;
@@ -43,9 +43,7 @@ export type CreatedWorkingTimeType = {
     working_time: BaseWorkingTimeType;
 };
 
-export type CreatedClockType = {
-    clock: BaseClockType;
-};
+export type CreatedClockType = BaseClockType;
 
 export type CreatedClock = {
     userID: string;

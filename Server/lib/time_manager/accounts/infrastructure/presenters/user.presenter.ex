@@ -6,7 +6,9 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
     %{
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      role: user.role,
+      manager: present_manager(user.manager)
     }
   end
 
@@ -15,16 +17,44 @@ defmodule TimeManager.Accounts.Infrastructure.UserPresenter do
   end
 
   def present_auth_user(%{user: %UserModel{} = user}) do
-    user =
-      %{
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
+    user = present_user(%{user: user})
 
     %{
       user: user,
       token: Token.sign(user)
     }
+  end
+
+  def present_manager(manager) do
+    case manager do
+      %UserModel{} ->
+        %{
+          id: manager.id,
+          username: manager.username,
+          email: manager.email
+        }
+
+      _ ->
+        nil
+    end
+  end
+
+  def present_user_without_manager(%{user: %UserModel{} = user}) do
+    %{
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    }
+  end
+
+  def present_users_without_manager(%{users: users}) do
+    case users do
+      %Ecto.Association.NotLoaded{} ->
+        []
+
+      _ ->
+        %{data: for(user <- users, do: present_user_without_manager(%{user: user}))}
+    end
   end
 end

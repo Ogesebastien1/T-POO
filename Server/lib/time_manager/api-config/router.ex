@@ -10,30 +10,13 @@ defmodule TimeManagerWeb.Router do
   end
 
   scope "/api/users", TimeManagerWeb do
-    pipe_through :api
+    pipe_through [:api, :authenticated]
 
     get "/", Accounts.Infrastructure.UserController, :index
     get "/:id", Accounts.Infrastructure.UserController, :show
     post "/", Accounts.Infrastructure.UserController, :create
     put "/:id", Accounts.Infrastructure.UserController, :update
     delete "/:id", Accounts.Infrastructure.UserController, :delete
-  end
-
-  scope "/api/workingtimes", TimeManagerWeb do
-    pipe_through :api
-
-    get "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :show
-    get "/:userID/:id", TimeTracking.Infrastructure.WorkingTimeController, :show
-    post "/:userID", TimeTracking.Infrastructure.WorkingTimeController, :create
-    put "/:id", TimeTracking.Infrastructure.WorkingTimeController, :update
-    delete "/:id", TimeTracking.Infrastructure.WorkingTimeController, :delete
-  end
-
-  scope "/api/clocks", TimeManagerWeb do
-    pipe_through :api
-
-    get "/:userID", TimeTracking.Infrastructure.ClockController, :index
-    post "/:userID", TimeTracking.Infrastructure.ClockController, :create
   end
 
   scope "/api/registration", TimeManagerWeb do
@@ -50,8 +33,39 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api/auth", TimeManagerWeb do
     pipe_through [:api, :authenticated]
-
     get "/me", Accounts.Infrastructure.AuthController, :me
+  end
+
+  scope "/api/teams", TimeManagerWeb do
+    pipe_through [:api, :authenticated]
+
+    post "/", TimeTracking.Infrastructure.TeamsController, :create_team
+    post "/:team_id/users", TimeTracking.Infrastructure.TeamsController, :add_user_to_team
+    get "/", TimeTracking.Infrastructure.TeamsController, :get_teams
+    get "/:team_id", TimeTracking.Infrastructure.TeamsController, :get_team
+
+    delete "/:team_id/users/:user_id",
+           TimeTracking.Infrastructure.TeamsController,
+           :delete_user_from_team
+
+    delete "/:team_id", TimeTracking.Infrastructure.TeamsController, :delete_team
+    # put "/:team_id", TimeTracking.Infrastructure.TeamsController, :update_team
+
+    # a faire supprime user from team
+  end
+
+  # Working time 
+  # On peut ajouter des heures de travails pour chaque jours pour chaque Utilisateur
+  # On peut aussi faire une batch query 
+  # On peut recuperer les working time d'un utilisateur
+  # On peut recuperer les working time d'un utilisateur avec un start et un end
+  # On peut modifier un working time
+  # On peut supprimer un working time
+
+  scope "/api/admin", TimeManagerWeb do
+    pipe_through :api
+
+    post "/:token", Accounts.Infrastructure.UserController, :admin
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
@@ -67,7 +81,10 @@ defmodule TimeManagerWeb.Router do
     scope "/dev" do
       pipe_through([:fetch_session, :protect_from_forgery])
 
-      live_dashboard "/dashboard", metrics: TimeManagerWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: TimeManagerWeb.Telemetry,
+        ecto_repo: [TimeManager.Repo]
+
       forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end

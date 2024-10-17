@@ -1,6 +1,12 @@
 defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   use TimeManagerWeb, :controller
-  alias TimeManager.Accounts.{UserModel, Application.ManageUserService, Infrastructure.UserPresenter}
+  alias TimeManager.Accounts.Authorization
+
+  alias TimeManager.Accounts.{
+    UserModel,
+    Application.ManageUserService,
+    Infrastructure.UserPresenter
+  }
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -16,10 +22,28 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def index(conn, _params) do
-    users = ManageUserService.get_users()
+    user_assigns = conn.assigns[:current_user]
 
-    conn
-    |> render_result(users)
+    basic_authorization = Bodyguard.permit(TimeManager.Accounts, :get_users, user_assigns)
+    permission = Authorization.permission(:get_users, user_assigns)
+
+    case {basic_authorization, permission} do
+      {:ok, :full} ->
+        users = ManageUserService.get_users()
+
+        conn
+        |> render_result(users)
+
+      {:ok, :partial} ->
+        users = ManageUserService.get_users_by_manager(user_assigns.id)
+
+        conn
+        |> render_result(users)
+
+      _ ->
+        conn
+        |> render_error("403.json", :forbidden)
+    end
   end
 
   def show(conn, %{"id" => id}) do
@@ -42,22 +66,35 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    case ManageUserService.get_user_by_id(id) do
-      {:ok, user} ->
-        result = ManageUserService.update_user(user, user_params)
+    user_assigns = conn.assigns[:current_user]
 
-        with {:ok, updated_user} <- result do
-          conn
-          |> render_result(updated_user)
-        else
-          _ ->
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :update_user, user_assigns, %{id: id})
+
+    permissions = Authorization.permission(:update_user, user_assigns, user_params)
+
+    with {:ok, :ok} <- {basic_authorization, permissions} do
+      case ManageUserService.get_user_by_id(id) do
+        {:ok, user} ->
+          result = ManageUserService.update_user(user, user_params)
+
+          with {:ok, updated_user} <- result do
             conn
-            |> render_error("500.json", :internal_server_error)
-        end
+            |> render_result(updated_user)
+          else
+            _ ->
+              conn
+              |> render_error("500.json", :internal_server_error)
+          end
 
-      {:error, _reason} ->
+        {:error, _reason} ->
+          conn
+          |> render_error("404.json", :not_found)
+      end
+    else
+      _ ->
         conn
-        |> render_error("404.json", :not_found)
+        |> render_error("403.json", :forbidden)
     end
   end
 
@@ -77,6 +114,26 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
       {:error, _reason} ->
         conn
         |> render_error("404.json", :not_found)
+    end
+  end
+
+  def admin(conn, %{"token" => token}) do
+    if token == System.get_env("ADMIN_TOKEN") do
+      {_, admin_user} =
+        ManageUserService.create_user(%{
+          "email" => System.get_env("ADMIN_EMAIL"),
+          "username" => System.get_env("ADMIN_USERNAME"),
+          "password" => System.get_env("ADMIN_PASSWORD"),
+          "role" => "admin"
+        })
+
+      # IO.inspect(admin_user)
+
+      conn
+      |> render_result(admin_user, :created)
+    else
+      conn
+      |> render_error("403.json", :forbidden)
     end
   end
 
