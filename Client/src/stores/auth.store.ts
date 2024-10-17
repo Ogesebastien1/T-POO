@@ -49,26 +49,31 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(payload: LoginPayload): Promise<boolean> {
-      this.isLoading = true
-      const response = await fetch({
-        endpoint: '/auth',
-        method: HttpMethod.POST,
-        payload,
-        withToken: false
-      })
+      try {
+        this.isLoading = true
+        const response = await fetch({
+          endpoint: '/auth',
+          method: HttpMethod.POST,
+          payload,
+          withToken: false
+        })
 
-      if (response.ok) {
-        const data = await response.json()
-        this.token = data.token
-        this.user = data.user
-        this.isLogged = true
-        localStorage.setItem('token', this.token || '')
-        localStorage.setItem('user', JSON.stringify(this.user))
-        // console.log(data, "Set isLoading to false")
-        this.isLoading = false
-        router.push('/')
-        return true
-      } else {
+        if (response.ok) {
+          const data = await response.json()
+          this.token = data.token
+          this.user = data.user
+          this.isLogged = true
+          localStorage.setItem('token', this.token || '')
+          localStorage.setItem('user', JSON.stringify(this.user))
+          this.isLoading = false
+          router.push('/')
+          return true
+        } else {
+          this.isLoading = false
+          return false
+        }
+      } catch (error) {
+        console.error(error)
         this.isLoading = false
         return false
       }
@@ -82,37 +87,53 @@ export const useAuthStore = defineStore('auth', {
       router.push('/login')
     },
     async register(payload: RegisterPayload): Promise<any> {
-      const response = await fetch({
-        endpoint: '/registration',
-        method: HttpMethod.POST,
-        payload,
-        withToken: false
-      })
+      try {
+        this.isLoading = true
+        const response = await fetch({
+          endpoint: '/registration',
+          method: HttpMethod.POST,
+          payload,
+          withToken: false
+        })
 
-      const errors = await extractResponseErrors(response)
+        const errors = await extractResponseErrors(response)
 
-      return {
-        ok: response.ok,
-        errors
+        this.isLoading = false
+        return {
+          ok: response.ok,
+          errors
+        }
+      } catch (error) {
+        this.isLoading = false
+        console.error(error)
+        return {
+          ok: false,
+          errors: null
+        }
       }
     },
     async me() {
-      this.isLoading = true
-      const response = await fetch({
-        endpoint: '/auth/me',
-        method: HttpMethod.GET,
-        payload: null,
-        withToken: true
-      })
+      try {
+        this.isLoading = true
+        const response = await fetch({
+          endpoint: '/auth/me',
+          method: HttpMethod.GET,
+          payload: null,
+          withToken: true
+        })
 
-      if (response.ok) {
-        const data = await response.json()
-        this.user = data.user
-        this.token = data.token
-        localStorage.setItem('token', this.token || '')
-        localStorage.setItem('user', JSON.stringify(this.user))
-        this.isLoading = false
-      } else {
+        if (response.ok) {
+          const data = await response.json()
+          this.user = data.user
+          this.token = data.token
+          localStorage.setItem('token', this.token || '')
+          localStorage.setItem('user', JSON.stringify(this.user))
+          this.isLoading = false
+        } else {
+          this.logout()
+        }
+      } catch (error) {
+        console.error(error)
         this.logout()
       }
     }
