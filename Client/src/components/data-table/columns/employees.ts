@@ -1,50 +1,71 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 import { h } from 'vue'
 
-import type { Employee } from '@/components/data-table/schemas'
-import DataTableColumnHeader from '@/components/data-table/DataTableColumnHeader.vue'
-import DataTableRowActions from '@/components/data-table/DataTableRowActions.vue'
-import { Checkbox } from '@/components/ui/checkbox'
+import { employeeSchema, type Employee } from '@/components/data-table/schemas'
+import { DataTableColumnHeader, DataTableRowActions } from '@/components/data-table'
 
-export const employeesColumns: ColumnDef<Employee>[] = [
-  {
-    accessorKey: 'username',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Username' }),
-    cell: ({ row }) => {
-      return h('div', { class: 'flex space-x-2' }, [
-        h('span', { class: 'max-w-[500px] truncate' }, row.getValue('username')),
-      ])
+interface EmployeeColumnProps {
+  onDelete: (row: any) => void,
+  onUpdate: (row: any) => void
+}
+
+type EmployeeColumn = ColumnDef<Employee> & { hidden?: boolean, props?: Record<string, any> }
+
+export const employeesColumns = (props: EmployeeColumnProps): EmployeeColumn[] => {
+  const { onDelete, onUpdate } = props
+
+  return [
+    {
+      accessorKey: 'username',
+      header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Username' }),
+      cell: ({ row }) => {
+        return h('div', { class: 'flex space-x-2' }, [
+          h('span', { class: 'max-w-[500px] truncate' }, row.getValue('username')),
+        ])
+      },
     },
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Email' }),
-    cell: ({ row }) => {
-      return h('div', { class: 'flex space-x-2' }, [
-        h('span', { class: 'max-w-[500px] truncate' }, row.getValue('email')),
-      ])
+    {
+      accessorKey: 'password',
+      hidden: true,
     },
-  },
-  {
-    accessorKey: 'manager',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Manager' }),
-    cell: ({ row }) => {
-      return h('div', { class: 'flex space-x-2' }, [
-        h('span', { class: 'max-w-[500px] truncate' }, row.getValue('manager')),
-      ])
+    {
+      accessorKey: 'email',
+      header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Email' }),
+      cell: ({ row }) => {
+        return h('div', { class: 'flex space-x-2' }, [
+          h('span', { class: 'max-w-[500px] truncate' }, row.getValue('email')),
+        ])
+      },
     },
-  },
-  {
-    accessorKey: 'role',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Permissions' }),
-    cell: ({ row }) => {
-      return h('div', { class: 'flex space-x-2' }, [
-        h('span', { class: 'max-w-[500px] truncate' }, row.getValue('role')),
-      ])
+    {
+      accessorKey: 'manager',
+      header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Manager' }),
+      cell: ({ row }) => {
+        return h('div', { class: 'flex space-x-2' }, [
+          h('span', { class: 'max-w-[500px] truncate' }, row.getValue('manager')),
+        ])
+      },
+      props: {
+        test: 'autocomplete',
+      }
     },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => h(DataTableRowActions, { row }),
-  },
-]
+    {
+      accessorKey: 'role',
+      header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Permissions' }),
+      cell: ({ row }) => {
+        return h('div', { class: 'flex space-x-2' }, [
+          h('span', { class: 'max-w-[500px] truncate' }, row.getValue('role')),
+        ])
+      }
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => h(DataTableRowActions, {
+        schema: employeeSchema,
+        row,
+        onUpdate,
+        onDelete,
+      }),
+    },
+  ]
+}

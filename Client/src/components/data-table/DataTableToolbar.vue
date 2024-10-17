@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Table } from '@tanstack/vue-table'
+import type { ColumnDef, Table } from '@tanstack/vue-table'
 import { computed, h, ref } from 'vue'
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
 import DataTableViewOptions from './DataTableViewOptions.vue'
@@ -41,41 +41,37 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
-import { cn } from '@/lib/utils'
+import { cn, ucfirst } from '@/lib/utils'
 
 import { Input } from '@/components/ui/input'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useForm } from 'vee-validate'
-
-const formSchema = toTypedSchema(
-  z.object({
-    username: z.string().min(3).max(30),
-    email: z.string().email().min(1),
-    password: z.string().min(8).max(30),
-    role: z.string().optional(),
-    manager: z.string().optional()
-  })
-)
-
-const { handleSubmit } = useForm({
-  validationSchema: formSchema
-})
+import { getTaleColumns } from '@/components/data-table/lib/utils'
+import AutoForm from '../ui/auto-form/AutoForm.vue'
 
 interface DataTableToolbarProps<TData> {
+  columns: ColumnDef<TData, any>[]
   table: Table<TData>
   search?: {
     label?: string
     field?: string
   }
   onCreate?: () => void
+  schema: z.ZodObject<any>
 }
 
 const props = defineProps<DataTableToolbarProps<any>>()
 
-const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
+const { columns, table, search, onCreate, schema } = props
 
-const searchField = computed(() => props.search?.field ?? 'name')
+const { handleSubmit } = useForm({
+  validationSchema: toTypedSchema(schema)
+})
+
+const isFiltered = computed(() => table.getState().columnFilters.length > 0)
+
+const searchField = computed(() => search?.field ?? 'name')
 
 const managers = [
   { value: 'Jean Martin', label: 'Jean Martin' },
@@ -93,6 +89,8 @@ const roles = [
   { label: 'Manager', value: 'manager' },
   { label: 'User', value: 'user' }
 ]
+
+const fields = getTaleColumns(table)
 </script>
 
 <template>
@@ -100,7 +98,7 @@ const roles = [
     <div class="flex flex-1 items-center justify-between space-x-2">
       <div class="flex items-center space-x-2">
         <Input
-          :placeholder="props.search?.label ?? 'Search...'"
+          :placeholder="search?.label ?? 'Search...'"
           :model-value="(table.getColumn(searchField)?.getFilterValue() as string) ?? ''"
           class="h-8 p-2 w-[150px] lg:w-[250px]"
           @input="table.getColumn(searchField)?.setFilterValue($event.target.value)"
@@ -119,7 +117,7 @@ const roles = [
       <div class="flex items-center space-x-2">
         <Sheet>
           <SheetTrigger as-child>
-            <Button variant="outline" size="sm" class="ml-auto flex h-8" @click="props.onCreate">
+            <Button variant="outline" size="sm" class="ml-auto flex h-8" @click="onCreate">
               <Plus class="mr-2 h-4 w-4" />
               Create
             </Button>
@@ -131,111 +129,20 @@ const roles = [
                 Fill out the form below to create a new employee.
               </SheetDescription>
             </SheetHeader>
-            <div class="grid gap-6 py-4">
-              <FormField name="username" v-slot="{ componentField }">
-                <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl class="w-full">
-                    <Input v-bind="componentField" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <FormField name="email" v-slot="{ componentField }">
-                <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl class="w-full">
-                    <Input v-bind="componentField" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <FormField name="password" v-slot="{ componentField }">
-                <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl class="w-full">
-                    <Input v-bind="componentField" type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <FormField name="role" v-slot="{ componentField }">
-                <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl class="w-full">
-                    <Select v-bind="componentField">
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem v-for="role in roles" :key="role.value" :value="role.value">
-                            {{ role.label }}
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-              <FormField name="manager" v-slot="{ componentField }">
-                <FormItem class="flex flex-col gap-1 w-full" v-auto-animate>
-                  <FormLabel>Manager</FormLabel>
-                  <Popover v-model:open="open">
-                    <PopoverTrigger as-child>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        :aria-expanded="open"
-                        class="w-full justify-between"
-                      >
-                        {{
-                          value
-                            ? managers.find((manager) => manager.value === value)?.label
-                            : 'Choose manager...'
-                        }}
-                        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent class="w-full p-0">
-                      <Command>
-                        <CommandInput class="h-9" placeholder="Search manager..." />
-                        <CommandEmpty> No managers found </CommandEmpty>
-                        <CommandList>
-                          <CommandGroup>
-                            <CommandItem
-                              v-for="manager in managers"
-                              :key="manager.value"
-                              :value="manager.value"
-                              @select="
-                                (ev) => {
-                                  if (typeof ev.detail.value === 'string') {
-                                    value = ev.detail.value
-                                  }
-                                  open = false
-                                }
-                              "
-                            >
-                              {{ manager.label }}
-                              <Check
-                                :class="
-                                  cn(
-                                    'ml-auto h-4 w-4',
-                                    value === manager.value ? 'opacity-100' : 'opacity-0'
-                                  )
-                                "
-                              />
-                            </CommandItem>
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </FormItem>
-              </FormField>
+            <div>
+              <AutoForm
+                class="grid gap-4 py-4"
+                v-auto-animate
+                :schema="schema"
+                :field-config="{
+                  username: {
+                    label: 'Username Test Label',
+                    inputProps: {
+                      placeholder: 'Username'
+                    }
+                  }
+                }"
+              />
             </div>
             <SheetFooter>
               <SheetClose as-child>

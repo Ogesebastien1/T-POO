@@ -7,5 +7,5 @@ const teams = ref([])
 </script>
 
 <template>
-  <DataTable :show-toolbar="true" :data="teams" :columns="teamsColumns" />
+  <DataTabl toolbar :data="teams" :columns="teamsColumns" />
 </template>

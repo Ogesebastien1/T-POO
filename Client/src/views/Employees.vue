@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { DataTable } from '@/components/data-table'
 import { employeesColumns } from '@/components/data-table/columns'
-import { ref, h } from 'vue'
+import { employeeSchema } from '@/components/data-table/schemas/employees.js';
+import { ref } from 'vue'
 
 const employees = ref([
   {
@@ -17,17 +18,30 @@ const employees = ref([
     manager: 'Mark Doe'
   }
 ])
+
+const onCreate = () => {
+  console.log('Create employee')
+}
+
+const onUpdate = (employee: any) => {
+  console.log('Update employee', employee)
+}
+
+const onDelete = (employee: any) => {
+  console.log('Delete employee', employee)
+}
 </script>
 
 <template>
   <DataTable
+    toolbar
+    :schema="employeeSchema"
     :data="employees"
-    :columns="employeesColumns"
-    :show-toolbar="true"
+    :columns="employeesColumns({ onUpdate, onDelete })"
     :search="{
       label: 'Search employees...',
       field: 'username'
     }"
-    :on-create="() => console.log('Create employee')"
+    :on-create="onCreate"
   />
 </template>

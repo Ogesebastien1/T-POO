@@ -53,6 +53,7 @@ const employees = [
 ]
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores'
+import { toast } from './ui/toast'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -239,6 +240,11 @@ const navItems: NavItem[] = [
               @click="
                 () => {
                   authStore.logout()
+                  toast({
+                    title: 'Success',
+                    description: 'Logged out successfully.',
+                    duration: 3500
+                  })
                 }
               "
               >Logout</DropdownMenuItem
