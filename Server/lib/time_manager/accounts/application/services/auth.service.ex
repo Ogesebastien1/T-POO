@@ -1,7 +1,7 @@
 defmodule TimeManager.Accounts.Application.AuthService do
   use TimeManager, :application_service
 
-  alias TimeManager.Accounts.Infrastructure.UserRepository
+  alias TimeManager.Accounts.Application.UserRepository
   alias TimeManager.Accounts.Application.{ManageUserService, PasswordHasher, Token}
 
   alias PasswordHasher

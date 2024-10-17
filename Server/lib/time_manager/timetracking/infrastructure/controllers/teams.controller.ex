@@ -93,13 +93,32 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.TeamsController do
     end
   end
 
-  def remove_user_from_team() do
+  def delete_team(conn, %{"team_id" => team_id}) do
+    _user_assigns = conn.assigns[:current_user]
+
+    case TeamService.delete_team(team_id) do
+      {:ok, _team} ->
+        conn
+        |> TeamPresenter.render_result(nil, :no_content)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("500.json", :internal_server_error)
+    end
   end
 
-  def update_team() do
-  end
+  def delete_user_from_team(conn, %{"team_id" => team_id, "user_id" => user_id}) do
+    _user_assigns = conn.assigns[:current_user]
 
-  def delete_team() do
+    case TeamService.delete_user_from_team(team_id, user_id) do
+      {:ok, team} ->
+        conn
+        |> TeamPresenter.render_result(team)
+
+      {:error, _reason} ->
+        conn
+        |> TeamPresenter.render_error("500.json", :internal_server_error)
+    end
   end
 
   def get_team_users() do

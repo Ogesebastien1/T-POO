@@ -44,8 +44,13 @@ defmodule TimeManagerWeb.Router do
     get "/", TimeTracking.Infrastructure.TeamsController, :get_teams
     get "/:team_id", TimeTracking.Infrastructure.TeamsController, :get_team
 
-    # a faire get <- teams
-    # a faire supprime teams
+    delete "/:team_id/users/:user_id",
+           TimeTracking.Infrastructure.TeamsController,
+           :delete_user_from_team
+
+    delete "/:team_id", TimeTracking.Infrastructure.TeamsController, :delete_team
+    # put "/:team_id", TimeTracking.Infrastructure.TeamsController, :update_team
+
     # a faire supprime user from team
   end
 

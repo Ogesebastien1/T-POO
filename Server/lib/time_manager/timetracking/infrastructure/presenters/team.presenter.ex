@@ -25,6 +25,10 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamPresenter do
     }
   end
 
+  def present_team_with_manager(_team) do
+    %{}
+  end
+
   def present_teams_with_manager(%{teams: teams}) do
     %{data: for(team <- teams, do: present_team_with_manager(%{team: team}))}
   end

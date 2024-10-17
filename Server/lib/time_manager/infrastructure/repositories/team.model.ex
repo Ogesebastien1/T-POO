@@ -11,7 +11,8 @@ defmodule TimeManager.TimeTracking.TeamModel do
 
     many_to_many :users, UserModel,
       join_through: "teams_users",
-      join_keys: [team_id: :id, user_id: :id]
+      join_keys: [team_id: :id, user_id: :id],
+      on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end

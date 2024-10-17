@@ -27,6 +27,14 @@ config :time_manager, TimeManagerWeb.Endpoint,
   secret_key_base: "Gr/kHCXYkk6JQFfpzKCoyE7y5HyK9/urd4TMwGqDpqzRueapgvU6IC9KZfN7W5yd",
   watchers: []
 
+config :time_manager,
+       TimeManager.Accounts.Application.UserRepository,
+       TimeManager.Accounts.Infrastructure.UserRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.TeamRepository,
+       TimeManager.TimeTracking.Infrastructure.TeamRepository
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

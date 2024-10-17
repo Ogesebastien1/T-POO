@@ -52,4 +52,11 @@ defmodule TimeManager.TimeTracking.Application.TeamService do
     team
     |> TeamRepository.delete()
   end
+
+  def delete_user_from_team(team_id, user_id) do
+    team = TeamRepository.get_by_id(team_id)
+
+    team
+    |> TeamRepository.delete_user(user_id)
+  end
 end

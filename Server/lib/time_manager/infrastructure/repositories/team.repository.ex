@@ -20,10 +20,12 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
 
   @impl true
   def get_by_id(id) do
-    TeamModel
-    |> Repo.get(id)
-    |> Repo.preload(:manager)
-    |> Repo.preload(:users)
+    if Repo.is_uuid(id) do
+      TeamModel
+      |> Repo.get(id)
+      |> Repo.preload(:manager)
+      |> Repo.preload(:users)
+    end
   end
 
   @impl true
@@ -55,8 +57,31 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
   end
 
   @impl true
-  def delete(team) do
-    Repo.delete(team)
+  def delete(team_id) do
+    TeamModel
+    |> Repo.get!(team_id)
+    |> Repo.delete()
+  end
+
+  @impl true
+  def delete_user(team, user_id) do
+    user =
+      UserModel
+      |> Repo.get!(user_id)
+
+    can_update =
+      team.users
+      |> Enum.find(fn u -> u.id == user.id end) != nil
+
+    with true <- can_update do
+      team
+      |> Changeset.change()
+      |> Changeset.put_assoc(:users, Enum.reject(team.users, fn u -> u.id == user.id end))
+      |> Repo.update()
+    else
+      false ->
+        {:error, :not_in_team}
+    end
   end
 
   @impl true

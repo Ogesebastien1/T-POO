@@ -11,6 +11,14 @@ defmodule TimeManager.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
+      # test_coverage: [tool: ExCoveralls],
+      # preferred_cli_env: [
+      #   coveralls: :test,
+      #   "coveralls.detail": :test,
+      #   "coveralls.post": :test,
+      #   "coveralls.html": :test,
+      #   "coveralls.cobertura": :test
+      # ]
     ]
   end
 
@@ -51,7 +59,8 @@ defmodule TimeManager.MixProject do
       {:bcrypt_elixir, "~> 3.0"},
       {:cors_plug, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.16"},
-      {:bodyguard, "~> 2.4"}
+      {:bodyguard, "~> 2.4"},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 
