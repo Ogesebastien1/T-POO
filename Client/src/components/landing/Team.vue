@@ -46,7 +46,7 @@ const teamList: TeamProps[] = [
       "https://avatars.githubusercontent.com/u/51353325?v=4",
     firstName: "Mouad",
     lastName: "EL-HILALI",
-    positions: ["Machine Learning Engineer", "TensorFlow Tinkerer"],
+    positions: ["Backend Developer"],
     socialNetworks: [
       {
         name: "LinkedIn",
@@ -63,7 +63,7 @@ const teamList: TeamProps[] = [
       "https://avatars.githubusercontent.com/u/100953761?v=4",
     firstName: "Hasan",
     lastName: "KAYA",
-    positions: ["DevOps Engineer", "CI/CD Pipeline Mastermind"],
+    positions: ["Fronted Developer"],
     socialNetworks: [
       {
         name: "LinkedIn",
@@ -76,7 +76,7 @@ const teamList: TeamProps[] = [
       "https://avatars.githubusercontent.com/u/145779469?v=4",
     firstName: "Sébastien",
     lastName: "OGE",
-    positions: ["Backend Developer"],
+    positions: ["Backend Developer", "DevOps"],
     socialNetworks: [
       {
         name: "LinkedIn",
