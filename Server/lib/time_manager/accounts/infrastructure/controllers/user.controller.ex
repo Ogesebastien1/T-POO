@@ -170,8 +170,6 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
           "role" => "admin"
         })
 
-      # IO.inspect(admin_user)
-
       conn
       |> render_result(admin_user, :created)
     else

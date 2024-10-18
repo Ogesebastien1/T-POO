@@ -12,8 +12,6 @@ defmodule TimeManager.Test.AccountsFixture do
   def then_user_is_updated(conn, user) do
     response_user = Poison.decode!(conn.resp_body)
 
-    # IO.inspect(response_user)
-
     assert conn.status == 200
     assert response_user["email"] == user["email"]
     assert response_user["username"] == user["username"]
