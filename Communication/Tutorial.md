@@ -3,12 +3,12 @@
 ## $${\color{blue}Login}$$ $${\color{blue}Page}$$
 Here's the login page, you'll need to log in to your account with your email address and password.
 
-![Login Page](./screenshot/login-page.png)
+![Login Page](./Communication/screenshot/login-page.png)
 
 ## $${\color{blue}Registration}$$ $${\color{blue}Page}$$
 If you don't have an account, you'll need to create one on the registration page by entering your email address, username, and secure password.
 
-![Register Page](./screenshot/register-page.png)
+![Register Page](./Communication/screenshot/register-page.png)
 
 ## $${\color{blue}Dashboard}$$
 This dashboard offers you a complete set of functions to help you manage your working hours. As soon as you arrive, you're greeted by a personalized message, and you can clock in and out directly via the “Clock in” button. This feature allows you to precisely record your entry and exit times, helping you to keep accurate track of your work periods. Whether you work a fixed or flexible schedule, this tool helps you stay organized.
@@ -21,34 +21,34 @@ Finally, your schedule for the coming days is also displayed, with the exact tim
 
 In short, this dashboard gives you everything you need to keep track of your time, assess your performance, and optimally organize your days ahead. It's designed to help you stay productive while balancing work and rest.
 
-![Dashboard Page](./screenshot/dashboard-page.png)
+![Dashboard Page](./Communication/screenshot/dashboard-page.png)
 
 ## $${\color{blue}Dashboard}$$ $${\color{blue}When}$$ $${\color{blue}You}$$ $${\color{blue}Clock}$$ $${\color{blue}In}$$
 When you clock in, a notification appears at the bottom right of your screen telling you whether you have clocked in or not, and it is displayed in “recent activities.”
 
-![Dashboard When Clock In](./screenshot/dashboard-clock-in-page.png)
+![Dashboard When Clock In](./Communication/screenshot/dashboard-clock-in-page.png)
 
 ## $${\color{blue}Dashboard}$$ $${\color{blue}When}$$ $${\color{blue}You}$$ $${\color{blue}Clock}$$ $${\color{blue}Out}$$
 When you clock out, a notification appears at the bottom right of your screen telling you whether you have clocked out or not, and it is displayed in “recent activities.”
 
-![Dashboard When Clock In](./screenshot/dashboard-clock-out-page.png)
+![Dashboard When Clock In](./Communication/screenshot/dashboard-clock-out-page.png)
 
 ## $${\color{blue}Settings}$$
 Here are the settings, where you can change your username, password, and delete your account.
 
-![Settings Page](./screenshot/settings-page.png)
+![Settings Page](./Communication/screenshot/settings-page.png)
 
 ### $${\color{blue}Settings}$$ $${\color{blue}When}$$ $${\color{blue}You}$$ $${\color{blue}Change}$$ $${\color{blue}Your}$$ $${\color{blue}Username}$$
 A notification appears at the bottom left of the screen to let you know whether the username change has been successful or not.
 
-![Settings page when updating the username](./screenshot/settings-username-page.png)
+![Settings page when updating the username](./Communication/screenshot/settings-username-page.png)
 
 ### $${\color{blue}Settings}$$ $${\color{blue}When}$$ $${\color{blue}You}$$ $${\color{blue}Change}$$ $${\color{blue}Your}$$ $${\color{blue}Password}$$
 A notification appears at the bottom left of the screen to let you know whether or not the password change has been successful.
 
-![Settings page when updating the password](./screenshot/settings-password-page.png)
+![Settings page when updating the password](./Communication/screenshot/settings-password-page.png)
 
 ### $${\color{blue}When}$$ $${\color{blue}You}$$ $${\color{blue}Delete}$$ $${\color{blue}Your}$$ $${\color{blue}Account}$$ $${\color{blue}(Redirect}$$ $${\color{blue}to}$$ $${\color{blue}Login}$$ $${\color{blue}Page)}$$
 If you have decided to delete your account and click on the button, you are redirected to the login page, and a notification appears in the bottom right-hand corner of the screen to let you know whether the deletion has worked or not.
 
-![Delete your account](./screenshot/delete-account.png)
+![Delete your account](./Communication/screenshot/delete-account.png)
