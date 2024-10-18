@@ -29,10 +29,19 @@ import {
 } from '@/components/ui/sheet'
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
 import type { Row } from '@tanstack/vue-table'
-import { Edit2Icon, EllipsisVertical, Trash2Icon } from 'lucide-vue-next'
+import {
+  Copy,
+  CopyIcon,
+  Edit2Icon,
+  EllipsisVertical,
+  NetworkIcon,
+  Trash2Icon
+} from 'lucide-vue-next'
 
-import * as z from 'zod'
 import { ref } from 'vue'
+import * as z from 'zod'
+import DropdownMenuItem from '../ui/dropdown-menu/DropdownMenuItem.vue'
+import { RouterLink } from 'vue-router'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -94,7 +103,13 @@ const formData = ref({ ...row.original })
           </div>
         </SheetContent>
       </Sheet>
-      <DropdownMenuSeparator v-if="onUpdate" />
+      <RouterLink :to="{ name: 'members', params: { id: row.original.id } }">
+        <Button variant="ghost" class="w-full flex justify-between p-3 font-normal">
+          Members
+          <NetworkIcon class="h-4 w-4" />
+        </Button>
+      </RouterLink>
+      <DropdownMenuSeparator v-if="onUpdate || onDelete" />
       <AlertDialog v-if="onDelete">
         <AlertDialogTrigger as-child>
           <Button

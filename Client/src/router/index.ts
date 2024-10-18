@@ -46,7 +46,7 @@ export const router = createRouter({
     },
     {
       path: '/teams/:id/members',
-      name: 'team-members',
+      name: 'members',
       component: () => import('../views/TeamMembers.vue'),
       meta: { requiresAuth: true }
     },
