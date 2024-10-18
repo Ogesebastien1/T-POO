@@ -98,6 +98,10 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
           conn
           |> render_error("500.json", :internal_server_error)
       end
+    else
+      _ ->
+        conn
+        |> render_error("403.json", :forbidden)
     end
   end
 
@@ -157,6 +161,10 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
           conn
           |> render_error("404.json", :not_found)
       end
+    else
+      _ ->
+        conn
+        |> render_error("403.json", :forbidden)
     end
   end
 

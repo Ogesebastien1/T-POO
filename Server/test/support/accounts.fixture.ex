@@ -1,12 +1,36 @@
 defmodule TimeManager.Test.AccountsFixture do
   use TimeManagerWeb.ConnCase
 
+  alias TimeManager.Accounts.Application.UserRepository
+
   def get_users(conn) do
     get(conn, "/api/users")
   end
 
   def update_user(conn, user, user_id) do
     put(conn, ~p"/api/users/#{user_id}", %{user: user})
+  end
+
+  def create_user(conn, user) do
+    post(conn, "/api/users", %{user: user})
+  end
+
+  def delete_user(conn, user_id) do
+    delete(conn, ~p"/api/users/#{user_id}")
+  end
+
+  def then_user_is_created(conn, user) do
+    response_user = Poison.decode!(conn.resp_body)
+
+    assert conn.status == 201
+
+    assert response_user["email"] == user["email"]
+    assert response_user["username"] == user["username"]
+    assert response_user["id"] != nil
+  end
+
+  def then_user_is_deleted(conn) do
+    assert conn.status == 204
   end
 
   def then_user_is_updated(conn, user) do
