@@ -73,7 +73,7 @@ const navItems: NavItem[] = [
   { icon: Home, label: 'Dashboard', path: '/' },
   { icon: Calendar, label: 'Agenda', path: '/agenda' },
   { icon: LineChart, label: 'Analytics', path: '/analytics' },
-  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.isManager },
+  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.hasAnyRole },
   { icon: Network, label: 'Employees', path: '/employees', show: authStore?.hasAnyRole },
   { icon: Settings, label: 'Settings', path: '/settings' }
 ]

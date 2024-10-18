@@ -1,15 +1,4 @@
 <script setup lang="ts">
-import type { Row, Table } from '@tanstack/vue-table'
-import { EllipsisVertical, Trash2Icon, Edit2Icon } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,57 +10,34 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import { vAutoAnimate } from '@formkit/auto-animate/vue'
+import { AutoForm } from '@/components/ui/auto-form'
+import { Button } from '@/components/ui/button'
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Check, ChevronsUpDown } from 'lucide-vue-next'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command'
-import { cn, ucfirst } from '@/lib/utils'
-import { AutoForm } from '@/components/ui/auto-form'
+import { vAutoAnimate } from '@formkit/auto-animate/vue'
+import type { Row } from '@tanstack/vue-table'
+import { Edit2Icon, EllipsisVertical, Trash2Icon } from 'lucide-vue-next'
 
-import { Input } from '@/components/ui/input'
 import * as z from 'zod'
-import { useForm } from 'vee-validate'
 import { ref } from 'vue'
-import { toTypedSchema } from '@vee-validate/zod'
-import { getAutoFormFieldConfig, getOriginal, getRowFields } from '@/components/data-table/lib/utils'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
-  onUpdate: (row: Row<TData>) => void
-  onDelete: (row: Row<TData>) => void
+  onUpdate?: (row: Row<TData>, data: any) => void
+  onDelete?: (row: Row<TData>) => void
   schema: z.ZodObject<any>
 }
 
@@ -79,16 +45,7 @@ const props = defineProps<DataTableRowActionsProps<any>>()
 
 const { row, onUpdate, onDelete, schema } = props
 
-const { handleSubmit } = useForm({
-  validationSchema: toTypedSchema(schema)
-})
-
-const managers = []
-
-const open = ref(false)
-const value = ref('')
-
-getAutoFormFieldConfig(row, schema)
+const formData = ref({ ...row.original })
 </script>
 
 <template>
@@ -100,7 +57,7 @@ getAutoFormFieldConfig(row, schema)
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" class="w-[160px]">
-      <Sheet>
+      <Sheet v-if="onUpdate">
         <SheetTrigger as-child>
           <Button variant="ghost" class="w-full flex justify-between font-normal p-3">
             Edit
@@ -109,9 +66,9 @@ getAutoFormFieldConfig(row, schema)
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Edit employee</SheetTitle>
+            <SheetTitle>Edit record</SheetTitle>
             <SheetDescription>
-              Fill in the form below to edit the employee details.
+              Fill in the form below to edit the record details.
             </SheetDescription>
           </SheetHeader>
           <div>
@@ -119,26 +76,26 @@ getAutoFormFieldConfig(row, schema)
               class="grid gap-4 py-4"
               v-auto-animate
               :schema="schema"
+              :initial-values="formData"
+              @submit="(data) => onUpdate && onUpdate(row, data)"
               :field-config="{
-                username: {
-                  label: 'Username Test Label',
+                password: {
                   inputProps: {
-                    placeholder: 'Username'
+                    type: 'password',
+                    placeholder: '••••••••'
                   }
                 }
               }"
-              @submit="onUpdate(row)"
-            />
+            >
+              <SheetClose as-child>
+                <Button type="submit" class="flex-1"> Save </Button>
+              </SheetClose>
+            </AutoForm>
           </div>
-          <SheetFooter>
-            <SheetClose as-child>
-              <Button type="submit" class="w-full mt-3" @click="onUpdate(row)"> Save </Button>
-            </SheetClose>
-          </SheetFooter>
         </SheetContent>
       </Sheet>
-      <DropdownMenuSeparator />
-      <AlertDialog>
+      <DropdownMenuSeparator v-if="onUpdate" />
+      <AlertDialog v-if="onDelete">
         <AlertDialogTrigger as-child>
           <Button
             variant="ghost"
@@ -152,8 +109,8 @@ getAutoFormFieldConfig(row, schema)
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove
-              your data from our servers.
+              This action cannot be undone. This will permanently delete the record and remove the
+              data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

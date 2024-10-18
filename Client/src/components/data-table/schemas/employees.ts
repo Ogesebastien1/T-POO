@@ -6,12 +6,14 @@ export enum Role {
   Employee = 'Employee',
 }
 
-export const employeeSchema = z.object({
+export const employeeSchema = (managers: any = []) => z.object({
   username: z.string().min(3).max(30),
   email: z.string().email().min(1),
   password: z.string().min(8).max(30),
   role: z.nativeEnum(Role).default(Role.Employee),
-  manager: z.string().optional()
+  manager: z.enum(managers)
 })
 
-export type Employee = z.infer<typeof employeeSchema>
+const schema = employeeSchema()
+
+export type Employee = z.infer<typeof schema>

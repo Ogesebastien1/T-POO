@@ -41,9 +41,11 @@ interface DataTableProps<TData> {
     label?: string
     field?: string
   }
-  onCreate?: () => void | undefined
+  onCreate?: (employee: any) => void | undefined
 }
 const props = defineProps<DataTableProps<any>>()
+
+console.log(props.data)
 
 const sorting = ref<SortingState>([])
 const columnFilters = ref<ColumnFiltersState>([])
