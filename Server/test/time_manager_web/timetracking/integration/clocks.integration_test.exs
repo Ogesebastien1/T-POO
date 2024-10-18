@@ -73,5 +73,72 @@ defmodule TimeManagerWeb.ClockTest do
       |> when_user_clock_in(user6.id)
       |> then_clock_is_created(user6)
     end
+
+    test "I can all my clocks", %{
+      conn: conn,
+      users: users
+    } do
+      user6 = hd(users)
+
+      user_token =
+        Auth.login_pass(user(6)["email"], user(6)["password"])
+        |> Auth.extract_auth_token()
+
+      conn = conn |> Auth.put_auth_token(user_token)
+
+      for _ <- 1..5 do
+        conn
+        |> when_user_clock_in(user6.id)
+        |> then_clock_is_created(user6)
+
+        after_x_seconds(@one_hour * 8 + round(@one_hour / 3))
+      end
+
+      conn
+      |> Auth.put_auth_token(user_token)
+      |> when_user_get_all_clocks()
+      |> then_clocks_are_shown()
+    end
+
+    test "I can see clocks of a user", %{
+      conn: conn,
+      users: users
+    } do
+      user6 = hd(users)
+      user5 = hd(tl(users))
+
+      user6_token =
+        Auth.login_pass(user(6)["email"], user(6)["password"])
+        |> Auth.extract_auth_token()
+
+      conn = conn |> Auth.put_auth_token(user6_token)
+
+      for _ <- 1..2 do
+        conn
+        |> when_user_clock_in(user6.id)
+        |> then_clock_is_created(user6)
+
+        after_x_seconds(@one_hour)
+      end
+
+      user5_token =
+        Auth.login_pass(user(5)["email"], user(5)["password"])
+        |> Auth.extract_auth_token()
+
+      conn = conn |> Auth.put_auth_token(user5_token)
+
+      for _ <- 1..10 do
+        conn
+        |> when_user_clock_in(user5.id)
+        |> then_clock_is_created(user5)
+
+        after_x_seconds(@one_hour)
+      end
+
+      conn
+      |> Auth.put_auth_token(user6_token)
+      |> when_user_get_all_clocks_by_user(user6.id)
+      |> then_clocks_are_shown()
+    end
   end
 end

@@ -58,6 +58,8 @@ defmodule TimeManagerWeb.Router do
     pipe_through [:api, :authenticated]
 
     post "/", TimeTracking.Infrastructure.ClockController, :clock
+    get "/", TimeTracking.Infrastructure.ClockController, :get_clocks
+    get "/:user_id", TimeTracking.Infrastructure.ClockController, :get_clocks_by_user
   end
 
   # Working time 

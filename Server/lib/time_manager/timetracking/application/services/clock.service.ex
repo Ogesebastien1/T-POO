@@ -30,4 +30,12 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
     |> ClockModel.changeset(%{status: status, user_id: user_id, time: DateProvider.now()})
     |> ClockRepository.insert()
   end
+
+  def get_clocks() do
+    ClockRepository.get_all()
+  end
+
+  def get_clocks_by_user(user_id) do
+    ClockRepository.get_all_by_user(user_id)
+  end
 end
