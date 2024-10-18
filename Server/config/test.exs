@@ -41,4 +41,16 @@ config :time_manager,
        TimeManager.TimeTracking.Application.TeamRepository,
        TimeManager.TimeTracking.Infrastructure.TeamRepository
 
+config :time_manager,
+       TimeManager.TimeTracking.Application.ClockRepository,
+       TimeManager.TimeTracking.Infrastructure.ClockRepository
+
+config :time_manager,
+       :date_provider,
+       TimeManager.Test.FakeDateProvider
+
+config :time_manager,
+       :fake_date_provider,
+       0
+
 config :bcrypt_elixir, log_rounds: 4

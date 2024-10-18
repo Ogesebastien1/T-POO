@@ -54,6 +54,14 @@ defmodule TimeManagerWeb.Router do
     # a faire supprime user from team
   end
 
+  scope "/api/clocks", TimeManagerWeb do
+    pipe_through [:api, :authenticated]
+
+    post "/", TimeTracking.Infrastructure.ClockController, :clock
+    get "/", TimeTracking.Infrastructure.ClockController, :get_clocks
+    get "/:user_id", TimeTracking.Infrastructure.ClockController, :get_clocks_by_user
+  end
+
   # Working time 
   # On peut ajouter des heures de travails pour chaque jours pour chaque Utilisateur
   # On peut aussi faire une batch query 
