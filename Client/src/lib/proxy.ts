@@ -1,3 +1,5 @@
+import { useNetwork } from '@vueuse/core'
+
 export enum HttpMethod {
   GET = 'GET',
   POST = 'POST',
@@ -17,6 +19,8 @@ interface FetchParamsInterface {
 export const fetch = async (params: FetchParamsInterface): Promise<Response> => {
   const { endpoint, method = HttpMethod.GET, payload, withToken = true } = params
 
+  const { isOnline } = useNetwork()
+
   const headers = new Headers()
 
   if (withToken) {
@@ -33,6 +37,13 @@ export const fetch = async (params: FetchParamsInterface): Promise<Response> => 
 
   if (payload && method !== HttpMethod.GET) {
     options.body = JSON.stringify(payload)
+  }
+
+  console.log(isOnline, isOnline.value)
+
+  if (!isOnline.value) {
+    console.log('Network is down, request will be sent when the network is back online')
+    return new Response(null, { status: 504, statusText: 'Gateway Timeout' })
   }
 
   const response = await window.fetch(`${VITE_API_URL}${endpoint}`, options)
