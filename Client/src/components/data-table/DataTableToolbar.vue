@@ -26,7 +26,7 @@ interface DataTableToolbarProps<TData> {
     field?: string
   }
   onCreate?: (employee: any) => void
-  schema: z.ZodObject<any>
+  schema?: z.ZodObject<any>
 }
 
 const props = defineProps<DataTableToolbarProps<any>>()
@@ -60,7 +60,7 @@ const searchField = computed(() => search?.field ?? 'name')
         </Button>
       </div>
       <div class="flex items-center space-x-2">
-        <Sheet>
+        <Sheet v-if="onCreate && schema">
           <SheetTrigger as-child>
             <Button variant="outline" size="sm" class="ml-auto flex h-8">
               <Plus class="mr-2 h-4 w-4" />

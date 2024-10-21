@@ -6,14 +6,12 @@ import { employeeSchema, type Employee } from '@/components/data-table/schemas'
 
 interface EmployeeColumnProps {
   onDelete: (row: any) => void
-  onUpdate: (row: any, data: any) => void
-  managers: any[]
 }
 
 type EmployeeColumn = ColumnDef<Employee> & { hidden?: boolean }
 
 export const membersColumns = (props: EmployeeColumnProps): EmployeeColumn[] => {
-  const { onDelete, onUpdate, managers } = props
+  const { onDelete } = props
 
   return [
     {
@@ -69,10 +67,9 @@ export const membersColumns = (props: EmployeeColumnProps): EmployeeColumn[] => 
       id: 'actions',
       cell: ({ row }) =>
         h(DataTableRowActions, {
-          schema: employeeSchema(managers),
+          schema: employeeSchema(),
           row,
-          onUpdate,
-          onDelete
+          onDelete,
         })
     }
   ]

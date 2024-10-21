@@ -10,24 +10,29 @@ export const useUsersStore = defineStore('users', {
   }),
 
   actions: {
-    async create(payload: UserType) {
+    async create(payload: UserType): Promise<boolean> {
       try {
-        // const response = await fetch({
-        //   endpoint: '/users',
-        //   method: HttpMethod.POST,
-        //   payload: {
-        //     user: payload
-        //   }
-        // })
+        const response = await fetch({
+          endpoint: '/users',
+          method: HttpMethod.POST,
+          payload: {
+            user: payload
+          }
+        })
 
-        // const { data } = await response.json()
-        this.users.push({ ...payload, id: Math.floor(Math.random() * 1000) } as UserType)
+        if (response.ok) {
+          this.users.push(payload)
+          return true;
+        }
+
+        return false;
       } catch (error) {
         console.error('Error creating user:', error)
+        return false;
       }
     },
 
-    async update(id: string, payload: any) {
+    async update(id: string, payload: any): Promise<void> {
       try {
         // const response = await fetch({
         //   endpoint: `/users/${id}`,

@@ -34,18 +34,16 @@ type DataTableColumnDef = ColumnDef<any, any> & { hidden?: boolean }
 
 interface DataTableProps<TData> {
   columns: DataTableColumnDef[]
-  schema: z.ZodObject<any>
+  schema?: z.ZodObject<any>
   data: TData[]
   toolbar?: boolean
   search?: {
     label?: string
     field?: string
   }
-  onCreate?: (employee: any) => void | undefined
+  onCreate?: (row: any) => Promise<void> | undefined
 }
 const props = defineProps<DataTableProps<any>>()
-
-console.log(props.data)
 
 const sorting = ref<SortingState>([])
 const columnFilters = ref<ColumnFiltersState>([])

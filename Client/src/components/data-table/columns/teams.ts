@@ -3,12 +3,16 @@ import { h } from 'vue'
 
 import { DataTableColumnHeader, DataTableRowActions } from '@/components/data-table'
 import { teamSchema, type Team } from '@/components/data-table/schemas'
+import type { CustomDataTableColumnAction } from '@/components/data-table/columns'
+import { NetworkIcon } from 'lucide-vue-next'
 
 interface ColumnProps {
   onDelete: (row: any) => void
 }
 
-export const teamsColumns = (props: ColumnProps): ColumnDef<Team>[] => {
+type TeamColumn = ColumnDef<Team> & { hidden?: boolean, actions?: CustomDataTableColumnAction[] }
+
+export const teamsColumns = (props: ColumnProps): TeamColumn[] => {
   const { onDelete } = props;
 
   return [
@@ -27,6 +31,13 @@ export const teamsColumns = (props: ColumnProps): ColumnDef<Team>[] => {
         schema: teamSchema,
         row,
         onDelete,
+        actions: [
+          {
+            label: 'Members',
+            to: (row: any) => ({ name: 'members', params: { id: row.original.id } }),
+            icon: NetworkIcon
+          }
+        ]
       }),
     }
   ]

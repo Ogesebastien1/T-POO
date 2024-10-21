@@ -25,8 +25,10 @@ const onDelete = (row: any) => {
   })
 }
 
-const onCreate = (team: any) => {
-  teamsStore.create(team)
+const onCreate = async (team: any) => {
+  const created = await teamsStore.create(team)
+
+  if (created) {
   teams.value = [...teamsStore.teams]
 
   toast({
@@ -34,6 +36,14 @@ const onCreate = (team: any) => {
     description: 'The team has been created successfully',
     duration: 3500
   })
+  } else {
+    toast({
+      variant: 'destructive',
+      title: 'Team creation failed',
+      description: 'The team could not be created',
+      duration: 3500
+    })
+  }
 }
 </script>
 

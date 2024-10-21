@@ -30,29 +30,27 @@ import {
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
 import type { Row } from '@tanstack/vue-table'
 import {
-  Copy,
-  CopyIcon,
   Edit2Icon,
   EllipsisVertical,
-  NetworkIcon,
   Trash2Icon
 } from 'lucide-vue-next'
 
 import { ref } from 'vue'
 import * as z from 'zod'
-import DropdownMenuItem from '../ui/dropdown-menu/DropdownMenuItem.vue'
 import { RouterLink } from 'vue-router'
+import type { CustomDataTableColumnAction } from './columns/index.js'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
   onUpdate?: (row: Row<TData>, data: any) => void
   onDelete?: (row: Row<TData>) => void
   schema: z.ZodObject<any>
+  actions?: CustomDataTableColumnAction[]
 }
 
 const props = defineProps<DataTableRowActionsProps<any>>()
 
-const { row, onUpdate, onDelete, schema } = props
+const { row, onUpdate, onDelete, schema, actions } = props
 
 const formData = ref({ ...row.original })
 </script>
@@ -103,10 +101,10 @@ const formData = ref({ ...row.original })
           </div>
         </SheetContent>
       </Sheet>
-      <RouterLink :to="{ name: 'members', params: { id: row.original.id } }">
+      <RouterLink v-for="action in actions" :to="action.to(row)" key="action.label">
         <Button variant="ghost" class="w-full flex justify-between p-3 font-normal">
-          Members
-          <NetworkIcon class="h-4 w-4" />
+          {{ action.label }}
+          <component :is="action.icon" class="h-4 w-4" />
         </Button>
       </RouterLink>
       <DropdownMenuSeparator v-if="onUpdate || onDelete" />

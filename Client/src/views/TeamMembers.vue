@@ -5,6 +5,8 @@ import { teamSchema } from '@/components/data-table/schemas'
 import { toast } from '@/components/ui/toast'
 import { useTeamsStore } from '@/stores'
 import { ref, watch } from 'vue'
+import { NetworkIcon } from 'lucide-vue-next'
+import { membersColumns } from '@/components/data-table/columns/members.js'
 
 const teamsStore = useTeamsStore()
 
@@ -24,26 +26,14 @@ const onDelete = (row: any) => {
     duration: 3500
   })
 }
-
-const onCreate = (team: any) => {
-  // teamsStore.create(team)
-  members.value = [...[]]
-
-  toast({
-    title: 'Team created',
-    description: 'The team has been created successfully',
-    duration: 3500
-  })
-}
 </script>
 
 <template>
   <DataTable
     toolbar
     :key="members.length"
-    :schema="teamSchema"
     :data="members"
-    :columns="teamsColumns({ onDelete })"
+    :columns="membersColumns({ onDelete })"
     :search="{
       label: 'Search members...',
       field: 'username'
