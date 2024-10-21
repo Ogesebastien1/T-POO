@@ -21,6 +21,10 @@ defmodule TimeManager.Test.ClocksFixture do
     Application.put_env(:time_manager, :fake_date_provider, time_to_put)
   end
 
+  def get_fake_time() do
+    Application.get_env(:time_manager, :fake_date_provider)
+  end
+
   def when_user_get_all_clocks(conn) do
     get(conn, "/api/clocks")
   end

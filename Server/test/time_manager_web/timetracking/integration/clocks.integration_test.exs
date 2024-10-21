@@ -143,7 +143,6 @@ defmodule TimeManagerWeb.ClockTest do
     end
   end
 
-  @tag :this
   test "calculate clock stats", %{
     users: users
 
@@ -157,10 +156,41 @@ defmodule TimeManagerWeb.ClockTest do
       ClockService.clock_in_out(user6.id)
       after_x_seconds(@one_hour)
     end
-
     clocks = ClockService.get_clocks_by_user(user6.id)
     clock_stats = ClockService.calculate_clock_stats(clocks)
     IO.inspect(clock_stats)
 
   end
+
+  @tag :this
+  test "this week", %{
+    users: users
+
+  } do
+    user6 = hd(users)
+    clocks = ClockService.get_clocks_by_user(user6.id)
+
+    for j <- 0..4 do
+      reset_fake_time()
+      after_x_seconds(-(@one_hour*24*7))
+      after_x_seconds(@one_hour*(24 * j))
+      ClockService.clock_in_out(user6.id)
+      after_x_seconds(@one_hour*8)
+      ClockService.clock_in_out(user6.id)
+    end
+
+
+    reset_fake_time()
+    for i <- 1..5 do
+      ClockService.clock_in_out(user6.id)
+      after_x_seconds(@one_hour*8)
+      ClockService.clock_in_out(user6.id)
+      reset_fake_time()
+      after_x_seconds(@one_hour*(24 * i))
+    end
+
+    clocks = ClockService.get_clocks_by_user(user6.id)
+    week_clock = ClockService.get_clocks_this_week(clocks)
+  end
+
 end

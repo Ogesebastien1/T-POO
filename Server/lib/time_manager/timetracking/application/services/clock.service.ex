@@ -48,8 +48,20 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
           acc + DateTime.diff(end_time, start_time, :hour)
         _, acc -> acc
       end)
-
     %{total_time: total_time}
+  end
+
+  def get_clocks_this_week(clocks) do
+    # ClockRepository.get_all_by_user(user_id)
+    now = DateProvider.now()
+    beginning_of_week = Date.beginning_of_week(now)
+    end_of_week = Date.end_of_week(now)
+
+    filtered_clocks = clocks
+    |> Enum.filter(fn clock ->
+      Date.compare(clock.time, beginning_of_week) != :lt and Date.compare(clock.time, end_of_week) != :gt
+    end)
+    IO.inspect(filtered_clocks)
   end
 
 end
