@@ -3,7 +3,6 @@ import { Sidebar, Loader } from '@/components'
 import { RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores'
 import { Toaster } from '@/components/ui/toast'
-import { watch } from 'vue';
 
 const authStore = useAuthStore()
 </script>
