@@ -26,7 +26,8 @@ defmodule TimeManager.Test.ClocksFixture do
   end
 
   def then_clocks_are_shown(conn) do
-    _response_body = Poison.decode!(conn.resp_body)
+    response_body = Poison.decode!(conn.resp_body)
+    # IO.inspect(response_body)
 
     assert conn.status == 200
   end
@@ -34,4 +35,5 @@ defmodule TimeManager.Test.ClocksFixture do
   def when_user_get_all_clocks_by_user(conn, user_id) do
     get(conn, "/api/clocks/#{user_id}")
   end
+
 end

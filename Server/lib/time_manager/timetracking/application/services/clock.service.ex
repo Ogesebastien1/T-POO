@@ -38,4 +38,18 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
   def get_clocks_by_user(user_id) do
     ClockRepository.get_all_by_user(user_id)
   end
+
+  def calculate_clock_stats(clocks) do
+    total_time =
+      clocks
+      |> Enum.chunk_every(2)
+      |> Enum.reduce(0, fn
+        [%{status: :clock_in, time: start_time}, %{status: :clock_out, time: end_time}], acc ->
+          acc + DateTime.diff(end_time, start_time, :hour)
+        _, acc -> acc
+      end)
+
+    %{total_time: total_time}
+  end
+
 end

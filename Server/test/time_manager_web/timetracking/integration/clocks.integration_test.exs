@@ -5,6 +5,7 @@ defmodule TimeManagerWeb.ClockTest do
   alias TimeManager.Test.SetupFixture.{Registration, Auth}
   import TimeManagerWeb.Test.UserBuilder
   import TimeManager.Test.ClocksFixture
+  alias TimeManager.TimeTracking.Application.ClockService
 
   @moduletag :integration
   @moduletag :clocks
@@ -140,5 +141,26 @@ defmodule TimeManagerWeb.ClockTest do
       |> when_user_get_all_clocks_by_user(user6.id)
       |> then_clocks_are_shown()
     end
+  end
+
+  @tag :this
+  test "calculate clock stats", %{
+    users: users
+
+  } do
+    user6 = hd(users)
+    clocks = ClockService.get_clocks_by_user(user6.id)
+
+    for _ <- 1..10 do
+      ClockService.clock_in_out(user6.id)
+      after_x_seconds(@one_hour*2)
+      ClockService.clock_in_out(user6.id)
+      after_x_seconds(@one_hour)
+    end
+
+    clocks = ClockService.get_clocks_by_user(user6.id)
+    clock_stats = ClockService.calculate_clock_stats(clocks)
+    IO.inspect(clock_stats)
+
   end
 end
