@@ -21,21 +21,42 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
     VitePWA({
+      registerType: "autoUpdate",
+      injectRegister: "auto",
       workbox: {
-        globPatterns: ["**/*"],
+        cleanupOutdatedCaches: true,
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,svg,json,woff2}"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'document',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'documents',
+              expiration: {
+                maxEntries: 50,
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images',
+              expiration: {
+                maxEntries: 50,
+              },
+            },
+          },
+        ],
       },
-      // add this to cache all the
-      // static assets in the public folder
-      includeAssets: [
-        "**/*",
-      ],
-      registerType: 'autoUpdate',
       devOptions: {
         enabled: true
       },
       manifest: {
-        name: 'Vite App',
-        short_name: 'Vite App',
+        id: '/',
+        name: 'Time Manager',
+        short_name: 'Time Manager App',
+        description: 'Make your employee\'s life easier, manage their time with ease. Be productive and efficient.',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
