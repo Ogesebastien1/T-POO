@@ -187,6 +187,35 @@ defmodule TimeManagerWeb.TeamsTest do
       |> TeamsFixture.then_team_was_deleted()
     end
 
+    test "I can delete a team with users in it", %{
+      conn: conn,
+      manager_id: manager_id,
+      manager_token: manager_token,
+      users: users
+    } do
+      {:ok, team} =
+        %{
+          "name" => "Team 1",
+          "manager_id" => manager_id
+        }
+        |> TeamsFixture.given_team_exists()
+
+      user1 = hd(tl(users))
+      user2 = hd(users)
+
+      conn =
+        conn
+        |> Auth.put_auth_token(manager_token)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user2.id)
+
+      team = conn.assigns.team
+
+      conn
+      |> TeamsFixture.when_user_delete_team(team.id)
+      |> TeamsFixture.then_team_was_deleted()
+    end
+
     test "I can remove a user from team", %{
       conn: conn,
       manager_id: manager_id,

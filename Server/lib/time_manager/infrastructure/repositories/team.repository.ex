@@ -7,6 +7,7 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
   alias TimeManager.TimeTracking.Application.TeamRepository
 
   alias Ecto.Changeset
+  alias Ecto.UUID
 
   @behaviour TeamRepository
 
@@ -58,9 +59,18 @@ defmodule TimeManager.TimeTracking.Infrastructure.TeamRepository do
 
   @impl true
   def delete(team_id) do
-    TeamModel
-    |> Repo.get!(team_id)
-    |> Repo.delete()
+    case UUID.dump(team_id) do
+      {:ok, team_uuid} ->
+        from(u in "teams_users", where: u.team_id == ^team_uuid)
+        |> Repo.delete_all()
+
+        TeamModel
+        |> Repo.get!(team_id)
+        |> Repo.delete()
+
+      _ ->
+        {:error, :invalid_team_id}
+    end
   end
 
   @impl true
