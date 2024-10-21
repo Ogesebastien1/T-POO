@@ -1,5 +1,14 @@
 version: "3.8"
 services:
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    env_file:
+      - .env
+
   server:
     build:
       context: ./Server
