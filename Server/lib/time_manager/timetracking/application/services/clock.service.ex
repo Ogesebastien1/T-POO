@@ -84,8 +84,8 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
   end
 
   def calculate_percentage(%{total_time: total_time_first}, %{total_time: total_time_last}) do
-    total_time_first = total_time_first
-    total_time_last = total_time_last
+    total_time_first = total_time_first / 1 |> Float.round(2)
+    total_time_last = total_time_last / 1 |> Float.round(2)
 
     if total_time_first == 0 do
       0

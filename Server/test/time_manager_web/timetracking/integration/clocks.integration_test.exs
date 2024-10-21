@@ -172,7 +172,7 @@ defmodule TimeManagerWeb.ClockTest do
       after_x_seconds(-(@one_hour * 24 * 7))
       after_x_seconds(@one_hour * (24 * j))
       ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour * 5)
+      after_x_seconds(@one_hour * 1)
       ClockService.clock_in_out(user6.id)
     end
 
@@ -180,7 +180,7 @@ defmodule TimeManagerWeb.ClockTest do
 
     for i <- 1..5 do
       ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour * 1)
+      after_x_seconds(@one_hour * 2)
       ClockService.clock_in_out(user6.id)
       reset_fake_time()
       after_x_seconds(@one_hour * (24 * i))
