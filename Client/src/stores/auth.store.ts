@@ -39,12 +39,11 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state): boolean => state.isLogged,
     hasRole: (state) => (role: 'admin' | 'manager') => {
       if (!state.user) return false
-      if (role === 'admin') return state.user.is_admin
-      if (role === 'manager') return state.user.is_manager
+      return state.user.role === role
     },
-    hasAnyRole: (state) => state.user?.is_admin || state.user?.is_manager,
-    isAdmin: (state) => state.user?.is_admin || false,
-    isManager: (state) => state.user?.is_manager || false
+    hasAnyRole: (state) => ['admin', 'manager'].some(role => state.user?.role === role),
+    isAdmin: (state) => state.user?.role === 'admin',
+    isManager: (state) => state.user?.role === 'manager'
   },
 
   actions: {
