@@ -11,7 +11,13 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   action_fallback TimeManagerWeb.FallbackController
 
   def index(conn, %{"email" => email, "username" => username}) do
-    with {:ok, user} <- ManageUserService.get_user_by_email_and_username(email, username) do
+    current_user = conn.assigns[:current_user]
+
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :get_user, current_user)
+
+    with :ok <- basic_authorization,
+         {:ok, user} <- ManageUserService.get_user_by_email_and_username(email, username) do
       conn
       |> render_result(user)
     else
@@ -47,21 +53,55 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    case ManageUserService.get_user_by_id(id) do
-      {:ok, user} ->
-        conn
-        |> render_result(user)
+    current_user = conn.assigns[:current_user]
 
-      {:error, _reason} ->
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :get_user, current_user)
+
+    with :ok <- basic_authorization do
+      case ManageUserService.get_user_by_id(id) do
+        {:ok, user} ->
+          permissions = Authorization.permission(:get_user, current_user, user)
+
+          with :full <- permissions do
+            conn
+            |> render_result(user)
+          else
+            _ ->
+              conn
+              |> render_error("403.json", :forbidden)
+          end
+
+        {:error, _reason} ->
+          conn
+          |> render_error("404.json", :not_found)
+      end
+    else
+      _ ->
         conn
-        |> render_error("404.json", :not_found)
+        |> render_error("403.json", :forbidden)
     end
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %UserModel{} = user} <- ManageUserService.create_user(user_params) do
-      conn
-      |> render_result(user, :created)
+    current_user = conn.assigns[:current_user]
+
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :create_user, current_user)
+
+    with :ok <- basic_authorization do
+      with {:ok, %UserModel{} = user} <- ManageUserService.create_user(user_params) do
+        conn
+        |> render_result(user, :created)
+      else
+        {:error, _reason} ->
+          conn
+          |> render_error("500.json", :internal_server_error)
+      end
+    else
+      _ ->
+        conn
+        |> render_error("403.json", :forbidden)
     end
   end
 
@@ -104,16 +144,27 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    case ManageUserService.get_user_by_id(id) do
-      {:ok, user} ->
-        ManageUserService.delete_user(user)
+    current_user = conn.assigns[:current_user]
 
-        conn
-        |> render_result(user, :no_content)
+    basic_authorization =
+      Bodyguard.permit(TimeManager.Accounts, :delete_user, current_user, %{id: id})
 
-      {:error, _reason} ->
+    with :ok <- basic_authorization do
+      case ManageUserService.get_user_by_id(id) do
+        {:ok, user} ->
+          ManageUserService.delete_user(user)
+
+          conn
+          |> render_result(user, :no_content)
+
+        {:error, _reason} ->
+          conn
+          |> render_error("404.json", :not_found)
+      end
+    else
+      _ ->
         conn
-        |> render_error("404.json", :not_found)
+        |> render_error("403.json", :forbidden)
     end
   end
 
@@ -126,8 +177,6 @@ defmodule TimeManagerWeb.Accounts.Infrastructure.UserController do
           "password" => System.get_env("ADMIN_PASSWORD"),
           "role" => "admin"
         })
-
-      # IO.inspect(admin_user)
 
       conn
       |> render_result(admin_user, :created)

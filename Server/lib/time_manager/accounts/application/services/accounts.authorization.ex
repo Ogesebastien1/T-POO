@@ -7,14 +7,11 @@ defmodule TimeManager.Accounts.Authorization do
   def authorize(:update_user, %{role: :admin}, _), do: :ok
   def authorize(:get_users, %{role: role}, _) when role in [:admin, :manager], do: :ok
   def authorize(:get_user, %{role: :admin}, _), do: :ok
-  # il faut sa permission a partial
-  # def authorize(:get_user, %{role: :manager}, _), do: :ok
-  # def authorize(:get_user, %{id: user_id}, %{id: user_id}), do: :ok
-  #
-  # def authorize(:create_user, %{role: :admin}, _), do: :ok
-  #
-  # def authorize(:delete_user, %{role: :admin}, _), do: :ok
-  # def authorize(:delete_user, %{id: user_id}, %{id: user_id}), do: :ok
+  def authorize(:get_user, %{role: :manager}, _), do: :ok
+
+  def authorize(:create_user, %{role: :admin}, _), do: :ok
+  def authorize(:delete_user, %{role: :admin}, _), do: :ok
+  def authorize(:delete_user, %{id: user_id}, %{id: user_id}), do: :ok
 
   def authorize(_, _, _), do: false
 
@@ -33,6 +30,12 @@ defmodule TimeManager.Accounts.Authorization do
   def permission(:get_users, %{role: :admin}), do: :full
   def permission(:get_users, %{role: :manager}), do: :partial
   def permission(:get_users, %{role: :user}), do: :none
+
+  def permission(:get_user, %{role: :admin}, _), do: :full
+  def permission(:get_user, %{id: user_id, role: :manager}, %{manager: user_id}), do: :full
+  def permission(:get_user, %{role: :manager}, _), do: :none
+  def permission(:get_user, %{id: user_id, role: :user}, %{id: user_id}), do: :full
+  def permission(:get_user, %{role: :user}, _), do: :none
 
   def permission(_, _), do: :none
 end

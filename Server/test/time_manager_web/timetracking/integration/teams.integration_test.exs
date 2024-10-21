@@ -61,7 +61,7 @@ defmodule TimeManagerWeb.TeamsTest do
 
       user1 = List.first(users)
 
-      team =
+      _team =
         conn
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
@@ -84,7 +84,7 @@ defmodule TimeManagerWeb.TeamsTest do
       user1 = hd(tl(users))
       user2 = hd(users)
 
-      team =
+      _team =
         conn
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
@@ -107,7 +107,7 @@ defmodule TimeManagerWeb.TeamsTest do
 
       user1 = hd(tl(users))
 
-      team =
+      _team =
         conn
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
@@ -118,8 +118,7 @@ defmodule TimeManagerWeb.TeamsTest do
     test "I can get a team by id", %{
       conn: conn,
       manager_id: manager_id,
-      manager_token: manager_token,
-      users: users
+      manager_token: manager_token
     } do
       {:ok, team} =
         %{
@@ -128,7 +127,7 @@ defmodule TimeManagerWeb.TeamsTest do
         }
         |> TeamsFixture.given_team_exists()
 
-      team =
+      _team =
         conn
         |> Auth.put_auth_token(manager_token)
         |> TeamsFixture.when_user_gets_team(team.id)
@@ -138,8 +137,7 @@ defmodule TimeManagerWeb.TeamsTest do
     test "I can get all teams -- REMOVE THIS TEST", %{
       conn: conn,
       manager_id: manager_id,
-      manager_token: manager_token,
-      users: users
+      manager_token: manager_token
     } do
       {:ok, team1} =
         %{
@@ -163,9 +161,7 @@ defmodule TimeManagerWeb.TeamsTest do
 
     test "I can't get a team that doesn't exist", %{
       conn: conn,
-      manager_id: manager_id,
-      manager_token: manager_token,
-      users: users
+      manager_token: manager_token
     } do
       conn
       |> Auth.put_auth_token(manager_token)
@@ -174,6 +170,24 @@ defmodule TimeManagerWeb.TeamsTest do
     end
 
     test "I can delete a team", %{
+      conn: conn,
+      manager_id: manager_id,
+      manager_token: manager_token
+    } do
+      {:ok, team} =
+        %{
+          "name" => "Team 1",
+          "manager_id" => manager_id
+        }
+        |> TeamsFixture.given_team_exists()
+
+      conn
+      |> Auth.put_auth_token(manager_token)
+      |> TeamsFixture.when_user_delete_team(team.id)
+      |> TeamsFixture.then_team_was_deleted()
+    end
+
+    test "I can delete a team with users in it", %{
       conn: conn,
       manager_id: manager_id,
       manager_token: manager_token,
@@ -186,8 +200,18 @@ defmodule TimeManagerWeb.TeamsTest do
         }
         |> TeamsFixture.given_team_exists()
 
+      user1 = hd(tl(users))
+      user2 = hd(users)
+
+      conn =
+        conn
+        |> Auth.put_auth_token(manager_token)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user1.id)
+        |> TeamsFixture.when_manager_adds_user_to_team(team.id, user2.id)
+
+      team = conn.assigns.team
+
       conn
-      |> Auth.put_auth_token(manager_token)
       |> TeamsFixture.when_user_delete_team(team.id)
       |> TeamsFixture.then_team_was_deleted()
     end

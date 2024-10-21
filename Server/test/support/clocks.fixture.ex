@@ -6,8 +6,8 @@ defmodule TimeManager.Test.ClocksFixture do
     |> post("/api/clocks", %{"user_id" => user_id})
   end
 
-  def then_clock_is_created(conn, user) do
-    repsonse_body = Poison.decode!(conn.resp_body)
+  def then_clock_is_created(conn, _user) do
+    _repsonse_body = Poison.decode!(conn.resp_body)
 
     assert conn.status == 200
   end
@@ -26,11 +26,9 @@ defmodule TimeManager.Test.ClocksFixture do
   end
 
   def then_clocks_are_shown(conn) do
-    response_body = Poison.decode!(conn.resp_body)
+    _response_body = Poison.decode!(conn.resp_body)
 
     assert conn.status == 200
-
-    IO.inspect(response_body)
   end
 
   def when_user_get_all_clocks_by_user(conn, user_id) do

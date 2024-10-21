@@ -76,6 +76,37 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> AccountsFixture.get_users()
       |> AccountsFixture.then_registered_users_are(registred_users)
     end
+
+    test "I can create a user", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@admin])
+
+      admin_response = Auth.login_pass(@admin["email"], @admin["password"])
+      admin_token = Auth.extract_auth_token(admin_response)
+
+      conn =
+        conn
+        |> Auth.put_auth_token(admin_token)
+
+      user = user(6)
+
+      conn
+      |> AccountsFixture.create_user(user)
+      |> AccountsFixture.then_user_is_created(user)
+    end
+
+    test "I can delete a user", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@user, @admin])
+
+      user_id = Enum.at(registred_users, 1).id
+
+      admin_response = Auth.login_pass(@admin["email"], @admin["password"])
+      admin_token = Auth.extract_auth_token(admin_response)
+
+      conn
+      |> Auth.put_auth_token(admin_token)
+      |> AccountsFixture.delete_user(user_id)
+      |> AccountsFixture.then_user_is_deleted()
+    end
   end
 
   describe "As a an User, " do
@@ -164,10 +195,56 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> AccountsFixture.get_users()
       |> AccountsFixture.request_is_forbidden()
     end
+
+    test "I can't create a user", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@user])
+
+      user_response = Auth.login_pass(@user["email"], @user["password"])
+      user_token = Auth.extract_auth_token(user_response)
+
+      conn =
+        conn
+        |> Auth.put_auth_token(user_token)
+
+      user = user(6)
+
+      conn
+      |> AccountsFixture.create_user(user)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    test "I can delete my account", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@user, @admin])
+
+      user_id = Enum.at(registred_users, 1).id
+
+      user_response = Auth.login_pass(@user["email"], @user["password"])
+      user_token = Auth.extract_auth_token(user_response)
+
+      conn
+      |> Auth.put_auth_token(user_token)
+      |> AccountsFixture.delete_user(user_id)
+      |> AccountsFixture.then_user_is_deleted()
+    end
+
+    test "I can't delete any other account", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@user, user(5)])
+
+      user_id = Enum.at(registred_users, 1).id
+      user5_id = Enum.at(registred_users, 0).id
+
+      user_response = Auth.login_pass(@user["email"], @user["password"])
+      user_token = Auth.extract_auth_token(user_response)
+
+      conn
+      |> Auth.put_auth_token(user_token)
+      |> AccountsFixture.delete_user(user5_id)
+      |> AccountsFixture.request_is_forbidden()
+    end
   end
 
-  describe "As a a Moderator, " do
-    test "I have an moderator role" do
+  describe "As a a Manager, " do
+    test "I have an manager role" do
       Registration.given_existing_users([@manager])
 
       Authorization.assert_user_role(@manager["email"], :manager)
@@ -235,7 +312,7 @@ defmodule TimeManagerWeb.AuthorizationTest do
 
       tl(registred_users)
       |> Enum.map(fn user ->
-        updated_user = %{manager_id: manager.id, password: "Pour faire passer le test"}
+        updated_user = %{manager_id: manager.id}
         Accounts.update_user(user, updated_user)
         user
       end)
@@ -250,6 +327,37 @@ defmodule TimeManagerWeb.AuthorizationTest do
       |> Auth.put_auth_token(manager_token)
       |> AccountsFixture.get_users()
       |> AccountsFixture.then_users_got_are(tl(registred_users))
+    end
+
+    test "I can't create a user", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@manager])
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      manager_token = Auth.extract_auth_token(manager_response)
+
+      conn =
+        conn
+        |> Auth.put_auth_token(manager_token)
+
+      user = user(6)
+
+      conn
+      |> AccountsFixture.create_user(user)
+      |> AccountsFixture.request_is_forbidden()
+    end
+
+    test "I can't delete a user", %{conn: conn} do
+      registred_users = Registration.given_existing_users([@user, @manager])
+
+      user_id = Enum.at(registred_users, 1).id
+
+      manager_response = Auth.login_pass(@manager["email"], @manager["password"])
+      manager_token = Auth.extract_auth_token(manager_response)
+
+      conn
+      |> Auth.put_auth_token(manager_token)
+      |> AccountsFixture.delete_user(user_id)
+      |> AccountsFixture.request_is_forbidden()
     end
   end
 end
