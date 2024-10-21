@@ -53,6 +53,7 @@ const employees = [
 ]
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores'
+import { toast } from './ui/toast'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -72,7 +73,7 @@ const navItems: NavItem[] = [
   { icon: Home, label: 'Dashboard', path: '/' },
   { icon: Calendar, label: 'Agenda', path: '/agenda' },
   { icon: LineChart, label: 'Analytics', path: '/analytics' },
-  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.isManager },
+  { icon: UsersRound, label: 'Teams', path: '/teams', show: authStore?.hasAnyRole },
   { icon: Network, label: 'Employees', path: '/employees', show: authStore?.hasAnyRole },
   { icon: Settings, label: 'Settings', path: '/settings' }
 ]
@@ -239,6 +240,11 @@ const navItems: NavItem[] = [
               @click="
                 () => {
                   authStore.logout()
+                  toast({
+                    title: 'Success',
+                    description: 'Logged out successfully.',
+                    duration: 3500
+                  })
                 }
               "
               >Logout</DropdownMenuItem

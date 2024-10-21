@@ -31,15 +31,19 @@ interface LoginPayload {
 
 const onSubmit = form.handleSubmit(async (values: LoginPayload) => {
   if (await authStore.login(values)) {
-    router.replace('/')
+    toast({
+      title: 'Success',
+      description: 'Logged in successfully.',
+      duration: 3500
+    })
     return
   }
 
   form.resetForm()
   toast({
     variant: 'destructive',
-    description: 'Invalid credentials',
-    duration: 5000
+    description: 'Invalid credentials.',
+    duration: 3500
   })
 })
 </script>

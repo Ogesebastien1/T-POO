@@ -37,14 +37,20 @@ const onSubmit = form.handleSubmit(async (values: RegisterPayload) => {
 
   if (ok) {
     router.push('/login')
+    toast({
+      title: 'Success',
+      description: 'Account created successfully.',
+      duration: 3500
+    })
     return
   }
 
   form.resetForm()
+
   toast({
     variant: 'destructive',
-    description: makeToastFromResponseErrors(errors),
-    duration: 5000
+    description: errors ? makeToastFromResponseErrors(errors) : 'An error occurred',
+    duration: 3500
   })
 })
 </script>
