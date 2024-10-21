@@ -145,52 +145,60 @@ defmodule TimeManagerWeb.ClockTest do
 
   test "calculate clock stats", %{
     users: users
-
   } do
     user6 = hd(users)
     clocks = ClockService.get_clocks_by_user(user6.id)
 
     for _ <- 1..10 do
       ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour*2)
+      after_x_seconds(@one_hour * 2)
       ClockService.clock_in_out(user6.id)
       after_x_seconds(@one_hour)
     end
+
     clocks = ClockService.get_clocks_by_user(user6.id)
     clock_stats = ClockService.calculate_clock_stats(clocks)
     IO.inspect(clock_stats)
-
   end
 
   @tag :this
   test "this week", %{
     users: users
-
   } do
     user6 = hd(users)
-    clocks = ClockService.get_clocks_by_user(user6.id)
 
     for j <- 0..4 do
       reset_fake_time()
-      after_x_seconds(-(@one_hour*24*7))
-      after_x_seconds(@one_hour*(24 * j))
+      after_x_seconds(-(@one_hour * 24 * 7))
+      after_x_seconds(@one_hour * (24 * j))
       ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour*8)
+      after_x_seconds(@one_hour * 5)
       ClockService.clock_in_out(user6.id)
     end
 
-
     reset_fake_time()
+
     for i <- 1..5 do
       ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour*8)
+      after_x_seconds(@one_hour * 1)
       ClockService.clock_in_out(user6.id)
       reset_fake_time()
-      after_x_seconds(@one_hour*(24 * i))
+      after_x_seconds(@one_hour * (24 * i))
     end
 
     clocks = ClockService.get_clocks_by_user(user6.id)
-    week_clock = ClockService.get_clocks_this_week(clocks)
-  end
 
+    last_stats_week =
+      ClockService.get_clocks_last_week(clocks)
+      |> ClockService.calculate_clock_stats()
+      |> IO.inspect()
+
+    this_week_stats =
+      ClockService.get_clocks_this_week(clocks)
+      |> ClockService.calculate_clock_stats()
+      |> IO.inspect()
+
+    ClockService.calculate_percentage(this_week_stats, last_stats_week)
+    |> IO.inspect()
+  end
 end

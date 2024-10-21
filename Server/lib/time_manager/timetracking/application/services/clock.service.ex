@@ -46,8 +46,11 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
       |> Enum.reduce(0, fn
         [%{status: :clock_in, time: start_time}, %{status: :clock_out, time: end_time}], acc ->
           acc + DateTime.diff(end_time, start_time, :hour)
-        _, acc -> acc
+
+        _, acc ->
+          acc
       end)
+
     %{total_time: total_time}
   end
 
@@ -57,11 +60,38 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
     beginning_of_week = Date.beginning_of_week(now)
     end_of_week = Date.end_of_week(now)
 
-    filtered_clocks = clocks
+    clocks
     |> Enum.filter(fn clock ->
-      Date.compare(clock.time, beginning_of_week) != :lt and Date.compare(clock.time, end_of_week) != :gt
+      Date.compare(clock.time, beginning_of_week) != :lt and
+        Date.compare(clock.time, end_of_week) != :gt
     end)
-    IO.inspect(filtered_clocks)
   end
 
+  def get_clocks_last_week(clocks) do
+    now = DateProvider.now()
+    beginning_of_week = Date.beginning_of_week(now)
+
+    last_sunday = Date.add(beginning_of_week, -1)
+
+    beginning_of_week = Date.beginning_of_week(last_sunday)
+    last_week = Date.end_of_week(last_sunday)
+
+    clocks
+    |> Enum.filter(fn clock ->
+      Date.compare(clock.time, beginning_of_week) != :lt and
+        Date.compare(clock.time, last_week) != :gt
+    end)
+  end
+
+  def calculate_percentage(%{total_time: total_time_first}, %{total_time: total_time_last}) do
+    total_time_first = total_time_first
+    total_time_last = total_time_last
+
+    if total_time_first == 0 do
+      0
+    else
+      percentage = (total_time_first - total_time_last) / total_time_first * 100
+      percentage |> Float.round(2)
+    end
+  end
 end
