@@ -18,7 +18,7 @@ defmodule TimeManager.Accounts.Application.AuthService do
 
   def auth_with_token(token) do
     with {:ok, data} <- Token.verify(token),
-         {:ok, user} = ManageUserService.get_user_by_id(data.id) do
+         {:ok, user} = ManageUserService.get_user_by_id(data["id"]) do
       {:ok, user}
     end
   end
