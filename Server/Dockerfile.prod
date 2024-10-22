@@ -19,6 +19,6 @@ RUN HEX_HTTP_CONCURRENCY=1 HEX_HTTP_TIMEOUT=120 mix deps.get
 RUN mix do compile
 
 EXPOSE 4000
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh.prod
 
-CMD ["/app/entrypoint.sh"]
+CMD ["/app/entrypoint.sh.prod"]
