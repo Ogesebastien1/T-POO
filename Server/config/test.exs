@@ -46,6 +46,10 @@ config :time_manager,
        TimeManager.TimeTracking.Infrastructure.ClockRepository
 
 config :time_manager,
+       TimeManager.TimeTracking.Application.WorkingTimeRepository,
+       TimeManager.TimeTracking.Infrastructure.WorkingTimeRepository
+
+config :time_manager,
        :date_provider,
        TimeManager.Test.FakeDateProvider
 
