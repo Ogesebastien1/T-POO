@@ -62,5 +62,6 @@ export const useClockManagerStore = defineStore('clockManager', {
       } catch (error) {
         console.error('Error fetching week stats:', error);
       }
+    },
   },
 });
