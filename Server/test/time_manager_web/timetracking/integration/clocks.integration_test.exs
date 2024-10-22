@@ -34,8 +34,6 @@ defmodule TimeManagerWeb.ClockTest do
   end
 
   describe "As a User, " do
-    @describetag :this
-
     test "I can clock in", %{
       conn: conn,
       users: users
@@ -186,19 +184,7 @@ defmodule TimeManagerWeb.ClockTest do
       after_x_seconds(@one_hour * (24 * i))
     end
 
-    clocks = ClockService.get_clocks_by_user(user6.id)
-
-    last_stats_week =
-      ClockService.get_clocks_last_week(clocks)
-      |> ClockService.calculate_clock_stats()
-      |> IO.inspect()
-
-    this_week_stats =
-      ClockService.get_clocks_this_week(clocks)
-      |> ClockService.calculate_clock_stats()
-      |> IO.inspect()
-
-    ClockService.calculate_percentage(this_week_stats, last_stats_week)
+    ClockService.get_weekly_hour_stat_by_user(user6.id)
     |> IO.inspect()
   end
 end
