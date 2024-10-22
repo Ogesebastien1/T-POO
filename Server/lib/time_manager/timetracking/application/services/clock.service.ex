@@ -1,6 +1,8 @@
 defmodule TimeManager.TimeTracking.Application.ClockService do
   use TimeManager, :application_service
 
+  alias __MODULE__
+
   alias TimeManager.TimeTracking.{
     ClockModel,
     Application.ClockRepository,
@@ -84,8 +86,8 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
   end
 
   def calculate_percentage(%{total_time: total_time_first}, %{total_time: total_time_last}) do
-    total_time_first = total_time_first / 1 |> Float.round(2)
-    total_time_last = total_time_last / 1 |> Float.round(2)
+    total_time_first = (total_time_first / 1) |> Float.round(2)
+    total_time_last = (total_time_last / 1) |> Float.round(2)
 
     if total_time_first == 0 do
       0
@@ -93,5 +95,21 @@ defmodule TimeManager.TimeTracking.Application.ClockService do
       percentage = (total_time_first - total_time_last) / total_time_first * 100
       percentage |> Float.round(2)
     end
+  end
+
+  def get_weekly_hour_stat_by_user(user_id) do
+    clocks = ClockService.get_clocks_by_user(user_id)
+
+    last_stats_week =
+      ClockService.get_clocks_last_week(clocks)
+      |> ClockService.calculate_clock_stats()
+
+    this_week_stats =
+      ClockService.get_clocks_this_week(clocks)
+      |> ClockService.calculate_clock_stats()
+
+    percentage = ClockService.calculate_percentage(this_week_stats, last_stats_week)
+
+    %{this_week_stats: this_week_stats, last_stats_week: last_stats_week, percentage: percentage}
   end
 end

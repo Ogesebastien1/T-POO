@@ -34,8 +34,6 @@ defmodule TimeManagerWeb.ClockTest do
   end
 
   describe "As a User, " do
-    @describetag :this
-
     test "I can clock in", %{
       conn: conn,
       users: users
@@ -141,64 +139,51 @@ defmodule TimeManagerWeb.ClockTest do
       |> when_user_get_all_clocks_by_user(user6.id)
       |> then_clocks_are_shown()
     end
-  end
 
-  test "calculate clock stats", %{
-    users: users
-  } do
-    user6 = hd(users)
-    clocks = ClockService.get_clocks_by_user(user6.id)
+    test "I can get my stats", %{
+      conn: conn,
+      users: users
+    } do
+      user6 = hd(users)
 
-    for _ <- 1..10 do
-      ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour * 2)
-      ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour)
+      user6_token =
+        Auth.login_pass(user(6)["email"], user(6)["password"])
+        |> Auth.extract_auth_token()
+
+      conn = conn |> Auth.put_auth_token(user6_token)
     end
-
-    clocks = ClockService.get_clocks_by_user(user6.id)
-    clock_stats = ClockService.calculate_clock_stats(clocks)
-    IO.inspect(clock_stats)
   end
+
+  # test "this week", %{
+  #   users: users
+  # } do
+  #   user6 = hd(users)
+  #
+  #   simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 1, week: -1})
+  #   simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 3, week: 0})
+  #
+  #   ClockService.get_weekly_hour_stat_by_user(user6.id)
+  #   |> IO.inspect()
+  # end
 
   @tag :this
-  test "this week", %{
+  test "Get my stats of the week", %{
+    conn: conn,
     users: users
   } do
     user6 = hd(users)
 
-    for j <- 0..4 do
-      reset_fake_time()
-      after_x_seconds(-(@one_hour * 24 * 7))
-      after_x_seconds(@one_hour * (24 * j))
-      ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour * 1)
-      ClockService.clock_in_out(user6.id)
-    end
+    user6_token =
+      Auth.login_pass(user(6)["email"], user(6)["password"])
+      |> Auth.extract_auth_token()
 
-    reset_fake_time()
+    conn = conn |> Auth.put_auth_token(user6_token)
 
-    for i <- 1..5 do
-      ClockService.clock_in_out(user6.id)
-      after_x_seconds(@one_hour * 2)
-      ClockService.clock_in_out(user6.id)
-      reset_fake_time()
-      after_x_seconds(@one_hour * (24 * i))
-    end
+    simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 1, week: -1})
+    simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 3, week: 0})
 
-    clocks = ClockService.get_clocks_by_user(user6.id)
-
-    last_stats_week =
-      ClockService.get_clocks_last_week(clocks)
-      |> ClockService.calculate_clock_stats()
-      |> IO.inspect()
-
-    this_week_stats =
-      ClockService.get_clocks_this_week(clocks)
-      |> ClockService.calculate_clock_stats()
-      |> IO.inspect()
-
-    ClockService.calculate_percentage(this_week_stats, last_stats_week)
-    |> IO.inspect()
+    conn
+    |> when_user_get_week_stats(user6.id)
+    |> then_week_stats_are_shown()
   end
 end
