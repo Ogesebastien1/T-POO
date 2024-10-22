@@ -5,6 +5,7 @@ defmodule TimeManagerWeb.ClockTest do
   alias TimeManager.Test.SetupFixture.{Registration, Auth}
   import TimeManagerWeb.Test.UserBuilder
   import TimeManager.Test.ClocksFixture
+  alias TimeManager.TimeTracking.Application.ClockService
 
   @moduletag :integration
   @moduletag :clocks
@@ -33,8 +34,6 @@ defmodule TimeManagerWeb.ClockTest do
   end
 
   describe "As a User, " do
-    @describetag :this
-
     test "I can clock in", %{
       conn: conn,
       users: users
@@ -140,5 +139,51 @@ defmodule TimeManagerWeb.ClockTest do
       |> when_user_get_all_clocks_by_user(user6.id)
       |> then_clocks_are_shown()
     end
+
+    test "I can get my stats", %{
+      conn: conn,
+      users: users
+    } do
+      user6 = hd(users)
+
+      user6_token =
+        Auth.login_pass(user(6)["email"], user(6)["password"])
+        |> Auth.extract_auth_token()
+
+      conn = conn |> Auth.put_auth_token(user6_token)
+    end
+  end
+
+  # test "this week", %{
+  #   users: users
+  # } do
+  #   user6 = hd(users)
+  #
+  #   simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 1, week: -1})
+  #   simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 3, week: 0})
+  #
+  #   ClockService.get_weekly_hour_stat_by_user(user6.id)
+  #   |> IO.inspect()
+  # end
+
+  @tag :this
+  test "Get my stats of the week", %{
+    conn: conn,
+    users: users
+  } do
+    user6 = hd(users)
+
+    user6_token =
+      Auth.login_pass(user(6)["email"], user(6)["password"])
+      |> Auth.extract_auth_token()
+
+    conn = conn |> Auth.put_auth_token(user6_token)
+
+    simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 1, week: -1})
+    simulate_clock_in_out_last_by_weeks(user6.id, %{days: 5, hours: 3, week: 0})
+
+    conn
+    |> when_user_get_week_stats(user6.id)
+    |> then_week_stats_are_shown()
   end
 end

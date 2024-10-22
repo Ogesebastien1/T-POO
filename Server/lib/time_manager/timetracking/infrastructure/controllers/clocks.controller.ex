@@ -36,4 +36,16 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.ClockController do
         ClockPresenter.render_result(conn, clocks)
     end
   end
+
+  def get_week_stats(conn, %{"user_id" => user_id}) do
+    _user_assigns = conn.assigns[:current_user]
+
+    case ClockService.get_weekly_hour_stat_by_user(user_id) do
+      {:error, _} ->
+        ClockPresenter.render_error(conn, "500.json", :internal_server_error)
+
+      stats ->
+        ClockPresenter.render_stats(conn, stats)
+    end
+  end
 end
