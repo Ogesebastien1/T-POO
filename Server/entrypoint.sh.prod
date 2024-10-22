@@ -1,0 +1,8 @@
+#!/bin/sh
+mix deps.get
+mix ecto.drop
+mix ecto.create
+mix ecto.migrate
+# MIX_ENV=prod 
+mix phx.server
+mix phx.swagger.generate
