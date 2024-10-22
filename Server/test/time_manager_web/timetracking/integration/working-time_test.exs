@@ -20,21 +20,49 @@ defmodule TimeManagerWeb.WorkingTimeTest do
     [users: registred_users]
   end
 
-  describe "unit WorkingTimeService" do
-    test "creating working time", %{
-      users: users
-    } do
-      working_time = %{
-        "user_id" => List.first(users).id,
-        "manager_id" => List.last(users).id,
-        "start_time" => ~U[2021-01-01 08:00:00Z],
-        "end_time" => ~U[2021-01-01 16:00:00Z],
-        "break_duration" => 30
-      }
+  # describe "unit WorkingTimeService" do
+  #   test "creating working time", %{
+  #     users: users
+  #   } do
+  #     working_time = %{
+  #       "user_id" => List.first(users).id,
+  #       "manager_id" => List.last(users).id,
+  #       "start_time" => ~U[2021-01-01 08:00:00Z],
+  #       "end_time" => ~U[2021-01-01 16:00:00Z],
+  #       "break_duration" => 30
+  #     }
+  #
+  #     {:ok, working_time} = WorkingTimeService.create_wt(working_time)
+  #
+  #     IO.inspect(working_time)
+  #   end
+  # end
 
-      {:ok, working_time} = WorkingTimeService.create_wt(working_time)
+  test "creating working time", %{
+    conn: conn,
+    users: users
+  } do
+    working_time = %{
+      "user_id" => List.first(users).id,
+      "start_time" => ~U[2021-01-01 08:00:00Z],
+      "end_time" => ~U[2021-01-01 16:00:00Z],
+      "break_duration" => 30
+    }
 
-      IO.inspect(working_time)
-    end
+    manager = List.last(users)
+
+    conn =
+      conn
+      |> Auth.put_auth_token(
+        Auth.login_pass(manager.email, manager.password)
+        |> Auth.extract_auth_token()
+      )
+      |> post("/api/working_times", %{
+        working_time: working_time
+      })
+
+    response = Poison.decode!(conn.resp_body)
+
+    IO.inspect(response)
   end
 end

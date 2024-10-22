@@ -66,6 +66,12 @@ defmodule TimeManagerWeb.Router do
         :get_week_stats
   end
 
+  scope "/api/working_times", TimeManagerWeb do
+    pipe_through [:api, :authenticated]
+
+    post "/", TimeTracking.Infrastructure.WorkingTimeController, :create_working_time
+  end
+
   # Working time 
   # On peut ajouter des heures de travails pour chaque jours pour chaque Utilisateur
   # On peut aussi faire une batch query 
