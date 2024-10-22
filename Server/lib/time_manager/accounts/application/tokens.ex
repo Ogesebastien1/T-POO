@@ -1,14 +1,15 @@
 defmodule TimeManager.Accounts.Application.Token do
-  @day_in_seconds 86_400
-  @token_age @day_in_seconds
-  @namespace "user auth"
-  alias Phoenix.Token
+  # @day_in_seconds 86_400
+
+  use Joken.Config
+
+  @self __MODULE__
 
   def sign(data) do
-    Token.sign(TimeManagerWeb.Endpoint, @namespace, data, [%{:max_age => @token_age}])
+    @self.generate_and_sign!(data)
   end
 
   def verify(token) do
-    Token.verify(TimeManagerWeb.Endpoint, @namespace, token)
+    @self.verify_and_validate(token)
   end
 end

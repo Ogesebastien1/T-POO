@@ -6,5 +6,5 @@ import { employeesColumns } from '@/components/data-table/columns'
 
 <template>
   <DateRangePicker />
-  <DataTable :data="[]" :columns="employeesColumns" />
+  <!-- <DataTable :data="[]" :columns="employeesColumns" /> -->
 </template>
