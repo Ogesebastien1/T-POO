@@ -53,14 +53,15 @@ defmodule TimeManager.MixProject do
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:bcrypt_elixir, "~> 3.0"},
       {:cors_plug, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.16"},
       {:bodyguard, "~> 2.4"},
-      {:excoveralls, "~> 0.18", only: :test}
+      {:excoveralls, "~> 0.18", only: :test},
+      {:joken, "~> 2.6"},
+      {:jason, "~> 1.4"}
     ]
   end
 

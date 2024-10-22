@@ -36,8 +36,8 @@ defmodule TimeManager.TimeTracking.Infrastructure.ClockRepository do
     with user_id <- user_id do
       query =
         from c in ClockModel,
-          where: c.user_id == ^user_id
-
+          where: c.user_id == ^user_id,
+          order_by: [asc: c.time]
       query
       |> Repo.all()
     else

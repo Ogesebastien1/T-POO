@@ -15,11 +15,9 @@ import {
   getSortedRowModel,
   useVueTable
 } from '@tanstack/vue-table'
-
 import { ref } from 'vue'
-import DataTablePagination from './DataTablePagination.vue'
-import DataTableToolbar from './DataTableToolbar.vue'
-import { valueUpdater } from '@/lib/utils'
+
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import {
   Table,
   TableBody,
@@ -29,10 +27,21 @@ import {
   TableRow
 } from '@/components/ui/table'
 
+import { valueUpdater } from '@/lib/utils'
+import type { z } from 'zod'
+
+type DataTableColumnDef = ColumnDef<any, any> & { hidden?: boolean }
+
 interface DataTableProps<TData> {
-  columns: ColumnDef<TData, any>[]
-  data: TData[],
-  showToolbar?: boolean
+  columns: DataTableColumnDef[]
+  schema?: z.ZodObject<any>
+  data: TData[]
+  toolbar?: boolean
+  search?: {
+    label?: string
+    field?: string
+  }
+  onCreate?: (row: any) => Promise<void> | undefined
 }
 const props = defineProps<DataTableProps<any>>()
 
@@ -46,7 +55,7 @@ const table = useVueTable({
     return props.data
   },
   get columns() {
-    return props.columns
+    return (props.columns || []).filter((column) => !column?.hidden)
   },
   state: {
     get sorting() {
@@ -78,7 +87,14 @@ const table = useVueTable({
 
 <template>
   <div class="space-y-4">
-    <DataTableToolbar :table="table" v-show="props.showToolbar" />
+    <DataTableToolbar
+      :table="table"
+      :schema="props.schema"
+      v-show="props.toolbar"
+      :search="props.search"
+      :columns="props.columns"
+      :on-create="props.onCreate"
+    />
     <div class="rounded-md border">
       <Table>
         <TableHeader>
@@ -106,7 +122,9 @@ const table = useVueTable({
           </template>
 
           <TableRow v-else>
-            <TableCell :colspan="props.columns.length" class="h-24 text-center"> No results. </TableCell>
+            <TableCell :colspan="props.columns.length" class="h-24 text-center">
+              No results.
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

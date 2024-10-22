@@ -17,6 +17,14 @@ defmodule TimeManager.TimeTracking.Infrastructure.ClockPresenter do
     %{data: for(clock <- clocks, do: present_clock(%{clock: clock}))}
   end
 
+  def present_stats(%{stats: stats}) do
+    %{
+      last_stats_week: stats[:last_stats_week][:total_time],
+      percentage: stats[:percentage],
+      this_week_stats: stats[:this_week_stats][:total_time]
+    }
+  end
+
   def render_result(conn, result, status \\ :ok)
 
   def render_result(conn, result, status) when is_list(result) do
@@ -31,6 +39,13 @@ defmodule TimeManager.TimeTracking.Infrastructure.ClockPresenter do
     |> put_status(status)
     |> put_view(@self)
     |> render(:present_clock, clock: result)
+  end
+
+  def render_stats(conn, result, status \\ :ok) do
+    conn
+    |> put_status(status)
+    |> put_view(@self)
+    |> render(:present_stats, stats: result)
   end
 
   def render_error(conn, template, status) do

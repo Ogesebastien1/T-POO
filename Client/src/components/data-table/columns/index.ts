@@ -1,3 +1,8 @@
 export { teamsColumns } from './teams'
 export { employeesColumns } from './employees'
-export { workingTimesColumns } from './working-times'
+
+export type CustomDataTableColumnAction = {
+    label: string
+    to: (row: any) => { name: string, params: any }
+    icon: any
+}

@@ -2,58 +2,45 @@
 import { ClockArrowUp, Loader2, CalendarCheck2, Clock, ClockArrowDown } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
 import { toast } from '@/components/ui/toast'
 import { useAuthStore, useClockManagerStore } from '@/stores'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { RefSymbol } from '@vue/reactivity'
 
 const authStore = useAuthStore()
-//const clockManagerStore = useClockManagerStore()
+const clockManagerStore = useClockManagerStore()
 
-onMounted(() => {
-  // await clockManagerStore.getAllClocks();
-  // await clockManagerStore.clock({
-  //   status: true,
-  //   time: '2024-10-14 11:16:32'
-  // })
-})
-
-// watch(() => clockManagerStore.clocks, (clocksTable) => {
-//   console.log('clocksTable', clocksTable);
-// });
-
-const clockedIn = ref(false)
+const clockedButton = ref(false)
 const loading = ref(false)
+const loadingLastClock = ref(false)
 const hasWorkingTime = ref(true)
 
-type Activity = {
-  type: string
-  time: string
-}
-const activities = ref([
-  {
-    type: 'Clock in',
-    time: 'Today, 08:00 AM'
-  },
-  {
-    type: 'Clock out',
-    time: 'Today, 12:00 PM'
-  },
-  {
-    type: 'Clock in',
-    time: 'Today, 13:00 PM'
-  },
-  {
-    type: 'Clock out',
-    time: 'Today, 17:00 PM'
-  },
-  {
-    type: 'Clock in',
-    time: 'Today, 18:00 PM'
+const lastClock = computed(() => {
+  return clockManagerStore.clocks.length > 0 ? clockManagerStore.clocks[clockManagerStore.clocks.length - 1] : null;
+});
+
+const updateClockedInStatus = () => {
+  console.log(lastClock.value);
+  if (lastClock.value) {
+    clockedButton.value = lastClock.value.status === 'clock_in';
   }
-])
+  console.log("Clocked in status updated:", clockedButton.value);
+}
+
+onMounted(async () => {
+  loadingLastClock.value = true
+  await clockManagerStore.getAllClocks();
+  updateClockedInStatus();
+  loadingLastClock.value = false
+})
+
+watch(() => clockManagerStore.clocks, () => {
+  updateClockedInStatus();
+});
 
 const workingTimes = [
   {
@@ -78,23 +65,16 @@ const workingTimes = [
   }
 ]
 
-const handleClockedIn = () => {
+const handleClockedIn = async () => {
   loading.value = true
-  if (clockedIn.value) {
-    activities.value.unshift({ type: 'Clock out', time: 'Today, ' + moment().format('HH:mm A') })
-  } else {
-    activities.value.unshift({ type: 'Clock in', time: 'Today, ' + moment().format('HH:mm A') })
-  }
-  console.log('activities', activities)
-  setTimeout(() => {
-    clockedIn.value = !clockedIn.value
-    loading.value = false
-    toast({
-      title: `You have successfully ${clockedIn.value ? 'clocked in' : 'clocked out'}`,
-      description: `You are now ${clockedIn.value ? 'in' : 'out'} of a work session`,
-      duration: 5000
-    })
-  }, 1250)
+  await clockManagerStore.clock();
+  clockedButton.value = !clockedButton.value
+  loading.value = false
+  toast({
+    title: `You have successfully ${clockedButton.value ? 'clocked in' : 'clocked out'}`,
+    description: `You are now ${clockedButton.value ? 'in' : 'out'} of a work session`,
+    duration: 5000
+  })
 }
 </script>
 
@@ -107,7 +87,7 @@ const handleClockedIn = () => {
           <div class="text-xs text-muted-foreground" v-show="!authStore.hasAnyRole">
             {{
               hasWorkingTime
-                ? clockedIn
+                ? clockedButton
                   ? 'You are currently in a work session'
                   : 'What are you waiting for? Start working!'
                 : null
@@ -126,18 +106,25 @@ const handleClockedIn = () => {
               : null
           }}
           <div class="block sm:absolute -mt-4 right-4 top-4" v-if="hasWorkingTime">
+            <Skeleton v-if="loadingLastClock" class="w-[123px] my-4 p-5 mx-auto">
+              <Button class="max-w-xs my-4 p-5 mx-auto" disabled>
+                <div class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
+                </div>
+              </Button>
+            </Skeleton>
             <Button
-              v-if="!clockedIn"
+              v-else-if="!clockedButton"
               @click="handleClockedIn"
               :disabled="loading"
               class="max-w-xs my-4 p-5 mx-auto"
             >
-              <div v-if="loading" class="flex items-center">
-                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
-              </div>
-              <div v-else class="flex items-center">
-                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
-              </div>
+                <div v-if="loading" class="flex items-center">
+                  <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
+                </div>
+                <div v-else class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
+                </div>
             </Button>
             <Button
               v-else
@@ -145,12 +132,12 @@ const handleClockedIn = () => {
               :disabled="loading"
               class="max-w-xs my-4 p-5 mx-auto"
             >
-              <div v-if="loading" class="flex items-center">
-                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
-              </div>
-              <div v-else class="flex items-center">
-                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
-              </div>
+                <div v-if="loading" class="flex items-center">
+                  <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
+                </div>
+                <div v-else class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
+                </div>
             </Button>
           </div>
         </div>
@@ -188,14 +175,14 @@ const handleClockedIn = () => {
       <CardContent>
         <Separator class="-mt-2 mb-4" />
         <ul class="space-y-4">
-          <li class="flex flex-row items-start" v-for="activity in activities" :key="activity.type">
+          <li class="flex flex-row items-start" v-for="clock in clockManagerStore.clocks" :key="clock.id">
             <div class="-mt-1 w-8 h-8 rounded-full flex items-center justify-center">
-              <ClockArrowDown class="w-4 h-4 text-primary" v-show="activity.type === 'Clock in'" />
-              <ClockArrowUp class="w-4 h-4 text-primary" v-show="activity.type === 'Clock out'" />
+              <ClockArrowDown class="w-4 h-4 text-primary" v-show="clock.status === 'clock_in'" />
+              <ClockArrowUp class="w-4 h-4 text-primary" v-show="clock.status === 'clock_out'" />
             </div>
             <div class="flex flex-col">
-              <p class="text-sm font-medium text-primary">{{ activity.type }}</p>
-              <p class="text-xs text-muted-foreground">{{ activity.time }}</p>
+              <p class="text-sm font-medium text-primary">{{ clock.status === 'clock_in' ? 'Clock in' : 'Clock out' }}</p>
+              <p class="text-xs text-muted-foreground">{{ moment(clock.time).format('LLLL') }}</p>
             </div>
           </li>
         </ul>

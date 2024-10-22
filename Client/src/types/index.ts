@@ -21,8 +21,7 @@ export type UpdatedUserType = {
 
 export type UserType = {
     id: string;
-    is_manager: boolean;
-    is_admin: boolean;
+    role: string;
 } & BaseUserType;
 
 export type CreatedUserType = {
