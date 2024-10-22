@@ -2,7 +2,7 @@
 import { ClockArrowUp, Loader2, CalendarCheck2, Clock, ClockArrowDown } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
@@ -10,50 +10,33 @@ import { toast } from '@/components/ui/toast'
 import { useAuthStore, useClockManagerStore } from '@/stores'
 
 const authStore = useAuthStore()
-//const clockManagerStore = useClockManagerStore()
-
-onMounted(() => {
-  // await clockManagerStore.getAllClocks();
-  // await clockManagerStore.clock({
-  //   status: true,
-  //   time: '2024-10-14 11:16:32'
-  // })
-})
-
-// watch(() => clockManagerStore.clocks, (clocksTable) => {
-//   console.log('clocksTable', clocksTable);
-// });
+const clockManagerStore = useClockManagerStore()
 
 const clockedIn = ref(false)
 const loading = ref(false)
 const hasWorkingTime = ref(true)
 
-type Activity = {
-  type: string
-  time: string
-}
-const activities = ref([
-  {
-    type: 'Clock in',
-    time: 'Today, 08:00 AM'
-  },
-  {
-    type: 'Clock out',
-    time: 'Today, 12:00 PM'
-  },
-  {
-    type: 'Clock in',
-    time: 'Today, 13:00 PM'
-  },
-  {
-    type: 'Clock out',
-    time: 'Today, 17:00 PM'
-  },
-  {
-    type: 'Clock in',
-    time: 'Today, 18:00 PM'
+const lastClock = computed(() => {
+  return clockManagerStore.clocks.length > 0 ? clockManagerStore.clocks[clockManagerStore.clocks.length - 1] : null;
+});
+
+const updateClockedInStatus = () => {
+  if (lastClock.value) {
+    clockedIn.value = lastClock.value.status === 'clock_in';
   }
-])
+}
+
+onMounted(async () => {
+  loading.value = true
+  await clockManagerStore.getAllClocks();
+  updateClockedInStatus();
+  loading.value = false
+})
+
+watch(() => clockManagerStore.clocks, () => {
+  console.log(clockManagerStore.clocks);
+  updateClockedInStatus();
+});
 
 const workingTimes = [
   {
@@ -80,12 +63,7 @@ const workingTimes = [
 
 const handleClockedIn = () => {
   loading.value = true
-  if (clockedIn.value) {
-    activities.value.unshift({ type: 'Clock out', time: 'Today, ' + moment().format('HH:mm A') })
-  } else {
-    activities.value.unshift({ type: 'Clock in', time: 'Today, ' + moment().format('HH:mm A') })
-  }
-  console.log('activities', activities)
+  clockManagerStore.clock();
   setTimeout(() => {
     clockedIn.value = !clockedIn.value
     loading.value = false
@@ -188,14 +166,14 @@ const handleClockedIn = () => {
       <CardContent>
         <Separator class="-mt-2 mb-4" />
         <ul class="space-y-4">
-          <li class="flex flex-row items-start" v-for="activity in activities" :key="activity.type">
+          <li class="flex flex-row items-start" v-for="clock in clockManagerStore.clocks" :key="clock.id">
             <div class="-mt-1 w-8 h-8 rounded-full flex items-center justify-center">
-              <ClockArrowDown class="w-4 h-4 text-primary" v-show="activity.type === 'Clock in'" />
-              <ClockArrowUp class="w-4 h-4 text-primary" v-show="activity.type === 'Clock out'" />
+              <ClockArrowDown class="w-4 h-4 text-primary" v-show="clock.status === 'clock_in'" />
+              <ClockArrowUp class="w-4 h-4 text-primary" v-show="clock.status === 'clock_out'" />
             </div>
             <div class="flex flex-col">
-              <p class="text-sm font-medium text-primary">{{ activity.type }}</p>
-              <p class="text-xs text-muted-foreground">{{ activity.time }}</p>
+              <p class="text-sm font-medium text-primary">{{ clock.status === 'clock_in' ? 'Clock in' : 'Clock out' }}</p>
+              <p class="text-xs text-muted-foreground">{{ moment(clock.time).format('LLLL') }}</p>
             </div>
           </li>
         </ul>
