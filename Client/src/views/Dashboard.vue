@@ -8,12 +8,15 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import moment from 'moment'
 import { toast } from '@/components/ui/toast'
 import { useAuthStore, useClockManagerStore } from '@/stores'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { RefSymbol } from '@vue/reactivity'
 
 const authStore = useAuthStore()
 const clockManagerStore = useClockManagerStore()
 
-const clockedIn = ref(false)
+const clockedButton = ref(false)
 const loading = ref(false)
+const loadingLastClock = ref(false)
 const hasWorkingTime = ref(true)
 
 const lastClock = computed(() => {
@@ -21,20 +24,21 @@ const lastClock = computed(() => {
 });
 
 const updateClockedInStatus = () => {
+  console.log(lastClock.value);
   if (lastClock.value) {
-    clockedIn.value = lastClock.value.status === 'clock_in';
+    clockedButton.value = lastClock.value.status === 'clock_in';
   }
+  console.log("Clocked in status updated:", clockedButton.value);
 }
 
 onMounted(async () => {
-  loading.value = true
+  loadingLastClock.value = true
   await clockManagerStore.getAllClocks();
   updateClockedInStatus();
-  loading.value = false
+  loadingLastClock.value = false
 })
 
 watch(() => clockManagerStore.clocks, () => {
-  console.log(clockManagerStore.clocks);
   updateClockedInStatus();
 });
 
@@ -61,18 +65,16 @@ const workingTimes = [
   }
 ]
 
-const handleClockedIn = () => {
+const handleClockedIn = async () => {
   loading.value = true
-  clockManagerStore.clock();
-  setTimeout(() => {
-    clockedIn.value = !clockedIn.value
-    loading.value = false
-    toast({
-      title: `You have successfully ${clockedIn.value ? 'clocked in' : 'clocked out'}`,
-      description: `You are now ${clockedIn.value ? 'in' : 'out'} of a work session`,
-      duration: 5000
-    })
-  }, 1250)
+  await clockManagerStore.clock();
+  clockedButton.value = !clockedButton.value
+  loading.value = false
+  toast({
+    title: `You have successfully ${clockedButton.value ? 'clocked in' : 'clocked out'}`,
+    description: `You are now ${clockedButton.value ? 'in' : 'out'} of a work session`,
+    duration: 5000
+  })
 }
 </script>
 
@@ -85,7 +87,7 @@ const handleClockedIn = () => {
           <div class="text-xs text-muted-foreground" v-show="!authStore.hasAnyRole">
             {{
               hasWorkingTime
-                ? clockedIn
+                ? clockedButton
                   ? 'You are currently in a work session'
                   : 'What are you waiting for? Start working!'
                 : null
@@ -104,18 +106,25 @@ const handleClockedIn = () => {
               : null
           }}
           <div class="block sm:absolute -mt-4 right-4 top-4" v-if="hasWorkingTime">
+            <Skeleton v-if="loadingLastClock" class="w-[123px] my-4 p-5 mx-auto">
+              <Button class="max-w-xs my-4 p-5 mx-auto" disabled>
+                <div class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
+                </div>
+              </Button>
+            </Skeleton>
             <Button
-              v-if="!clockedIn"
+              v-else-if="!clockedButton"
               @click="handleClockedIn"
               :disabled="loading"
               class="max-w-xs my-4 p-5 mx-auto"
             >
-              <div v-if="loading" class="flex items-center">
-                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
-              </div>
-              <div v-else class="flex items-center">
-                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
-              </div>
+                <div v-if="loading" class="flex items-center">
+                  <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking in...
+                </div>
+                <div v-else class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock in
+                </div>
             </Button>
             <Button
               v-else
@@ -123,12 +132,12 @@ const handleClockedIn = () => {
               :disabled="loading"
               class="max-w-xs my-4 p-5 mx-auto"
             >
-              <div v-if="loading" class="flex items-center">
-                <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
-              </div>
-              <div v-else class="flex items-center">
-                <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
-              </div>
+                <div v-if="loading" class="flex items-center">
+                  <Loader2 class="w-4 h-4 mr-2 animate-spin" /> Clocking out...
+                </div>
+                <div v-else class="flex items-center">
+                  <ClockArrowUp class="w-4 h-4 mr-2" /> Clock out
+                </div>
             </Button>
           </div>
         </div>

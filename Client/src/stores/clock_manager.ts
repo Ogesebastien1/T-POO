@@ -15,7 +15,7 @@ export const useClockManagerStore = defineStore('clockManager', {
       const authStore = useAuthStore();
       try { 
         const response = await fetch({
-          endpoint: `/clocks/${authStore.user?.id}`,
+          endpoint: `/clocks`,
           method: HttpMethod.GET,
         });
         const { data } = await response.json();
@@ -50,5 +50,17 @@ export const useClockManagerStore = defineStore('clockManager', {
         console.error('Error creating a clock state:', error);
       }
     },
+    async getWeekstats() { 
+      const authStore = useAuthStore();
+      try {
+        const response = await fetch({
+          endpoint: `/clocks/week_stats/${authStore.user?.id}`,
+          method: HttpMethod.GET,
+        });
+        const { data } = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching week stats:', error);
+      }
   },
 });
