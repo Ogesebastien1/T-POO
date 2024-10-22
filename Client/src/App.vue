@@ -3,8 +3,11 @@ import { Sidebar, Loader } from '@/components'
 import { RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores'
 import { Toaster } from '@/components/ui/toast'
+import { listen } from '@/lib/proxy'
 
 const authStore = useAuthStore()
+
+listen()
 </script>
 
 <template>

@@ -80,7 +80,7 @@ const navItems: NavItem[] = [
 </script>
 
 <template>
-  <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+  <aside class="fixed inset-y-0 left-0 z-10 sm:z-50 hidden w-14 flex-col border-r bg-background sm:flex">
     <nav class="flex flex-col items-center gap-4 px-2 sm:py-5">
       <div v-for="item in navItems" :key="item.label" v-show="item.show ?? true">
         <TooltipProvider>
@@ -107,7 +107,7 @@ const navItems: NavItem[] = [
       </div>
     </nav>
   </aside>
-  <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+  <div class="fixed w-full z-[200] sm:z-30 bottom-0 sm:relative sm:flex sm:flex-col sm:gap-4 sm:py-4 sm:pl-14">
     <header
       class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
     >
@@ -118,17 +118,17 @@ const navItems: NavItem[] = [
             <span class="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" class="sm:max-w-xs">
-          <nav class="grid gap-6 text-lg font-medium">
+        <SheetContent side="left" class="sm:max-w-xs flex items-center sm:block">
+          <nav class="grid gap-12 sm:gap-6 text-3xl sm:text-lg font-medium">
             <RouterLink
-              to="/"
+              :to="item.path"
               class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               :class="{ 'text-foreground ': route.fullPath === '/' }"
               v-for="item in navItems"
               :key="item.label"
               v-show="item.show ?? true"
             >
-              <component :is="item.icon" class="h-5 w-5" />
+              <component :is="item.icon" class="h-8 w-8 sm:h-5 sm:w-5" />
               {{ item.label }}
             </RouterLink>
           </nav>
