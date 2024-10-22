@@ -60,6 +60,10 @@ defmodule TimeManagerWeb.Router do
     post "/", TimeTracking.Infrastructure.ClockController, :clock
     get "/", TimeTracking.Infrastructure.ClockController, :get_clocks
     get "/:user_id", TimeTracking.Infrastructure.ClockController, :get_clocks_by_user
+
+    get "/week_stats/:user_id",
+        TimeTracking.Infrastructure.ClockController,
+        :get_week_stats
   end
 
   # Working time 
