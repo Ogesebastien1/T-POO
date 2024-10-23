@@ -21,4 +21,44 @@ defmodule TimeManagerWeb.TimeTracking.Infrastructure.WorkingTimeController do
         WorkingTimePresenter.render_error(conn, "500.json", :internal_server_error)
     end
   end
+
+  def get_working_times(conn, _assigns) do
+    case WorkingTimeService.get_wts() do
+      {:ok, working_times} ->
+        WorkingTimePresenter.render_result(conn, working_times)
+
+      {:error, _} ->
+        WorkingTimePresenter.render_error(conn, "500.json", :internal_server_error)
+    end
+  end
+
+  def get_working_times_by_user(conn, %{"user_id" => user_id, "start" => start, "end" => end_time}) do
+    case WorkingTimeService.get_wts_by_user(user_id, start, end_time) do
+      {:ok, working_times} ->
+        WorkingTimePresenter.render_result(conn, working_times)
+
+      {:error, _} ->
+        WorkingTimePresenter.render_error(conn, "500.json", :internal_server_error)
+    end
+  end
+
+  def get_working_times_by_user(conn, %{"user_id" => user_id}) do
+    case WorkingTimeService.get_wts_by_user(user_id) do
+      {:ok, working_times} ->
+        WorkingTimePresenter.render_result(conn, working_times)
+
+      {:error, _} ->
+        WorkingTimePresenter.render_error(conn, "500.json", :internal_server_error)
+    end
+  end
+
+  def update_working_time(conn, %{"id" => wt_id, "working_time" => wt}) do
+    case WorkingTimeService.update_by_user(wt_id, wt) do
+      {:ok, working_time} ->
+        WorkingTimePresenter.render_result(conn, working_time)
+
+      {:error, _} ->
+        WorkingTimePresenter.render_error(conn, "500.json", :internal_server_error)
+    end
+  end
 end

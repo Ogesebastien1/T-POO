@@ -18,4 +18,9 @@ defmodule TimeManager.TimeTracking.WorkingTimeModel do
     |> cast(params, [:start_time, :end_time, :break_duration, :user_id, :manager_id])
     |> validate_required([:start_time, :end_time, :break_duration, :user_id, :manager_id])
   end
+
+  def changeset_update(working_time, params) do
+    working_time
+    |> cast(params, [:start_time, :end_time, :break_duration, :user_id, :manager_id])
+  end
 end

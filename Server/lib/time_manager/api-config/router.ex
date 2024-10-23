@@ -70,6 +70,14 @@ defmodule TimeManagerWeb.Router do
     pipe_through [:api, :authenticated]
 
     post "/", TimeTracking.Infrastructure.WorkingTimeController, :create_working_time
+    get "/", TimeTracking.Infrastructure.WorkingTimeController, :get_working_times
+    get "/:user_id", TimeTracking.Infrastructure.WorkingTimeController, :get_working_times_by_user
+
+    get "/:user_id/:start/:end",
+        TimeTracking.Infrastructure.WorkingTimeController,
+        :get_working_times_by_user
+
+    put "/:id", TimeTracking.Infrastructure.WorkingTimeController, :update_working_time
   end
 
   # Working time 

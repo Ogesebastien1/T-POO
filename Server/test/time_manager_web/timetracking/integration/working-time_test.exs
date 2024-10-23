@@ -2,7 +2,7 @@ defmodule TimeManagerWeb.WorkingTimeTest do
   use TimeManagerWeb.ConnCase, async: true
   alias TimeManager.Test.SetupFixture.{Registration, Auth}
   import TimeManagerWeb.Test.UserBuilder
-  # alias TimeManager.Test.WorkingTimesFixture
+  import TimeManager.Test.WorkingTimesFixture
 
   alias TimeManager.TimeTracking.Application.WorkingTimeService
 
@@ -17,7 +17,28 @@ defmodule TimeManagerWeb.WorkingTimeTest do
     registred_users =
       Registration.given_existing_users(bunch_of_users)
 
-    [users: registred_users]
+    users = registred_users
+    manager = List.last(users)
+
+    working_time = %{
+      "user_id" => List.first(users).id,
+      "manager_id" => manager.id,
+      "start_time" => ~U[2021-01-01 08:00:00Z],
+      "end_time" => ~U[2021-01-01 16:00:00Z],
+      "break_duration" => 30
+    }
+
+    working_time1 = %{
+      "user_id" => List.first(tl(users)).id,
+      "manager_id" => manager.id,
+      "start_time" => ~U[2021-02-01 08:00:00Z],
+      "end_time" => ~U[2021-02-01 16:00:00Z],
+      "break_duration" => 30
+    }
+
+    wts = given_existing_wt([working_time, working_time1])
+
+    [users: registred_users, wts: wts]
   end
 
   # describe "unit WorkingTimeService" do
@@ -63,6 +84,84 @@ defmodule TimeManagerWeb.WorkingTimeTest do
 
     response = Poison.decode!(conn.resp_body)
 
-    IO.inspect(response)
+    # IO.inspect(response)
+  end
+
+  test "getting working times", %{
+    conn: conn,
+    users: users,
+    wts: [working_time, working_time1]
+  } do
+    manager = List.last(users)
+
+    conn =
+      conn
+      |> Auth.put_auth_token(
+        Auth.login_pass(manager.email, manager.password)
+        |> Auth.extract_auth_token()
+      )
+      |> when_getting_wt()
+      |> then_wt_should_be_returned([working_time, working_time1])
+  end
+
+  test "getting working times by user", %{
+    conn: conn,
+    users: users,
+    wts: [working_time, working_time1]
+  } do
+    manager = List.last(users)
+
+    conn =
+      conn
+      |> Auth.put_auth_token(
+        Auth.login_pass(manager.email, manager.password)
+        |> Auth.extract_auth_token()
+      )
+      |> get("/api/working_times/#{List.first(users).id}")
+      |> then_wt_should_be_returned([working_time])
+  end
+
+  test "getting working times by user and time", %{
+    conn: conn,
+    users: users,
+    wts: [working_time, working_time1]
+  } do
+    manager = List.last(users)
+
+    conn =
+      conn
+      |> Auth.put_auth_token(
+        Auth.login_pass(manager.email, manager.password)
+        |> Auth.extract_auth_token()
+      )
+      |> get("/api/working_times/#{List.first(users).id}/2021-01-01/2021-01-02")
+      |> then_wt_should_be_returned([working_time])
+  end
+
+  test "updating working time", %{
+    conn: conn,
+    users: users,
+    wts: [working_time, working_time1]
+  } do
+    manager = List.last(users)
+
+    wt_update = %{
+      "start_time" => ~U[2021-01-01 08:30:00Z],
+      "break_duration" => 45
+    }
+
+    conn =
+      conn
+      |> Auth.put_auth_token(
+        Auth.login_pass(manager.email, manager.password)
+        |> Auth.extract_auth_token()
+      )
+      |> put("/api/working_times/#{working_time.id}", %{
+        working_time: wt_update
+      })
+
+    response = Poison.decode!(conn.resp_body)
+
+    assert response["start_time"] == "2021-01-01T08:30:00Z"
   end
 end
