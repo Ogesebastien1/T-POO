@@ -9,6 +9,9 @@ config :time_manager, TimeManagerWeb.Endpoint,
   debug_errors: true,
   watchers: []
 
+
+config :bcrypt_elixir, log_rounds: 12
+
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: TimeManager.Finch
 
