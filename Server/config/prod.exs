@@ -15,4 +15,23 @@ config :bcrypt_elixir, log_rounds: 12
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: TimeManager.Finch
 
-# Disable Swoosh Local Memory Storage
+
+config :time_manager,
+       TimeManager.Accounts.Application.UserRepository,
+       TimeManager.Accounts.Infrastructure.UserRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.TeamRepository,
+       TimeManager.TimeTracking.Infrastructure.TeamRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.ClockRepository,
+       TimeManager.TimeTracking.Infrastructure.ClockRepository
+
+config :time_manager,
+       TimeManager.TimeTracking.Application.WorkingTimeRepository,
+       TimeManager.TimeTracking.Infrastructure.WorkingTimeRepository
+
+config :time_manager,
+       :date_provider,
+       TimeManager.TimeTracking.Infrastructure.DateProvider
