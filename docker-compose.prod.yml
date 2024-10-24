@@ -13,6 +13,7 @@ services:
     environment:
         DATABASE_URL: ecto://postgres:postgres@db/db
         SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  
     # build:
     #   context: ./Server
     #   dockerfile: Dockerfile.prod
